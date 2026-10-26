@@ -1137,6 +1137,21 @@ data:
   - {addr: 0x800e0054, name: g_menu_wait_for_file_allocation_message}
   - {addr: 0x800e0070, name: g_script_pause_message}
   - {addr: 0x800e007c, name: g_world_script_reading_character_message}
+  - {addr: 0x800e00bc, name: g_world_card_save_file_name_0}
+  - {addr: 0x800e00d0, name: g_world_card_save_file_name_1}
+  - {addr: 0x800e00e4, name: g_world_card_save_file_name_2}
+  - {addr: 0x800e00f8, name: g_world_card_save_file_name_3}
+  - {addr: 0x800e010c, name: g_world_card_save_file_name_4}
+  - {addr: 0x800e0120, name: g_world_card_save_file_name_5}
+  - {addr: 0x800e0134, name: g_world_card_save_file_name_6}
+  - {addr: 0x800e0148, name: g_world_card_save_file_name_7}
+  - {addr: 0x800e015c, name: g_world_card_save_file_name_8}
+  - {addr: 0x800e0170, name: g_world_card_save_file_name_9}
+  - {addr: 0x800e0184, name: g_world_card_save_file_name_10}
+  - {addr: 0x800e0198, name: g_world_card_save_file_name_11}
+  - {addr: 0x800e01ac, name: g_world_card_save_file_name_12}
+  - {addr: 0x800e01c0, name: g_world_card_save_file_name_13}
+  - {addr: 0x800e01d4, name: g_world_card_save_file_name_14}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
   - {addr: 0x8010042c, name: g_thread_call_saved_ra}
@@ -1167,6 +1182,20 @@ data:
   - {addr: 0x8013a60a, name: g_world_menu_restore_unit_id}
   - {addr: 0x8013a60c, name: g_menu_unit_view_cached_battle_id}
   - {addr: 0x8013a60e, name: g_menu_unit_view_cached_comparison_id}
+  - {addr: 0x8013a610, name: g_world_menu_command_map_00}
+  - {addr: 0x8013a618, name: g_world_menu_command_map_20}
+  - {addr: 0x8013a620, name: g_world_menu_command_map_2e}
+  - {addr: 0x8013a628, name: g_world_menu_command_map_32}
+  - {addr: 0x8013a630, name: g_world_menu_command_map_0f}
+  - {addr: 0x8013a634, name: g_world_menu_command_map_10}
+  - {addr: 0x8013a638, name: g_world_menu_command_map_11}
+  - {addr: 0x8013a63c, name: g_world_menu_command_map_12}
+  - {addr: 0x8013a640, name: g_world_menu_command_map_19}
+  - {addr: 0x8013a644, name: g_world_menu_command_map_1a}
+  - {addr: 0x8013a648, name: g_world_menu_command_map_1b}
+  - {addr: 0x8013a64c, name: g_world_menu_command_map_1c}
+  - {addr: 0x8013a650, name: g_world_menu_command_map_1e}
+  - {addr: 0x8013a654, name: g_world_menu_command_map_63}
   - {addr: 0x8013a658, name: g_world_menu_command_maps}
   - {addr: 0x8013a750, name: g_world_menu_unit_selection_records}
   - {addr: 0x8013a8b8, name: g_world_menu_glyph_image_data}
@@ -1266,21 +1295,43 @@ data:
   - {addr: 0x80153c78, name: g_world_ability_menu_layout}
   - {addr: 0x80153ca4, name: g_world_menu_status_list_layout}
   - {addr: 0x80153cd0, name: g_world_menu_at_list_layout}
+  - {addr: 0x80153cfc, name: D_80153cfc}
   - {addr: 0x80153d08, name: g_world_menu_auto_battle_row_actions}
   - {addr: 0x80153d18, name: g_world_menu_action_slot_row_actions}
   - {addr: 0x80153d24, name: g_menu_skillset_row_actions}
   - {addr: 0x80153d3c, name: g_world_menu_wait_row_actions}
   - {addr: 0x80153d44, name: g_world_menu_status_list_row_actions}
+  - {addr: 0x80153d54, name: D_80153d54}
+  - {addr: 0x80153d58, name: D_80153d58}
+  - {addr: 0x80153d60, name: D_80153d60}
+  - {addr: 0x80153d6c, name: D_80153d6c}
+  - {addr: 0x80153d70, name: D_80153d70}
+  - {addr: 0x80153d74, name: D_80153d74}
+  - {addr: 0x80153d7c, name: D_80153d7c}
+  - {addr: 0x80153d80, name: D_80153d80}
+  - {addr: 0x80153d8c, name: D_80153d8c}
+  - {addr: 0x80153d98, name: D_80153d98}
+  - {addr: 0x80153d9c, name: D_80153d9c}
   - {addr: 0x80153da4, name: g_world_menu_system_function_row_actions}
   - {addr: 0x80153dc0, name: g_world_menu_confirm_stored_unit_row_actions}
+  - {addr: 0x80153dc4, name: D_80153dc4}
   - {addr: 0x80153dc8, name: g_world_menu_result}
+  - {addr: 0x80153dcc, name: D_80153dcc}
   - {addr: 0x80153dd4, name: g_world_menu_set_auto_battle_row_actions}
+  - {addr: 0x80153dd8, name: D_80153dd8}
+  - {addr: 0x80153de4, name: D_80153de4}
+  - {addr: 0x80153df0, name: D_80153df0}
   - {addr: 0x80153df4, name: g_world_menu_idle_action_entries}
   - {addr: 0x80154b14, name: g_world_help_portrait_clut_by_sheet_id}
   - {addr: 0x80154cbc, name: g_world_menu_numeric_display_texture_window}
   - {addr: 0x80154cc4, name: g_world_menu_numeric_display_palette_indices}
   - {addr: 0x80154cd0, name: g_world_menu_numeric_display_frame_offsets}
   - {addr: 0x80154d30, name: g_world_text_current_line}
+  - {addr: 0x80154d38, name: g_menu_window_tween_easing_curve_0}
+  - {addr: 0x80154d4c, name: g_menu_window_tween_easing_curve_1}
+  - {addr: 0x80154d64, name: g_menu_window_tween_easing_curve_2}
+  - {addr: 0x80154d7c, name: g_menu_window_tween_easing_curve_3}
+  - {addr: 0x80154d8c, name: g_menu_window_tween_easing_curve_4}
   - {addr: 0x80154d94, name: g_menu_window_tween_easing_tables}
   - {addr: 0x80154da8, name: g_text_section_pointers_saved}
   - {addr: 0x80154dd4, name: g_world_auto_battle_option_colors}
@@ -1297,7 +1348,10 @@ data:
   - {addr: 0x80155810, name: g_world_menu_sprite_page_texture_windows}
   - {addr: 0x80155838, name: g_world_menu_sprite_page_image_params}
   - {addr: 0x80155874, name: g_world_menu_sprite_page_image_params_from_5}
+  - {addr: 0x801559a0, name: g_world_unit_status_quad_image_params_mode_3}
   - {addr: 0x801559d0, name: g_world_unit_status_quad_clut_pairs}
+  - {addr: 0x801559e0, name: g_world_unit_status_quad_image_params_mode_4}
+  - {addr: 0x80155a34, name: g_world_unit_status_quad_image_params_mode_6}
   - {addr: 0x80155a88, name: g_world_unit_status_sprite_clut_pairs}
   - {addr: 0x80155aa4, name: g_world_unit_status_icon_image_params}
   - {addr: 0x80155ad4, name: g_menu_hovered_unit_stats_rect}
@@ -1376,10 +1430,25 @@ data:
   - {addr: 0x80156ca0, name: g_world_menu_thin_panel_texture_windows}
   - {addr: 0x80156cd8, name: g_world_menu_panel_texture_windows}
   - {addr: 0x80156d24, name: g_world_gfx_draw_area_scale_percent}
+  - {addr: 0x80156d3c, name: g_world_option_menu_entry_table_text_ids}
+  - {addr: 0x80156d6c, name: g_world_option_menu_entry_table_text_colors}
   - {addr: 0x80156d90, name: g_world_option_menu_entry_table}
   - {addr: 0x80156dbc, name: g_world_menu_at_list_entry_table}
   - {addr: 0x80156de8, name: g_world_crystal_pickup_menu_entries}
+  - {addr: 0x80156e14, name: D_80156e14}
+  - {addr: 0x80156e24, name: D_80156e24}
+  - {addr: 0x80156e28, name: D_80156e28}
+  - {addr: 0x80156e2c, name: D_80156e2c}
+  - {addr: 0x80156e30, name: D_80156e30}
+  - {addr: 0x80156e34, name: D_80156e34}
   - {addr: 0x80156e38, name: g_world_crystal_pickup_menu}
+  - {addr: 0x80156fdc, name: D_80156fdc}
+  - {addr: 0x80156fde, name: D_80156fde}
+  - {addr: 0x80156fe0, name: D_80156fe0}
+  - {addr: 0x80156fe2, name: D_80156fe2}
+  - {addr: 0x80156fe4, name: D_80156fe4}
+  - {addr: 0x801570a4, name: D_801570a4}
+  - {addr: 0x801570b8, name: D_801570b8}
   - {addr: 0x801570bc, name: g_world_menu_at_list_state}
   - {addr: 0x80157134, name: g_world_game_option_original_values}
   - {addr: 0x8015716c, name: g_world_game_option_values}
@@ -1395,11 +1464,14 @@ data:
   - {addr: 0x8015743c, name: g_world_help_attack_preview_navigation}
   - {addr: 0x801574ac, name: g_world_help_unit_box_navigation}
   - {addr: 0x801574fc, name: g_world_help_require_navigation}
+  - {addr: 0x801576ec, name: g_world_help_menu_text_id_lists}
   - {addr: 0x80157784, name: g_world_help_menu_text_id_tables}
   - {addr: 0x801577e0, name: g_world_help_text_section_offsets}
   - {addr: 0x80157860, name: g_world_help_data_base}
   - {addr: 0x8016e1a0, name: g_world_location_names_resident}
   - {addr: 0x8016e44c, name: g_world_gfx_full_texture_window}
+  - {addr: 0x8016e454, name: D_8016e454}
+  - {addr: 0x8016e456, name: D_8016e456}
   - {addr: 0x8016e458, name: g_world_menu_screen_open_request}
   - {addr: 0x8016e45a, name: g_world_menu_open_entry_index}
   - {addr: 0x8016e45c, name: g_world_formation_open_request_state}
@@ -1421,9 +1493,19 @@ data:
   - {addr: 0x8016e500, name: g_world_menu_location_list_row_colors}
   - {addr: 0x8016e568, name: g_world_menu_location_list_layout}
   - {addr: 0x8016e594, name: g_world_menu_submenu_page_counts}
+  - {addr: 0x8016e5c4, name: g_world_menu_submenu_page_text_id_lists}
   - {addr: 0x8016e68c, name: g_world_menu_submenu_page_text_ids}
+  - {addr: 0x8016e754, name: g_world_menu_submenu_page_layout_text_ids}
+  - {addr: 0x8016e7bc, name: g_world_menu_submenu_page_layout_text_colors}
   - {addr: 0x8016e814, name: g_world_input_timing_profiles}
+  - {addr: 0x8016e840, name: D_8016e840}
   - {addr: 0x8016e86c, name: g_world_menu_submenu_page_layout}
+  - {addr: 0x8016e898, name: D_8016e898}
+  - {addr: 0x8016e8a4, name: D_8016e8a4}
+  - {addr: 0x8016e8b4, name: D_8016e8b4}
+  - {addr: 0x8016e8c8, name: D_8016e8c8}
+  - {addr: 0x8016e8d8, name: D_8016e8d8}
+  - {addr: 0x8016e8e8, name: D_8016e8e8}
   - {addr: 0x8016e908, name: g_world_menu_number_entry_value}
   - {addr: 0x8016e90c, name: g_world_menu_default_entries}
   - {addr: 0x8016ed44, name: g_world_menu_frame_palette_rect}
@@ -1463,6 +1545,7 @@ data:
   - {addr: 0x8018a330, name: g_world_screen_menu_thin_panel_texture_windows}
   - {addr: 0x8018a368, name: g_world_screen_menu_panel_texture_windows}
   - {addr: 0x8018a3b4, name: g_world_menu_zoom_percentages}
+  - {addr: 0x8018a3cc, name: g_world_menu_entry_text_id_lists}
   - {addr: 0x8018a494, name: g_world_menu_entry_text_id_tables}
   - {addr: 0x8018a894, name: g_world_menu_number_entry_digit_steps}
   - {addr: 0x8018a8b8, name: g_world_portrait_clut_by_sheet_id}
@@ -1649,6 +1732,7 @@ data:
   - {addr: 0x8018c93c, name: g_world_job_wheel_opening}
   - {addr: 0x8018c940, name: g_world_job_wheel_name_text}
   - {addr: 0x8018c944, name: g_world_job_wheel_mastered_icon_sprite}
+  - {addr: 0x8018c958, name: D_8018c958}
   - {addr: 0x8018c960, name: g_world_item_icon_menu}
   - {addr: 0x8018c99c, name: g_world_item_menu_unit_index}
   - {addr: 0x8018c99d, name: g_world_item_submenu_exit_pending}
@@ -1667,8 +1751,10 @@ data:
   - {addr: 0x8018cabe, name: g_world_remove_item_saved_newly_pressed}
   - {addr: 0x8018cac0, name: g_world_remove_item_cursor_point}
   - {addr: 0x8018cac4, name: g_world_remove_all_equipment_cursor_point}
+  - {addr: 0x8018cac8, name: D_8018cac8}
   - {addr: 0x8018cad4, name: g_world_item_action_quantity_range}
   - {addr: 0x8018cae0, name: g_world_item_action_option_states}
+  - {addr: 0x8018cae6, name: D_8018cae6}
   - {addr: 0x8018cae8, name: g_world_item_action_menu}
   - {addr: 0x8018cb9c, name: g_world_item_quantity_change_menu}
   - {addr: 0x8018cc14, name: g_world_item_unequip_all_menu}
@@ -1684,6 +1770,7 @@ data:
   - {addr: 0x8018cf60, name: g_world_item_category_tab_x}
   - {addr: 0x8018cf68, name: g_world_status_display_image_rects}
   - {addr: 0x8018d0a8, name: g_world_ability_menu_slots_changed}
+  - {addr: 0x8018d0ac, name: D_8018d0ac}
   - {addr: 0x8018d0b4, name: g_world_ability_menu}
   - {addr: 0x8018d0f0, name: g_world_ability_submenu_running}
   - {addr: 0x8018d0f1, name: g_world_ability_menu_unit_index}
@@ -1705,16 +1792,21 @@ data:
   - {addr: 0x8018d2f8, name: g_world_ability_list_script}
   - {addr: 0x8018d4e8, name: g_world_learn_job_name_list}
   - {addr: 0x8018d4ec, name: g_world_view_job_name_list}
+  - {addr: 0x8018d4f0, name: D_8018d4f0}
   - {addr: 0x8018d500, name: g_world_order_unit_menu}
   - {addr: 0x8018d538, name: g_world_menu_order_unit_cursor}
+  - {addr: 0x8018d53c, name: D_8018d53c}
   - {addr: 0x8018d540, name: g_world_selected_unit_text_binding}
   - {addr: 0x8018d548, name: g_world_formation_dismiss_confirm_menu}
   - {addr: 0x8018d638, name: g_world_formation_dismiss_confirm_menu_scrolled}
+  - {addr: 0x8018d728, name: D_8018d728}
   - {addr: 0x8018d72c, name: g_world_formation_dismiss_prompt}
   - {addr: 0x8018d748, name: g_world_formation_dismiss_prompt_text_id}
   - {addr: 0x8018d758, name: g_world_formation_dismiss_prompt_kind}
   - {addr: 0x8018d768, name: g_world_formation_dismiss_anim_timer}
   - {addr: 0x8018d76c, name: g_world_formation_dismiss_entries}
+  - {addr: 0x8018d7a4, name: g_world_sort_key_list_6}
+  - {addr: 0x8018d7a8, name: g_world_sort_key_list_7}
   - {addr: 0x8018d7ac, name: g_world_sort_key_lists}
   - {addr: 0x8018d7cc, name: g_world_formation_sort_field_indices}
   - {addr: 0x8018d7d8, name: g_world_item_sorted_lists}
@@ -1765,6 +1857,9 @@ data:
   - {addr: 0x8018e0ae, name: g_world_menu_scroll_hold_counter}
   - {addr: 0x8018e0b0, name: g_world_menu_text_redraw_request}
   - {addr: 0x8018e0b2, name: g_world_unit_status_banner_active}
+  - {addr: 0x8018e0b4, name: D_8018e0b4}
+  - {addr: 0x8018e0b6, name: D_8018e0b6}
+  - {addr: 0x8018e0b8, name: D_8018e0b8}
   - {addr: 0x8018e0bc, name: g_world_grid_menu_default_cells}
   - {addr: 0x8018e230, name: g_world_grid_menu_cell_23_text_offset}
   - {addr: 0x8018e240, name: g_world_grid_menu_cell_24_text_offset}
@@ -1773,6 +1868,7 @@ data:
   - {addr: 0x8018e430, name: g_world_menu_thread_running_status}
   - {addr: 0x8018e434, name: g_world_grid_menu_cursor_anim}
   - {addr: 0x8018e436, name: g_world_grid_menu_initialized}
+  - {addr: 0x8018e438, name: D_8018e438}
   - {addr: 0x8018e43c, name: g_world_unit_status_banner_menu}
   - {addr: 0x8018e478, name: g_world_unit_status_banner_state}
   - {addr: 0x8018e47c, name: g_world_primary_bit_cursor_reset}
@@ -1810,6 +1906,7 @@ data:
   - {addr: 0x80193dea, name: g_world_input_activation_timer}
   - {addr: 0x80193deb, name: g_world_input_triangle_latch}
   - {addr: 0x80193dec, name: g_world_input_blocked_state}
+  - {addr: 0x80193dee, name: D_80193dee}
   - {addr: 0x80193df0, name: g_world_card_slot_select_timer}
   - {addr: 0x80193df4, name: g_world_card_screen_background_tile}
   - {addr: 0x80193dfc, name: g_world_card_slot_select_menu}
@@ -1858,6 +1955,7 @@ data:
   - {addr: 0x80194fe0, name: g_world_text_shop_menu_labels_data}
   - {addr: 0x801950d6, name: g_world_shop_background_visible}
   - {addr: 0x801950d7, name: g_world_shop_item_category}
+  - {addr: 0x801950d8, name: D_801950d8}
   - {addr: 0x801950da, name: g_world_shop_quantity_limit}
   - {addr: 0x801950e4, name: g_world_shop_quantity_menu_data}
   - {addr: 0x8019515c, name: g_world_shop_main_menu_thread_data}
@@ -1885,6 +1983,7 @@ data:
   - {addr: 0x80195510, name: g_world_shop_sell_message_wait}
   - {addr: 0x80195512, name: g_world_shop_sell_result}
   - {addr: 0x80195514, name: g_world_shop_fitting_room_initialized}
+  - {addr: 0x80195518, name: D_80195518}
   - {addr: 0x80195524, name: g_world_shop_fitting_room_menu_thread_data}
   - {addr: 0x8019559c, name: g_world_shop_fitting_item_list_menu_script}
   - {addr: 0x80195671, name: g_world_shop_fitting_equip_menu_initialized}
@@ -1990,6 +2089,8 @@ data:
   - {addr: 0x8019ac8c, name: g_world_menu_anything_ability_id}
   - {addr: 0x8019ac90, name: g_world_menu_selected_option}
   - {addr: 0x8019ac94, name: g_world_menu_action_slot_selected_option}
+  - {addr: 0x8019ac98, name: D_8019ac98}
+  - {addr: 0x8019ac9c, name: D_8019ac9c}
   - {addr: 0x8019aca0, name: g_menu_window_buffers}
   - {addr: 0x8019b330, name: g_menu_window_buffer_pointers}
   - {addr: 0x8019b348, name: g_gfx_tpage7_free_rect_pixels}
@@ -2031,8 +2132,12 @@ data:
   - {addr: 0x801ad344, name: g_world_menu_at_list_indices}
   - {addr: 0x801ad544, name: g_world_crystal_pickup_menu_flags}
   - {addr: 0x801ad944, name: g_world_menu_at_list_flags}
+  - {addr: 0x801adb44, name: D_801adb44}
+  - {addr: 0x801adb48, name: D_801adb48}
   - {addr: 0x801adb4c, name: g_world_crystal_pickup_menu_result}
   - {addr: 0x801adb50, name: g_world_crystal_pickup_move_result}
+  - {addr: 0x801ae32c, name: D_801ae32c}
+  - {addr: 0x801ae330, name: D_801ae330}
   - {addr: 0x801ae334, name: g_world_action_target_list_slots}
   - {addr: 0x801ae3d4, name: g_world_menu_at_list_text}
   - {addr: 0x801ae884, name: g_world_options_menu_title_rect}
@@ -2049,6 +2154,7 @@ data:
   - {addr: 0x801aed50, name: g_world_menu_frame_initial_repeat_counter}
   - {addr: 0x801aed54, name: g_world_menu_frame_repeat_counter}
   - {addr: 0x801aed58, name: g_world_menu_frame_secondary_repeat_counter}
+  - {addr: 0x801aed60, name: D_801aed60}
   - {addr: 0x801aed64, name: g_world_menu_thread_status_snapshot}
   - {addr: 0x801aed74, name: g_world_menu_submenu_page_row_text_ids}
   - {addr: 0x801aed8c, name: g_world_menu_text_file_buffer}
@@ -3157,3 +3263,1087 @@ overrides:
   - {function: world_unit_view_supervisor_thread, name: g_menu_unit_view_cached_comparison_id, addr: 0x8013a60e}
   - {function: world_unit_view_supervisor_thread, name: g_menu_unit_view_mode, addr: 0x80153264}
   - {function: world_unit_view_supervisor_thread, name: g_menu_unit_view_thread_sets, addr: 0x801564d0}
+
+relocations:
+  - {addr: 0x8013a65c, to: g_world_menu_command_map_00}
+  - {addr: 0x8013a664, to: g_world_menu_command_map_00}
+  - {addr: 0x8013a66c, to: g_world_menu_command_map_00}
+  - {addr: 0x8013a674, to: g_world_menu_command_map_00}
+  - {addr: 0x8013a67c, to: g_world_menu_command_map_20}
+  - {addr: 0x8013a684, to: g_world_menu_command_map_20}
+  - {addr: 0x8013a68c, to: g_world_menu_command_map_2e}
+  - {addr: 0x8013a694, to: g_world_menu_command_map_2e}
+  - {addr: 0x8013a69c, to: g_world_menu_command_map_2e}
+  - {addr: 0x8013a6a4, to: g_world_menu_command_map_2e}
+  - {addr: 0x8013a6ac, to: g_world_menu_command_map_32}
+  - {addr: 0x8013a6b4, to: g_world_menu_command_map_32}
+  - {addr: 0x8013a6bc, to: g_world_menu_command_map_0f}
+  - {addr: 0x8013a6c4, to: g_world_menu_command_map_10}
+  - {addr: 0x8013a6cc, to: g_world_menu_command_map_11}
+  - {addr: 0x8013a6d4, to: g_world_menu_command_map_12}
+  - {addr: 0x8013a6dc, to: g_world_menu_command_map_19}
+  - {addr: 0x8013a6e4, to: g_world_menu_command_map_1a}
+  - {addr: 0x8013a6ec, to: g_world_menu_command_map_1b}
+  - {addr: 0x8013a6f4, to: g_world_menu_command_map_1c}
+  - {addr: 0x8013a6fc, to: g_world_menu_command_map_1e}
+  - {addr: 0x8013a704, to: g_world_menu_command_map_19}
+  - {addr: 0x8013a70c, to: g_world_menu_command_map_63}
+  - {addr: 0x8013a714, to: g_world_menu_command_map_1a}
+  - {addr: 0x8013a71c, to: g_world_menu_command_map_1b}
+  - {addr: 0x8013a724, to: g_world_menu_command_map_1e}
+  - {addr: 0x8013a72c, to: g_world_menu_command_map_19}
+  - {addr: 0x8013a734, to: g_world_menu_command_map_19}
+  - {addr: 0x8013a73c, to: g_world_menu_command_map_19}
+  - {addr: 0x8013a744, to: g_world_menu_command_map_1b}
+  - {addr: 0x8013a74c, to: g_world_menu_command_map_1b}
+  - {addr: 0x8015327c, to: g_thread_contexts}
+  - {addr: 0x80153280, to: g_main_script_variables}
+  - {addr: 0x80153c94, to: g_world_menu_ability_display_flags}
+  - {addr: 0x80153c98, to: g_world_menu_ability_display_flags}
+  - {addr: 0x80153c9c, to: g_world_menu_ability_display_flags}
+  - {addr: 0x80153cb4, to: g_world_menu_status_left_text_ids}
+  - {addr: 0x80153cb8, to: g_world_menu_status_right_text_ids}
+  - {addr: 0x80153cbc, to: g_world_menu_status_right_text_ids}
+  - {addr: 0x80153cc0, to: g_world_menu_ability_display_flags}
+  - {addr: 0x80153cc4, to: g_world_menu_ability_display_flags}
+  - {addr: 0x80153cc8, to: g_world_menu_ability_display_flags}
+  - {addr: 0x80153e18, to: D_80153cfc}
+  - {addr: 0x80153e1c, to: world_menu_build_main}
+  - {addr: 0x80153e24, to: g_world_ability_menu_layout}
+  - {addr: 0x80153e28, to: g_world_menu_selected_option}
+  - {addr: 0x80153e54, to: g_world_menu_auto_battle_row_actions}
+  - {addr: 0x80153e58, to: world_menu_auto_battle_setting_thread}
+  - {addr: 0x80153e60, to: g_world_ability_menu_layout}
+  - {addr: 0x80153e64, to: g_world_menu_selected_option}
+  - {addr: 0x80153e90, to: g_world_menu_auto_battle_row_actions, offset: 0xc}
+  - {addr: 0x80153e94, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80153e9c, to: g_world_ability_menu_layout}
+  - {addr: 0x80153ea0, to: g_world_menu_selected_option}
+  - {addr: 0x80153ecc, to: g_world_menu_action_slot_row_actions}
+  - {addr: 0x80153ed0, to: world_menu_select_unit_action_slots_thread}
+  - {addr: 0x80153ed8, to: g_world_ability_menu_layout}
+  - {addr: 0x80153edc, to: g_world_menu_action_slot_selected_option}
+  - {addr: 0x80153f08, to: g_menu_skillset_row_actions}
+  - {addr: 0x80153f0c, to: world_menu_run_skillset_thread}
+  - {addr: 0x80153f14, to: g_world_ability_menu_layout}
+  - {addr: 0x80153f18, to: D_8019ac98}
+  - {addr: 0x80153f44, to: g_menu_skillset_row_actions, offset: 0xc}
+  - {addr: 0x80153f48, to: world_menu_run_status_screen_thread}
+  - {addr: 0x80153f50, to: g_world_ability_menu_layout}
+  - {addr: 0x80153f54, to: g_world_menu_selected_option}
+  - {addr: 0x80153f80, to: g_world_menu_wait_row_actions}
+  - {addr: 0x80153f84, to: world_menu_wait_thread}
+  - {addr: 0x80153f8c, to: g_world_ability_menu_layout}
+  - {addr: 0x80153f90, to: g_world_menu_selected_option}
+  - {addr: 0x80153fbc, to: g_world_menu_wait_row_actions, offset: 0x4}
+  - {addr: 0x80153fc0, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80153fc8, to: g_world_ability_menu_layout}
+  - {addr: 0x80153fcc, to: g_world_menu_selected_option}
+  - {addr: 0x80153ff8, to: g_world_menu_status_list_row_actions}
+  - {addr: 0x80153ffc, to: world_menu_build_unit_status_list}
+  - {addr: 0x80154004, to: g_world_menu_status_list_layout}
+  - {addr: 0x80154008, to: g_world_menu_selected_option}
+  - {addr: 0x80154034, to: D_80153d54}
+  - {addr: 0x80154038, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80154040, to: g_world_ability_menu_layout}
+  - {addr: 0x80154044, to: g_world_menu_selected_option}
+  - {addr: 0x80154070, to: D_80153d58}
+  - {addr: 0x80154074, to: world_menu_display_triangle_selection}
+  - {addr: 0x8015407c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154080, to: g_world_menu_selected_option}
+  - {addr: 0x801540ac, to: g_world_menu_status_list_row_actions}
+  - {addr: 0x801540b0, to: world_menu_open_option_game_options}
+  - {addr: 0x801540b8, to: g_world_menu_status_list_layout}
+  - {addr: 0x801540bc, to: g_world_menu_selected_option}
+  - {addr: 0x801540e8, to: g_world_menu_status_list_row_actions}
+  - {addr: 0x801540ec, to: world_menu_open_bunit}
+  - {addr: 0x801540f4, to: g_world_menu_status_list_layout}
+  - {addr: 0x801540f8, to: g_world_menu_selected_option}
+  - {addr: 0x80154124, to: D_80153d54}
+  - {addr: 0x80154128, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80154130, to: g_world_ability_menu_layout}
+  - {addr: 0x80154134, to: g_world_menu_selected_option}
+  - {addr: 0x80154160, to: D_80153d60}
+  - {addr: 0x80154164, to: world_menu_build_main}
+  - {addr: 0x8015416c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154170, to: g_world_menu_selected_option}
+  - {addr: 0x8015419c, to: D_80153d6c}
+  - {addr: 0x801541a0, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801541a8, to: g_world_ability_menu_layout}
+  - {addr: 0x801541ac, to: g_world_menu_selected_option}
+  - {addr: 0x801541d8, to: D_80153d70}
+  - {addr: 0x801541dc, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801541e4, to: g_world_ability_menu_layout}
+  - {addr: 0x801541e8, to: g_world_menu_selected_option}
+  - {addr: 0x80154214, to: D_80153d74}
+  - {addr: 0x80154218, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80154220, to: g_world_ability_menu_layout}
+  - {addr: 0x80154224, to: g_world_menu_selected_option}
+  - {addr: 0x80154250, to: D_80153d7c}
+  - {addr: 0x80154254, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8015425c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154260, to: g_world_menu_selected_option}
+  - {addr: 0x8015428c, to: D_80153d80}
+  - {addr: 0x80154290, to: world_menu_build_main}
+  - {addr: 0x80154298, to: g_world_ability_menu_layout}
+  - {addr: 0x8015429c, to: g_world_menu_selected_option}
+  - {addr: 0x801542c8, to: D_80153d8c}
+  - {addr: 0x801542cc, to: world_menu_build_main}
+  - {addr: 0x801542d4, to: g_world_ability_menu_layout}
+  - {addr: 0x801542d8, to: g_world_menu_selected_option}
+  - {addr: 0x80154304, to: g_world_menu_status_list_row_actions}
+  - {addr: 0x80154308, to: world_menu_run_jobstts_thread}
+  - {addr: 0x80154310, to: g_world_menu_status_list_layout}
+  - {addr: 0x80154314, to: g_world_menu_selected_option}
+  - {addr: 0x80154340, to: D_80153d98}
+  - {addr: 0x80154344, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8015434c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154350, to: g_world_menu_selected_option}
+  - {addr: 0x8015437c, to: D_80153d98}
+  - {addr: 0x80154380, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80154388, to: g_world_ability_menu_layout}
+  - {addr: 0x8015438c, to: g_world_menu_selected_option}
+  - {addr: 0x801543b8, to: D_80153d9c}
+  - {addr: 0x801543bc, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801543c4, to: g_world_ability_menu_layout}
+  - {addr: 0x801543c8, to: D_8019ac9c}
+  - {addr: 0x801543f4, to: D_80153d9c}
+  - {addr: 0x801543f8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80154400, to: g_world_ability_menu_layout}
+  - {addr: 0x80154404, to: D_8019ac9c}
+  - {addr: 0x80154430, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80154434, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8015443c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154440, to: g_world_menu_selected_option}
+  - {addr: 0x8015446c, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80154470, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80154478, to: g_world_ability_menu_layout}
+  - {addr: 0x8015447c, to: g_world_menu_selected_option}
+  - {addr: 0x801544a8, to: g_world_menu_system_function_row_actions}
+  - {addr: 0x801544ac, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801544b4, to: g_world_ability_menu_layout}
+  - {addr: 0x801544b8, to: g_world_menu_selected_option}
+  - {addr: 0x801544e4, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x801544e8, to: world_menu_open_option_at_list}
+  - {addr: 0x801544f0, to: g_world_menu_status_list_layout}
+  - {addr: 0x801544f4, to: g_world_menu_selected_option}
+  - {addr: 0x80154520, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80154524, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8015452c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154530, to: g_world_menu_selected_option}
+  - {addr: 0x8015455c, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80154560, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80154568, to: g_world_ability_menu_layout}
+  - {addr: 0x8015456c, to: g_world_menu_selected_option}
+  - {addr: 0x80154598, to: g_world_menu_system_function_row_actions, offset: 0x14}
+  - {addr: 0x8015459c, to: world_menu_build_main}
+  - {addr: 0x801545a4, to: g_world_ability_menu_layout}
+  - {addr: 0x801545a8, to: g_world_menu_selected_option}
+  - {addr: 0x801545d4, to: g_world_menu_system_function_row_actions, offset: 0x14}
+  - {addr: 0x801545d8, to: world_menu_build_main}
+  - {addr: 0x801545e0, to: g_world_ability_menu_layout}
+  - {addr: 0x801545e4, to: g_world_menu_selected_option}
+  - {addr: 0x80154610, to: g_world_menu_confirm_stored_unit_row_actions}
+  - {addr: 0x80154614, to: world_menu_confirm_move_command_thread}
+  - {addr: 0x8015461c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154620, to: g_world_menu_selected_option}
+  - {addr: 0x8015464c, to: D_80153dc4}
+  - {addr: 0x80154650, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80154658, to: g_world_ability_menu_layout}
+  - {addr: 0x8015465c, to: g_world_menu_selected_option}
+  - {addr: 0x80154688, to: g_world_menu_result}
+  - {addr: 0x8015468c, to: world_menu_validate_skill_selection_thread}
+  - {addr: 0x80154694, to: g_world_ability_menu_layout}
+  - {addr: 0x80154698, to: g_world_menu_selected_option}
+  - {addr: 0x801546c4, to: D_80153dcc}
+  - {addr: 0x801546c8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801546d0, to: g_world_ability_menu_layout}
+  - {addr: 0x801546d4, to: g_world_menu_selected_option}
+  - {addr: 0x80154700, to: D_80153dcc}
+  - {addr: 0x80154704, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8015470c, to: g_world_ability_menu_layout}
+  - {addr: 0x80154710, to: g_world_menu_selected_option}
+  - {addr: 0x8015473c, to: g_world_menu_set_auto_battle_row_actions}
+  - {addr: 0x80154740, to: world_menu_confirm_auto_battle_selection_thread}
+  - {addr: 0x80154748, to: g_world_ability_menu_layout}
+  - {addr: 0x8015474c, to: g_world_menu_selected_option}
+  - {addr: 0x80154778, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x8015477c, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80154784, to: g_world_ability_menu_layout}
+  - {addr: 0x80154788, to: g_world_menu_selected_option}
+  - {addr: 0x801547b4, to: D_80153dcc}
+  - {addr: 0x801547b8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801547c0, to: g_world_ability_menu_layout}
+  - {addr: 0x801547c4, to: g_world_menu_selected_option}
+  - {addr: 0x801547f0, to: D_80153dcc}
+  - {addr: 0x801547f4, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801547fc, to: g_world_ability_menu_layout}
+  - {addr: 0x80154800, to: g_world_menu_selected_option}
+  - {addr: 0x8015482c, to: g_world_menu_system_function_row_actions}
+  - {addr: 0x80154830, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80154838, to: g_world_ability_menu_layout}
+  - {addr: 0x8015483c, to: g_world_menu_selected_option}
+  - {addr: 0x80154868, to: g_world_menu_system_function_row_actions}
+  - {addr: 0x8015486c, to: world_menu_open_debugchr}
+  - {addr: 0x80154874, to: g_world_ability_menu_layout}
+  - {addr: 0x80154878, to: g_world_menu_selected_option}
+  - {addr: 0x801548a4, to: D_80153dcc}
+  - {addr: 0x801548a8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801548b0, to: g_world_ability_menu_layout}
+  - {addr: 0x801548b4, to: g_world_menu_selected_option}
+  - {addr: 0x801548e0, to: D_80153dd8}
+  - {addr: 0x801548e4, to: world_menu_build_main}
+  - {addr: 0x801548ec, to: g_world_ability_menu_layout}
+  - {addr: 0x801548f0, to: g_world_menu_selected_option}
+  - {addr: 0x8015491c, to: D_80153dd8}
+  - {addr: 0x80154920, to: world_menu_build_main}
+  - {addr: 0x80154928, to: g_world_ability_menu_layout}
+  - {addr: 0x8015492c, to: g_world_menu_selected_option}
+  - {addr: 0x80154958, to: D_80153dd8}
+  - {addr: 0x8015495c, to: world_menu_build_main}
+  - {addr: 0x80154964, to: g_world_ability_menu_layout}
+  - {addr: 0x80154968, to: g_world_menu_selected_option}
+  - {addr: 0x80154994, to: D_80153dd8}
+  - {addr: 0x80154998, to: world_menu_build_main}
+  - {addr: 0x801549a0, to: g_world_ability_menu_layout}
+  - {addr: 0x801549a4, to: g_world_menu_selected_option}
+  - {addr: 0x801549d0, to: D_80153de4}
+  - {addr: 0x801549d4, to: world_menu_build_main}
+  - {addr: 0x801549dc, to: g_world_ability_menu_layout}
+  - {addr: 0x801549e0, to: g_world_menu_selected_option}
+  - {addr: 0x80154a0c, to: D_80153de4}
+  - {addr: 0x80154a10, to: world_menu_build_main}
+  - {addr: 0x80154a18, to: g_world_ability_menu_layout}
+  - {addr: 0x80154a1c, to: g_world_menu_selected_option}
+  - {addr: 0x80154a48, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80154a4c, to: world_menu_run_scrolling_ability_list_thread}
+  - {addr: 0x80154a54, to: g_world_menu_at_list_layout}
+  - {addr: 0x80154a58, to: g_world_menu_selected_option}
+  - {addr: 0x80154a84, to: g_world_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80154a88, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80154a90, to: g_world_ability_menu_layout}
+  - {addr: 0x80154a94, to: g_world_menu_selected_option}
+  - {addr: 0x80154ac0, to: D_80153df0}
+  - {addr: 0x80154ac4, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80154acc, to: g_world_ability_menu_layout}
+  - {addr: 0x80154ad0, to: g_world_menu_selected_option}
+  - {addr: 0x80154afc, to: D_80153d70}
+  - {addr: 0x80154b00, to: world_menu_stop_thread_with_invalid_sound}
+  - {addr: 0x80154b08, to: g_world_ability_menu_layout}
+  - {addr: 0x80154b0c, to: g_world_menu_selected_option}
+  - {addr: 0x80154d94, to: g_menu_window_tween_easing_curve_0}
+  - {addr: 0x80154d98, to: g_menu_window_tween_easing_curve_1}
+  - {addr: 0x80154d9c, to: g_menu_window_tween_easing_curve_2}
+  - {addr: 0x80154da0, to: g_menu_window_tween_easing_curve_3}
+  - {addr: 0x80154da4, to: g_menu_window_tween_easing_curve_4}
+  - {addr: 0x80155af8, to: g_menu_selected_unit_status, offset: 0xc}
+  - {addr: 0x80155b04, to: g_menu_selected_unit_status, offset: 0x10}
+  - {addr: 0x80155b10, to: g_menu_selected_unit_status, offset: 0x12}
+  - {addr: 0x80155b1c, to: g_menu_selected_unit_status, offset: 0x16}
+  - {addr: 0x80155b28, to: g_menu_selected_unit_status, offset: 0x18}
+  - {addr: 0x80155b34, to: g_menu_selected_unit_status, offset: 0x1c}
+  - {addr: 0x80155b40, to: g_menu_selected_unit_status, offset: 0x4}
+  - {addr: 0x80155b4c, to: g_menu_selected_unit_status, offset: 0x6}
+  - {addr: 0x80155b58, to: g_menu_selected_unit_status}
+  - {addr: 0x80155b64, to: g_menu_selected_unit_status, offset: 0x8}
+  - {addr: 0x80155b70, to: g_menu_comparison_unit_status, offset: 0xc}
+  - {addr: 0x80155b7c, to: g_menu_comparison_unit_status, offset: 0x10}
+  - {addr: 0x80155b88, to: g_menu_comparison_unit_status, offset: 0x12}
+  - {addr: 0x80155b94, to: g_menu_comparison_unit_status, offset: 0x16}
+  - {addr: 0x80155ba0, to: g_menu_comparison_unit_status, offset: 0x18}
+  - {addr: 0x80155bac, to: g_menu_comparison_unit_status, offset: 0x1c}
+  - {addr: 0x80155bb8, to: g_menu_comparison_unit_status, offset: 0x4}
+  - {addr: 0x80155bc4, to: g_menu_comparison_unit_status, offset: 0x6}
+  - {addr: 0x80155bd0, to: g_menu_comparison_unit_status}
+  - {addr: 0x80155bdc, to: g_menu_comparison_unit_status, offset: 0x8}
+  - {addr: 0x80155be8, to: g_menu_selected_unit_status, offset: 0xc}
+  - {addr: 0x80155bf4, to: g_menu_selected_unit_status, offset: 0x10}
+  - {addr: 0x80155c00, to: g_menu_selected_unit_status, offset: 0x12}
+  - {addr: 0x80155c0c, to: g_menu_selected_unit_status, offset: 0x16}
+  - {addr: 0x80155c18, to: g_menu_selected_unit_status, offset: 0x18}
+  - {addr: 0x80155c24, to: g_menu_selected_unit_status, offset: 0x1c}
+  - {addr: 0x80155c30, to: g_menu_selected_unit_status, offset: 0x1e}
+  - {addr: 0x80155c3c, to: g_menu_selected_unit_status, offset: 0x20}
+  - {addr: 0x80155c48, to: g_menu_comparison_unit_status, offset: 0xc}
+  - {addr: 0x80155c54, to: g_menu_comparison_unit_status, offset: 0x10}
+  - {addr: 0x80155c60, to: g_menu_comparison_unit_status, offset: 0x12}
+  - {addr: 0x80155c6c, to: g_menu_comparison_unit_status, offset: 0x16}
+  - {addr: 0x80155c78, to: g_menu_comparison_unit_status, offset: 0x18}
+  - {addr: 0x80155c84, to: g_menu_comparison_unit_status, offset: 0x1c}
+  - {addr: 0x80155c90, to: g_menu_comparison_unit_status, offset: 0x1e}
+  - {addr: 0x80155c9c, to: g_menu_comparison_unit_status, offset: 0x20}
+  - {addr: 0x80155cd4, to: g_world_menu_sprite_page_image_params, offset: 0x78}
+  - {addr: 0x80155cd8, to: g_world_menu_sprite_page_image_params, offset: 0xa8}
+  - {addr: 0x80155cdc, to: g_world_menu_sprite_page_image_params, offset: 0x120}
+  - {addr: 0x80155ce0, to: g_world_unit_status_quad_image_params_mode_3}
+  - {addr: 0x80155ce4, to: g_world_unit_status_quad_image_params_mode_4}
+  - {addr: 0x80155ce8, to: g_world_unit_status_quad_image_params_mode_4}
+  - {addr: 0x80155cec, to: g_world_unit_status_quad_image_params_mode_6}
+  - {addr: 0x80155cf0, to: g_world_unit_status_quad_image_params_mode_6}
+  - {addr: 0x80155e64, to: g_menu_billboard_data}
+  - {addr: 0x80155e70, to: g_menu_billboard_data, offset: 0x4}
+  - {addr: 0x80155e7c, to: g_menu_billboard_data, offset: 0x2}
+  - {addr: 0x80155e88, to: g_menu_billboard_data, offset: 0x6}
+  - {addr: 0x80155e94, to: g_menu_billboard_data, offset: 0x8}
+  - {addr: 0x80155ea0, to: g_menu_billboard_data, offset: 0xa}
+  - {addr: 0x80155eac, to: g_menu_billboard_data, offset: 0xc}
+  - {addr: 0x80155eb8, to: g_menu_billboard_data, offset: 0x12}
+  - {addr: 0x80155ec4, to: g_menu_billboard_data, offset: 0x1c}
+  - {addr: 0x80155ed0, to: g_menu_billboard_data, offset: 0x14}
+  - {addr: 0x80155edc, to: g_menu_billboard_data, offset: 0x1e}
+  - {addr: 0x80155ee8, to: g_menu_billboard_data, offset: 0x16}
+  - {addr: 0x80155ef4, to: g_menu_billboard_data, offset: 0x20}
+  - {addr: 0x80155f00, to: g_menu_billboard_data, offset: 0x18}
+  - {addr: 0x80155f0c, to: g_menu_billboard_data, offset: 0x22}
+  - {addr: 0x80156500, to: world_menu_selected_tile_info_display_thread}
+  - {addr: 0x80156530, to: world_menu_selected_tile_info_display_thread}
+  - {addr: 0x8015653c, to: world_menu_refresh_hovered_unit_stats_display}
+  - {addr: 0x80156560, to: world_menu_selected_tile_info_display_thread}
+  - {addr: 0x80156564, to: world_menu_run_unit_summary_panel_thread}
+  - {addr: 0x8015656c, to: world_menu_refresh_hovered_unit_stats_display}
+  - {addr: 0x80156590, to: world_menu_selected_tile_info_display_thread}
+  - {addr: 0x80156598, to: world_menu_refresh_right_unit_stats_display}
+  - {addr: 0x801565c0, to: world_menu_selected_tile_info_display_thread}
+  - {addr: 0x801565c8, to: world_menu_preview_attack_caster_stats}
+  - {addr: 0x801565cc, to: world_menu_preview_attack_target_stats}
+  - {addr: 0x801565f0, to: world_menu_run_numeric_display_panel_thread}
+  - {addr: 0x801565f4, to: world_menu_run_unit_summary_panel_thread}
+  - {addr: 0x801565fc, to: world_menu_refresh_hovered_unit_stats_display}
+  - {addr: 0x8015675c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156770, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156784, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156798, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801567ac, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x801567c0, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x801567d4, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801567e8, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801567fc, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x80156810, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156824, to: world_menu_icon_timed_thread}
+  - {addr: 0x80156838, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8015684c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156860, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156874, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x80156888, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8015689c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801568b0, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801568c4, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801568d8, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801568ec, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156900, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156914, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156928, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8015693c, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156950, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156964, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156978, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8015698c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801569a0, to: world_menu_icon_timed_thread}
+  - {addr: 0x801569b4, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801569c8, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x801569dc, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x801569f0, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156a04, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156a18, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156a2c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156a40, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156a54, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156a68, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156a7c, to: world_menu_input_loop_thread}
+  - {addr: 0x80156a90, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156aa4, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156ab8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156acc, to: world_menu_icon_timed_thread}
+  - {addr: 0x80156ae0, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156af4, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156b08, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156b1c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156b30, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156b44, to: world_menu_icon_timed_thread}
+  - {addr: 0x80156da0, to: g_world_option_menu_entry_table_text_ids}
+  - {addr: 0x80156dac, to: g_world_option_menu_entry_table_text_colors}
+  - {addr: 0x80156db0, to: g_world_option_menu_entry_table_text_colors}
+  - {addr: 0x80156db4, to: g_world_option_menu_entry_table_text_colors}
+  - {addr: 0x80156dcc, to: g_world_menu_at_list_indices}
+  - {addr: 0x80156dd0, to: g_world_menu_at_list_primary_values}
+  - {addr: 0x80156dd4, to: g_world_menu_at_list_secondary_values}
+  - {addr: 0x80156dd8, to: g_world_crystal_pickup_menu_flags}
+  - {addr: 0x80156ddc, to: g_world_menu_at_list_flags}
+  - {addr: 0x80156de0, to: g_world_menu_at_list_flags}
+  - {addr: 0x80156df8, to: g_world_menu_at_list_primary_values}
+  - {addr: 0x80156e04, to: g_world_crystal_pickup_menu_flags}
+  - {addr: 0x80156e08, to: g_world_crystal_pickup_menu_flags}
+  - {addr: 0x80156e0c, to: g_world_crystal_pickup_menu_flags}
+  - {addr: 0x80156e5c, to: D_80156e14}
+  - {addr: 0x80156e60, to: world_option_menu_run_list_thread}
+  - {addr: 0x80156e68, to: g_world_crystal_pickup_menu_entries}
+  - {addr: 0x80156e6c, to: D_801adb44}
+  - {addr: 0x80156e98, to: D_80156e24}
+  - {addr: 0x80156e9c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156ea8, to: D_801adb48}
+  - {addr: 0x80156ed4, to: D_80156e2c}
+  - {addr: 0x80156ed8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156ee4, to: g_world_crystal_pickup_menu_result}
+  - {addr: 0x80156f10, to: D_80156e28}
+  - {addr: 0x80156f14, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156f20, to: D_801adb48}
+  - {addr: 0x80156f4c, to: D_80156e30}
+  - {addr: 0x80156f50, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156f5c, to: g_world_crystal_pickup_menu_result}
+  - {addr: 0x80156f88, to: D_80156e24}
+  - {addr: 0x80156f8c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80156f98, to: D_801adb48}
+  - {addr: 0x80156fc4, to: D_80156e34}
+  - {addr: 0x80156fc8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80156fd4, to: g_world_crystal_pickup_move_result}
+  - {addr: 0x8015706c, to: D_80156fdc}
+  - {addr: 0x80157078, to: D_80156fde}
+  - {addr: 0x80157084, to: D_80156fe0}
+  - {addr: 0x80157090, to: D_80156fe2}
+  - {addr: 0x8015709c, to: D_80156fe4}
+  - {addr: 0x801570e0, to: D_801570a4}
+  - {addr: 0x801570e4, to: world_option_menu_run_list_thread}
+  - {addr: 0x801570f0, to: D_801ae32c}
+  - {addr: 0x8015711c, to: D_801570b8}
+  - {addr: 0x80157120, to: world_option_menu_at_list_select_unit_thread}
+  - {addr: 0x8015712c, to: D_801ae330}
+  - {addr: 0x8015737c, to: g_world_help_menu_cursor_tile}
+  - {addr: 0x801573ac, to: g_world_help_menu_cursor_tile}
+  - {addr: 0x801574bc, to: g_world_help_active_unit_data, offset: 0x2}
+  - {addr: 0x8015757c, to: g_world_help_active_unit_data, offset: 0x2}
+  - {addr: 0x801575ac, to: g_world_help_active_unit_data, offset: 0x8}
+  - {addr: 0x8015761c, to: g_world_help_billboard, offset: 0x24}
+  - {addr: 0x8015762c, to: g_world_help_billboard, offset: 0x26}
+  - {addr: 0x8015763c, to: g_world_help_billboard, offset: 0x28}
+  - {addr: 0x8015764c, to: g_world_help_billboard, offset: 0x2a}
+  - {addr: 0x8015765c, to: g_world_help_billboard, offset: 0x2c}
+  - {addr: 0x8015766c, to: g_world_help_billboard, offset: 0x2e}
+  - {addr: 0x8015767c, to: g_world_help_billboard, offset: 0x30}
+  - {addr: 0x8015768c, to: g_world_help_billboard, offset: 0x32}
+  - {addr: 0x8015769c, to: g_world_help_billboard, offset: 0x34}
+  - {addr: 0x801576ac, to: g_world_help_billboard, offset: 0x36}
+  - {addr: 0x80157784, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x80157788, to: g_world_help_menu_text_id_lists, offset: 0x20}
+  - {addr: 0x8015778c, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x80157790, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x80157794, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x80157798, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x8015779c, to: g_world_help_menu_text_id_lists, offset: 0x3c}
+  - {addr: 0x801577a0, to: g_world_help_menu_text_id_lists, offset: 0x42}
+  - {addr: 0x801577a4, to: g_world_help_menu_text_id_lists, offset: 0x48}
+  - {addr: 0x801577a8, to: g_world_help_menu_text_id_lists, offset: 0x52}
+  - {addr: 0x801577ac, to: g_world_help_menu_text_id_lists, offset: 0x58}
+  - {addr: 0x801577b0, to: g_world_help_menu_text_id_lists, offset: 0x60}
+  - {addr: 0x801577b4, to: g_world_help_menu_text_id_lists, offset: 0x68}
+  - {addr: 0x801577b8, to: g_world_help_menu_text_id_lists, offset: 0x6c}
+  - {addr: 0x801577bc, to: g_world_help_menu_text_id_lists, offset: 0x74}
+  - {addr: 0x801577c0, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x801577c4, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x801577c8, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x801577cc, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x801577d0, to: g_world_help_menu_text_id_lists}
+  - {addr: 0x801577d4, to: g_world_help_menu_text_id_lists, offset: 0x78}
+  - {addr: 0x801577d8, to: g_world_help_menu_text_id_lists, offset: 0x84}
+  - {addr: 0x801577dc, to: g_world_help_menu_text_id_lists, offset: 0x90}
+  - {addr: 0x8016e578, to: g_world_menu_location_list_text_ids}
+  - {addr: 0x8016e57c, to: g_world_menu_location_list_text_ids}
+  - {addr: 0x8016e580, to: g_world_menu_location_list_text_ids}
+  - {addr: 0x8016e584, to: g_world_menu_location_list_row_colors}
+  - {addr: 0x8016e588, to: g_world_menu_location_list_row_colors}
+  - {addr: 0x8016e58c, to: g_world_menu_location_list_row_colors}
+  - {addr: 0x8016e68c, to: g_world_menu_submenu_page_text_id_lists}
+  - {addr: 0x8016e690, to: g_world_menu_submenu_page_text_id_lists, offset: 0xc}
+  - {addr: 0x8016e694, to: g_world_menu_submenu_page_text_id_lists, offset: 0x10}
+  - {addr: 0x8016e698, to: g_world_menu_submenu_page_text_id_lists, offset: 0x18}
+  - {addr: 0x8016e69c, to: g_world_menu_submenu_page_text_id_lists, offset: 0x1c}
+  - {addr: 0x8016e6a0, to: g_world_menu_submenu_page_text_id_lists, offset: 0x20}
+  - {addr: 0x8016e6a4, to: g_world_menu_submenu_page_text_id_lists, offset: 0x24}
+  - {addr: 0x8016e6a8, to: g_world_menu_submenu_page_text_id_lists, offset: 0x28}
+  - {addr: 0x8016e6ac, to: g_world_menu_submenu_page_text_id_lists, offset: 0x2c}
+  - {addr: 0x8016e6b0, to: g_world_menu_submenu_page_text_id_lists, offset: 0x30}
+  - {addr: 0x8016e6b4, to: g_world_menu_submenu_page_text_id_lists, offset: 0x34}
+  - {addr: 0x8016e6b8, to: g_world_menu_submenu_page_text_id_lists, offset: 0x38}
+  - {addr: 0x8016e6bc, to: g_world_menu_submenu_page_text_id_lists, offset: 0x3c}
+  - {addr: 0x8016e6c0, to: g_world_menu_submenu_page_text_id_lists, offset: 0x40}
+  - {addr: 0x8016e6c4, to: g_world_menu_submenu_page_text_id_lists, offset: 0x44}
+  - {addr: 0x8016e6c8, to: g_world_menu_submenu_page_text_id_lists, offset: 0x48}
+  - {addr: 0x8016e6cc, to: g_world_menu_submenu_page_text_id_lists, offset: 0x4c}
+  - {addr: 0x8016e6d0, to: g_world_menu_submenu_page_text_id_lists, offset: 0x50}
+  - {addr: 0x8016e6d4, to: g_world_menu_submenu_page_text_id_lists, offset: 0x54}
+  - {addr: 0x8016e6d8, to: g_world_menu_submenu_page_text_id_lists, offset: 0x60}
+  - {addr: 0x8016e6dc, to: g_world_menu_submenu_page_text_id_lists, offset: 0x64}
+  - {addr: 0x8016e6e0, to: g_world_menu_submenu_page_text_id_lists, offset: 0x68}
+  - {addr: 0x8016e6e4, to: g_world_menu_submenu_page_text_id_lists, offset: 0x70}
+  - {addr: 0x8016e6e8, to: g_world_menu_submenu_page_text_id_lists, offset: 0x74}
+  - {addr: 0x8016e6ec, to: g_world_menu_submenu_page_text_id_lists, offset: 0x78}
+  - {addr: 0x8016e6f0, to: g_world_menu_submenu_page_text_id_lists, offset: 0x7c}
+  - {addr: 0x8016e6f4, to: g_world_menu_submenu_page_text_id_lists, offset: 0x80}
+  - {addr: 0x8016e6f8, to: g_world_menu_submenu_page_text_id_lists, offset: 0x84}
+  - {addr: 0x8016e6fc, to: g_world_menu_submenu_page_text_id_lists, offset: 0x88}
+  - {addr: 0x8016e700, to: g_world_menu_submenu_page_text_id_lists, offset: 0x8c}
+  - {addr: 0x8016e704, to: g_world_menu_submenu_page_text_id_lists, offset: 0x90}
+  - {addr: 0x8016e708, to: g_world_menu_submenu_page_text_id_lists, offset: 0x94}
+  - {addr: 0x8016e70c, to: g_world_menu_submenu_page_text_id_lists, offset: 0x98}
+  - {addr: 0x8016e710, to: g_world_menu_submenu_page_text_id_lists, offset: 0x9c}
+  - {addr: 0x8016e714, to: g_world_menu_submenu_page_text_id_lists, offset: 0xa0}
+  - {addr: 0x8016e718, to: g_world_menu_submenu_page_text_id_lists, offset: 0xa4}
+  - {addr: 0x8016e71c, to: g_world_menu_submenu_page_text_id_lists, offset: 0xa8}
+  - {addr: 0x8016e720, to: g_world_menu_submenu_page_text_id_lists, offset: 0xac}
+  - {addr: 0x8016e724, to: g_world_menu_submenu_page_text_id_lists, offset: 0xb0}
+  - {addr: 0x8016e728, to: g_world_menu_submenu_page_text_id_lists, offset: 0xb4}
+  - {addr: 0x8016e72c, to: g_world_menu_submenu_page_text_id_lists, offset: 0xb8}
+  - {addr: 0x8016e730, to: g_world_menu_submenu_page_text_id_lists, offset: 0xbc}
+  - {addr: 0x8016e734, to: g_world_menu_submenu_page_text_id_lists, offset: 0xc0}
+  - {addr: 0x8016e738, to: g_world_menu_submenu_page_text_id_lists, offset: 0xc4}
+  - {addr: 0x8016e73c, to: g_world_menu_submenu_page_text_id_lists, offset: 0xa0}
+  - {addr: 0x8016e740, to: g_world_menu_submenu_page_text_id_lists, offset: 0xa4}
+  - {addr: 0x8016e744, to: g_world_menu_submenu_page_text_id_lists, offset: 0xa8}
+  - {addr: 0x8016e748, to: g_world_menu_submenu_page_text_id_lists, offset: 0xac}
+  - {addr: 0x8016e74c, to: g_world_menu_submenu_page_text_id_lists, offset: 0xb0}
+  - {addr: 0x8016e750, to: g_world_menu_submenu_page_text_id_lists, offset: 0xb4}
+  - {addr: 0x8016e850, to: g_world_menu_submenu_page_layout_text_ids}
+  - {addr: 0x8016e854, to: g_world_menu_submenu_page_layout_text_ids}
+  - {addr: 0x8016e858, to: g_world_menu_submenu_page_layout_text_ids}
+  - {addr: 0x8016e85c, to: g_world_menu_submenu_page_layout_text_colors}
+  - {addr: 0x8016e860, to: g_world_menu_submenu_page_layout_text_colors}
+  - {addr: 0x8016e864, to: g_world_menu_submenu_page_layout_text_colors}
+  - {addr: 0x8016e87c, to: g_world_menu_submenu_page_row_text_ids}
+  - {addr: 0x8016e880, to: g_world_menu_submenu_page_layout_text_ids}
+  - {addr: 0x8016e884, to: g_world_menu_submenu_page_layout_text_ids}
+  - {addr: 0x8016e888, to: g_world_menu_submenu_page_layout_text_colors}
+  - {addr: 0x8016e88c, to: g_world_menu_submenu_page_layout_text_colors}
+  - {addr: 0x8016e890, to: g_world_menu_submenu_page_layout_text_colors}
+  - {addr: 0x8016e8a0, to: world_script_reset_event_variables_thread}
+  - {addr: 0x8016e930, to: D_8016e454}
+  - {addr: 0x8016e934, to: world_menu_main_text_window_thread}
+  - {addr: 0x8016e940, to: g_world_menu_default_entry_0_text_values}
+  - {addr: 0x8016e96c, to: D_8016e454}
+  - {addr: 0x8016e970, to: world_menu_main_text_window_thread}
+  - {addr: 0x8016e97c, to: g_world_menu_default_entry_1_text_values}
+  - {addr: 0x8016e9a8, to: D_8016e454}
+  - {addr: 0x8016e9ac, to: world_map_destination_list_thread}
+  - {addr: 0x8016e9b8, to: g_world_menu_location_text_id}
+  - {addr: 0x8016e9e4, to: D_8016e8a4}
+  - {addr: 0x8016e9e8, to: world_menu_formation_icon_list_thread}
+  - {addr: 0x8016e9f4, to: D_801aed60}
+  - {addr: 0x8016ea20, to: D_8016e8b4}
+  - {addr: 0x8016ea24, to: world_menu_formation_icon_list_thread}
+  - {addr: 0x8016ea2c, to: D_8016e840}
+  - {addr: 0x8016ea30, to: D_801aed60}
+  - {addr: 0x8016ea5c, to: D_8016e8b4}
+  - {addr: 0x8016ea60, to: world_option_open_game_options}
+  - {addr: 0x8016ea68, to: D_8016e840}
+  - {addr: 0x8016ea6c, to: D_801aed60}
+  - {addr: 0x8016ea98, to: D_8016e8a4}
+  - {addr: 0x8016ea9c, to: world_map_destination_list_thread}
+  - {addr: 0x8016eaa4, to: g_world_menu_location_list_layout}
+  - {addr: 0x8016eaa8, to: D_8016e456}
+  - {addr: 0x8016ead4, to: D_8016e8b4}
+  - {addr: 0x8016ead8, to: world_formation_request_open}
+  - {addr: 0x8016eae0, to: D_8016e840}
+  - {addr: 0x8016eae4, to: D_801aed60}
+  - {addr: 0x8016eb10, to: D_8016e8b4}
+  - {addr: 0x8016eb14, to: world_script_reset_event_variables_thread}
+  - {addr: 0x8016eb1c, to: D_8016e840}
+  - {addr: 0x8016eb20, to: D_801aed60}
+  - {addr: 0x8016eb4c, to: D_8016e8c8}
+  - {addr: 0x8016eb50, to: world_menu_run_scrolling_ability_list_thread}
+  - {addr: 0x8016eb58, to: D_8016e840}
+  - {addr: 0x8016eb5c, to: g_world_menu_submenu_page_row_text_ids, offset: 0x14}
+  - {addr: 0x8016eb88, to: D_8016e8d8}
+  - {addr: 0x8016eb8c, to: world_menu_build_submenu_text_id_page}
+  - {addr: 0x8016eb94, to: g_world_menu_submenu_page_layout}
+  - {addr: 0x8016eb98, to: D_8016e456}
+  - {addr: 0x8016ebc4, to: D_8016e8b4}
+  - {addr: 0x8016ebc8, to: world_menu_request_brave_story}
+  - {addr: 0x8016ebd0, to: D_8016e840}
+  - {addr: 0x8016ebd4, to: D_801aed60}
+  - {addr: 0x8016ec00, to: D_8016e8b4}
+  - {addr: 0x8016ec04, to: world_card_open_menu}
+  - {addr: 0x8016ec0c, to: D_8016e840}
+  - {addr: 0x8016ec10, to: D_801aed60}
+  - {addr: 0x8016ec3c, to: D_8016e8b4}
+  - {addr: 0x8016ec40, to: world_map_confirm_destination}
+  - {addr: 0x8016ec48, to: D_8016e840}
+  - {addr: 0x8016ec4c, to: D_801aed60}
+  - {addr: 0x8016ec78, to: D_8016e8b4}
+  - {addr: 0x8016ec7c, to: world_menu_request_tutorial_categories}
+  - {addr: 0x8016ec84, to: D_8016e840}
+  - {addr: 0x8016ec88, to: D_801aed60}
+  - {addr: 0x8016ecb4, to: D_8016e8b4}
+  - {addr: 0x8016ecb8, to: world_menu_request_debug_variable_list}
+  - {addr: 0x8016ecc0, to: D_8016e840}
+  - {addr: 0x8016ecc4, to: D_801aed60}
+  - {addr: 0x8016ecf0, to: D_8016e8e8}
+  - {addr: 0x8016ecf4, to: world_menu_number_entry_thread}
+  - {addr: 0x8016ecfc, to: D_8016e898}
+  - {addr: 0x8016ed00, to: g_world_menu_number_entry_value}
+  - {addr: 0x8016ed2c, to: D_8016e8b4}
+  - {addr: 0x8016ed30, to: world_menu_request_party_number_panel}
+  - {addr: 0x8016ed38, to: D_8016e898}
+  - {addr: 0x8016ed3c, to: g_world_menu_number_entry_value}
+  - {addr: 0x80189ef0, to: world_menu_main_text_window_thread}
+  - {addr: 0x80189ef4, to: world_menu_main_text_window_thread}
+  - {addr: 0x80189f14, to: world_menu_main_text_window_thread}
+  - {addr: 0x80189f18, to: world_menu_main_text_window_thread}
+  - {addr: 0x80189f1c, to: world_menu_main_text_window_thread}
+  - {addr: 0x80189f3c, to: world_menu_main_text_window_thread}
+  - {addr: 0x8018a494, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a498, to: g_world_menu_entry_text_id_lists, offset: 0xac}
+  - {addr: 0x8018a49c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4a0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4a4, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4a8, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4ac, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4b0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4b4, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4b8, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4bc, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4c0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4c4, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4c8, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4cc, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4d0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4d4, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4d8, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4dc, to: g_world_menu_entry_text_id_lists, offset: 0x9c}
+  - {addr: 0x8018a4e0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4e4, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4e8, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4ec, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4f0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4f4, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4f8, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a4fc, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a500, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a504, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a508, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a50c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a510, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a514, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a518, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a51c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a520, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a524, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a528, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a52c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a530, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a534, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a538, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a53c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a540, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a544, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a548, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a54c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a550, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a554, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a558, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a55c, to: g_world_menu_entry_text_id_lists, offset: 0x28}
+  - {addr: 0x8018a560, to: g_world_menu_entry_text_id_lists, offset: 0x30}
+  - {addr: 0x8018a564, to: g_world_menu_entry_text_id_lists, offset: 0x34}
+  - {addr: 0x8018a568, to: g_world_menu_entry_text_id_lists, offset: 0x38}
+  - {addr: 0x8018a56c, to: g_world_menu_entry_text_id_lists, offset: 0x40}
+  - {addr: 0x8018a570, to: g_world_menu_entry_text_id_lists, offset: 0x48}
+  - {addr: 0x8018a574, to: g_world_menu_entry_text_id_lists, offset: 0x50}
+  - {addr: 0x8018a578, to: g_world_menu_entry_text_id_lists, offset: 0x5c}
+  - {addr: 0x8018a57c, to: g_world_menu_entry_text_id_lists, offset: 0x60}
+  - {addr: 0x8018a580, to: g_world_menu_entry_text_id_lists, offset: 0x68}
+  - {addr: 0x8018a584, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a588, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a58c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a590, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a594, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a598, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a59c, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a5a0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a5a4, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a5a8, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a5ac, to: g_world_menu_entry_text_id_lists, offset: 0x70}
+  - {addr: 0x8018a5b0, to: g_world_menu_entry_text_id_lists}
+  - {addr: 0x8018a5b4, to: g_world_menu_entry_text_id_lists, offset: 0x74}
+  - {addr: 0x8018a5b8, to: g_world_menu_entry_text_id_lists, offset: 0x80}
+  - {addr: 0x8018a5bc, to: g_world_menu_entry_text_id_lists, offset: 0x88}
+  - {addr: 0x8018a5c0, to: g_world_menu_entry_text_id_lists, offset: 0x8c}
+  - {addr: 0x8018a5c4, to: g_world_menu_entry_text_id_lists, offset: 0x94}
+  - {addr: 0x8018ac34, to: g_world_selected_unit_stat_summary, offset: 0xc}
+  - {addr: 0x8018ac40, to: g_world_selected_unit_stat_summary, offset: 0x10}
+  - {addr: 0x8018ac4c, to: g_world_selected_unit_stat_summary, offset: 0x12}
+  - {addr: 0x8018ac58, to: g_world_selected_unit_stat_summary, offset: 0x16}
+  - {addr: 0x8018ac64, to: g_world_selected_unit_stat_summary, offset: 0x18}
+  - {addr: 0x8018ac70, to: g_world_selected_unit_stat_summary, offset: 0x1c}
+  - {addr: 0x8018ac7c, to: g_world_selected_unit_stat_summary, offset: 0x4}
+  - {addr: 0x8018ac88, to: g_world_selected_unit_stat_summary, offset: 0x6}
+  - {addr: 0x8018ac94, to: g_world_selected_unit_stat_summary}
+  - {addr: 0x8018aca0, to: g_world_selected_unit_stat_summary, offset: 0x8}
+  - {addr: 0x8018acac, to: g_world_selected_unit_stat_summary, offset: 0xe}
+  - {addr: 0x8018acb8, to: g_world_selected_unit_stat_summary, offset: 0x10}
+  - {addr: 0x8018acc4, to: g_world_selected_unit_stat_summary, offset: 0x14}
+  - {addr: 0x8018acd0, to: g_world_selected_unit_stat_summary, offset: 0x16}
+  - {addr: 0x8018acdc, to: g_world_comparison_unit_stat_summary, offset: 0xc}
+  - {addr: 0x8018ace8, to: g_world_comparison_unit_stat_summary, offset: 0x10}
+  - {addr: 0x8018acf4, to: g_world_comparison_unit_stat_summary, offset: 0x12}
+  - {addr: 0x8018ad00, to: g_world_comparison_unit_stat_summary, offset: 0x16}
+  - {addr: 0x8018ad0c, to: g_world_comparison_unit_stat_summary, offset: 0x18}
+  - {addr: 0x8018ad18, to: g_world_comparison_unit_stat_summary, offset: 0x1c}
+  - {addr: 0x8018ad24, to: g_world_comparison_unit_stat_summary, offset: 0x4}
+  - {addr: 0x8018ad30, to: g_world_comparison_unit_stat_summary, offset: 0x6}
+  - {addr: 0x8018ad3c, to: g_world_comparison_unit_stat_summary}
+  - {addr: 0x8018ad48, to: g_world_comparison_unit_stat_summary, offset: 0x8}
+  - {addr: 0x8018ad54, to: g_world_comparison_unit_stat_summary, offset: 0xe}
+  - {addr: 0x8018ad60, to: g_world_comparison_unit_stat_summary, offset: 0x10}
+  - {addr: 0x8018ad6c, to: g_world_comparison_unit_stat_summary, offset: 0x14}
+  - {addr: 0x8018ad78, to: g_world_comparison_unit_stat_summary, offset: 0x16}
+  - {addr: 0x8018b4d8, to: g_world_selected_unit_stat_detail}
+  - {addr: 0x8018b4e4, to: g_world_selected_unit_stat_detail, offset: 0x4}
+  - {addr: 0x8018b4f0, to: g_world_selected_unit_stat_detail, offset: 0x2}
+  - {addr: 0x8018b4fc, to: g_world_selected_unit_stat_detail, offset: 0x6}
+  - {addr: 0x8018b508, to: g_world_selected_unit_stat_detail, offset: 0x8}
+  - {addr: 0x8018b514, to: g_world_selected_unit_stat_detail, offset: 0xa}
+  - {addr: 0x8018b520, to: g_world_selected_unit_stat_detail, offset: 0xc}
+  - {addr: 0x8018b52c, to: g_world_selected_unit_stat_detail, offset: 0x12}
+  - {addr: 0x8018b538, to: g_world_selected_unit_stat_detail, offset: 0x1c}
+  - {addr: 0x8018b544, to: g_world_selected_unit_stat_detail, offset: 0x14}
+  - {addr: 0x8018b550, to: g_world_selected_unit_stat_detail, offset: 0x1e}
+  - {addr: 0x8018b55c, to: g_world_selected_unit_stat_detail, offset: 0x16}
+  - {addr: 0x8018b568, to: g_world_selected_unit_stat_detail, offset: 0x20}
+  - {addr: 0x8018b574, to: g_world_selected_unit_stat_detail, offset: 0x18}
+  - {addr: 0x8018b580, to: g_world_selected_unit_stat_detail, offset: 0x22}
+  - {addr: 0x8018b58c, to: g_world_item_preview_stat_detail}
+  - {addr: 0x8018b598, to: g_world_item_preview_stat_detail, offset: 0x4}
+  - {addr: 0x8018b5a4, to: g_world_item_preview_stat_detail, offset: 0x2}
+  - {addr: 0x8018b5b0, to: g_world_item_preview_stat_detail, offset: 0x6}
+  - {addr: 0x8018b5bc, to: g_world_item_preview_stat_detail, offset: 0x8}
+  - {addr: 0x8018b5c8, to: g_world_item_preview_stat_detail, offset: 0xa}
+  - {addr: 0x8018b5d4, to: g_world_item_preview_stat_detail, offset: 0xc}
+  - {addr: 0x8018b5e0, to: g_world_item_preview_stat_detail, offset: 0x12}
+  - {addr: 0x8018b5ec, to: g_world_item_preview_stat_detail, offset: 0x1c}
+  - {addr: 0x8018b5f8, to: g_world_item_preview_stat_detail, offset: 0x14}
+  - {addr: 0x8018b604, to: g_world_item_preview_stat_detail, offset: 0x1e}
+  - {addr: 0x8018b610, to: g_world_item_preview_stat_detail, offset: 0x16}
+  - {addr: 0x8018b61c, to: g_world_item_preview_stat_detail, offset: 0x20}
+  - {addr: 0x8018b628, to: g_world_item_preview_stat_detail, offset: 0x18}
+  - {addr: 0x8018b634, to: g_world_item_preview_stat_detail, offset: 0x22}
+  - {addr: 0x8018baec, to: world_formation_run_unit_grid_menu}
+  - {addr: 0x8018baf0, to: world_formation_run_item_menu}
+  - {addr: 0x8018baf4, to: world_formation_run_ability_menu}
+  - {addr: 0x8018baf8, to: world_formation_run_job_wheel_menu}
+  - {addr: 0x8018bafc, to: world_formation_run_unit_grid_menu}
+  - {addr: 0x8018bb00, to: world_formation_run_unit_grid_menu}
+  - {addr: 0x8018bb04, to: world_formation_run_item_menu}
+  - {addr: 0x8018bb08, to: world_formation_run_item_menu}
+  - {addr: 0x8018bb0c, to: world_formation_run_item_menu}
+  - {addr: 0x8018bb10, to: world_formation_run_item_menu}
+  - {addr: 0x8018bb14, to: world_formation_run_ability_menu}
+  - {addr: 0x8018bb18, to: world_formation_run_ability_menu}
+  - {addr: 0x8018bb1c, to: world_formation_run_ability_menu}
+  - {addr: 0x8018bb20, to: world_formation_run_view_abilities_menu}
+  - {addr: 0x8018bb24, to: world_formation_run_job_wheel_menu}
+  - {addr: 0x8018bb28, to: world_formation_run_job_wheel_menu}
+  - {addr: 0x8018bb2c, to: world_formation_run_item_menu}
+  - {addr: 0x8018bb30, to: world_formation_run_item_menu}
+  - {addr: 0x8018bb34, to: world_formation_run_ability_menu}
+  - {addr: 0x8018bb38, to: world_formation_run_ability_menu}
+  - {addr: 0x8018bb3c, to: world_formation_run_job_wheel_menu}
+  - {addr: 0x8018bb40, to: world_formation_run_job_wheel_menu}
+  - {addr: 0x8018bb44, to: world_formation_run_ability_menu}
+  - {addr: 0x8018bb48, to: world_formation_run_item_menu}
+  - {addr: 0x8018bb4c, to: world_formation_run_job_wheel_menu}
+  - {addr: 0x8018c100, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018c10c, to: g_world_menu_selection_results}
+  - {addr: 0x8018c138, to: D_8018e0b4}
+  - {addr: 0x8018c13c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8018c148, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018c178, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018c184, to: g_world_menu_selection_results}
+  - {addr: 0x8018c984, to: D_8018c958}
+  - {addr: 0x8018c988, to: world_menu_icon_list_thread}
+  - {addr: 0x8018c990, to: g_world_menu_text_redraw_request}
+  - {addr: 0x8018c994, to: g_world_menu_selection_results, offset: 0x2}
+  - {addr: 0x8018ca98, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018caa4, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018cadc, to: world_formation_menu_noop_callback}
+  - {addr: 0x8018cb0c, to: g_world_item_action_option_states}
+  - {addr: 0x8018cb10, to: world_menu_icon_list_thread}
+  - {addr: 0x8018cb18, to: g_world_menu_text_redraw_request}
+  - {addr: 0x8018cb1c, to: g_world_menu_selection_results, offset: 0x6}
+  - {addr: 0x8018cb48, to: D_8018e0b6}
+  - {addr: 0x8018cb4c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8018cb58, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018cb84, to: D_8018e0b8}
+  - {addr: 0x8018cb88, to: world_item_discard_quantity_entry_thread}
+  - {addr: 0x8018cb90, to: g_world_item_action_quantity_range}
+  - {addr: 0x8018cb94, to: g_world_menu_selection_results, offset: 0x8}
+  - {addr: 0x8018cbc4, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018cbd0, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x8018cbfc, to: D_8018cae6}
+  - {addr: 0x8018cc00, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8018cc0c, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018cc3c, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018cc48, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x8018cd9c, to: D_8018cac8}
+  - {addr: 0x8018cda0, to: world_menu_icon_list_thread}
+  - {addr: 0x8018cda8, to: g_world_menu_text_redraw_request}
+  - {addr: 0x8018cdac, to: g_world_menu_selection_results, offset: 0xe}
+  - {addr: 0x8018cdd8, to: D_8018cac8}
+  - {addr: 0x8018cddc, to: world_menu_icon_list_thread}
+  - {addr: 0x8018cde4, to: g_world_menu_text_redraw_request}
+  - {addr: 0x8018cde8, to: g_world_menu_selection_results, offset: 0xe}
+  - {addr: 0x8018d0d8, to: D_8018d0ac}
+  - {addr: 0x8018d0dc, to: world_menu_icon_list_thread}
+  - {addr: 0x8018d0e4, to: g_world_menu_text_redraw_request}
+  - {addr: 0x8018d0e8, to: g_world_menu_selection_results, offset: 0x10}
+  - {addr: 0x8018d2a4, to: D_8018e0b4}
+  - {addr: 0x8018d2a8, to: world_menu_build_selected_ability_prompt}
+  - {addr: 0x8018d2b4, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d2e4, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018d2f0, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x8018d524, to: D_8018d4f0}
+  - {addr: 0x8018d528, to: world_menu_icon_list_thread}
+  - {addr: 0x8018d530, to: g_world_menu_text_redraw_request}
+  - {addr: 0x8018d534, to: g_world_menu_selection_results, offset: 0x12}
+  - {addr: 0x8018d540, to: world_formation_menu_noop_callback}
+  - {addr: 0x8018d56c, to: D_8018e0b4}
+  - {addr: 0x8018d570, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8018d57c, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d5a8, to: D_8018d53c}
+  - {addr: 0x8018d5ac, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018d5b8, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d5e4, to: D_8018e0b8}
+  - {addr: 0x8018d5e8, to: world_menu_text_entry_wait_thread_for_selected_unit}
+  - {addr: 0x8018d5f0, to: g_world_selected_unit_text_binding}
+  - {addr: 0x8018d5f4, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d624, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018d630, to: g_world_menu_selection_results, offset: 0x14}
+  - {addr: 0x8018d65c, to: D_8018e0b4}
+  - {addr: 0x8018d660, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8018d66c, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d698, to: D_8018d53c}
+  - {addr: 0x8018d69c, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018d6a8, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d6d4, to: D_8018e0b8}
+  - {addr: 0x8018d6d8, to: world_menu_text_entry_wait_thread_for_selected_unit}
+  - {addr: 0x8018d6e0, to: g_world_selected_unit_text_binding}
+  - {addr: 0x8018d6e4, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d714, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8018d720, to: g_world_menu_selection_results, offset: 0x14}
+  - {addr: 0x8018d750, to: D_8018d728}
+  - {addr: 0x8018d754, to: world_menu_text_entry_wait_thread_for_selected_unit}
+  - {addr: 0x8018d75c, to: g_world_selected_unit_text_binding}
+  - {addr: 0x8018d760, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8018d7ac, to: g_main_item_type_order_1}
+  - {addr: 0x8018d7b0, to: g_main_item_type_order_2}
+  - {addr: 0x8018d7b4, to: g_main_item_type_order_3}
+  - {addr: 0x8018d7b8, to: g_main_item_type_order_4}
+  - {addr: 0x8018d7bc, to: g_main_item_type_order_5}
+  - {addr: 0x8018d7c0, to: g_main_item_type_order_6}
+  - {addr: 0x8018d7c4, to: g_world_sort_key_list_6}
+  - {addr: 0x8018d7c8, to: g_world_sort_key_list_7}
+  - {addr: 0x8018d7d8, to: g_main_weapon_page_order}
+  - {addr: 0x8018d7dc, to: g_main_helmet_page_order}
+  - {addr: 0x8018d7e0, to: g_main_armor_page_order}
+  - {addr: 0x8018d7e4, to: g_main_accessory_page_order}
+  - {addr: 0x8018d7e8, to: g_main_item_page_order}
+  - {addr: 0x8018dfb8, to: world_menu_script_draw_window_frame}
+  - {addr: 0x8018dfbc, to: world_menu_script_if_group}
+  - {addr: 0x8018dfc0, to: world_menu_script_if_else_group}
+  - {addr: 0x8018dfc4, to: world_menu_script_draw_tile}
+  - {addr: 0x8018dfc8, to: world_menu_script_draw_textured_quad}
+  - {addr: 0x8018dfcc, to: world_menu_script_draw_textured_quad}
+  - {addr: 0x8018dfd0, to: world_menu_script_draw_callback_quad}
+  - {addr: 0x8018dfd4, to: world_menu_script_draw_line}
+  - {addr: 0x8018dfdc, to: world_menu_script_set_fixed_clut}
+  - {addr: 0x8018dfe0, to: world_menu_script_set_clut}
+  - {addr: 0x8018dfe4, to: world_menu_script_set_draw_color}
+  - {addr: 0x8018dfe8, to: world_menu_script_set_texture_page}
+  - {addr: 0x8018dfec, to: world_menu_script_draw_formatted_number}
+  - {addr: 0x8018dff0, to: world_menu_script_set_semi_trans}
+  - {addr: 0x8018dff4, to: world_menu_script_set_draw_priority}
+  - {addr: 0x8018dff8, to: world_menu_script_draw_scrollable_list}
+  - {addr: 0x8018dffc, to: world_menu_script_draw_tiled_rectangle}
+  - {addr: 0x8018e000, to: world_menu_script_draw_opening_window_frame}
+  - {addr: 0x8018e004, to: world_menu_script_clear_temporary_draw_area}
+  - {addr: 0x8018e008, to: world_menu_script_set_draw_area}
+  - {addr: 0x8018e00c, to: world_menu_script_reregister_temporary_draw_area}
+  - {addr: 0x8018e010, to: world_menu_script_advance_window_scale_step}
+  - {addr: 0x8018e014, to: world_menu_script_draw_plain_number}
+  - {addr: 0x8018e018, to: world_menu_script_add_blend_draw_mode}
+  - {addr: 0x8018e01c, to: world_menu_script_draw_formatted_number}
+  - {addr: 0x8018e020, to: world_menu_script_draw_formatted_number}
+  - {addr: 0x8018e024, to: world_menu_script_draw_formatted_number}
+  - {addr: 0x8018e13c, to: g_world_selected_unit_identity, offset: 0x2}
+  - {addr: 0x8018e16c, to: g_world_selected_unit_identity, offset: 0x8}
+  - {addr: 0x8018e1dc, to: g_world_selected_unit_stat_detail, offset: 0x24}
+  - {addr: 0x8018e1ec, to: g_world_selected_unit_stat_detail, offset: 0x26}
+  - {addr: 0x8018e1fc, to: g_world_selected_unit_stat_detail, offset: 0x28}
+  - {addr: 0x8018e20c, to: g_world_selected_unit_stat_detail, offset: 0x2a}
+  - {addr: 0x8018e21c, to: g_world_selected_unit_stat_detail, offset: 0x2c}
+  - {addr: 0x8018e22c, to: g_world_selected_unit_stat_detail, offset: 0x2e}
+  - {addr: 0x8018e23c, to: g_world_selected_unit_stat_detail, offset: 0x30}
+  - {addr: 0x8018e24c, to: g_world_selected_unit_stat_detail, offset: 0x32}
+  - {addr: 0x8018e25c, to: g_world_selected_unit_stat_detail, offset: 0x34}
+  - {addr: 0x8018e26c, to: g_world_selected_unit_stat_detail, offset: 0x36}
+  - {addr: 0x8018e32c, to: g_world_selected_unit_identity, offset: 0x2}
+  - {addr: 0x8018e35c, to: g_world_selected_unit_identity, offset: 0x8}
+  - {addr: 0x8018e3ec, to: g_world_selected_unit_identity, offset: 0x2}
+  - {addr: 0x8018e41c, to: g_world_selected_unit_identity, offset: 0x8}
+  - {addr: 0x8018e460, to: D_8018e438}
+  - {addr: 0x8018e464, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8018e470, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80193c1c, to: g_world_text_skillset_names_data}
+  - {addr: 0x80193c20, to: g_world_text_job_names_data}
+  - {addr: 0x80193c24, to: g_world_text_ability_names_data}
+  - {addr: 0x80193c28, to: g_world_text_formation_messages_data}
+  - {addr: 0x80193c2c, to: g_world_text_dismiss_unit_replies_data}
+  - {addr: 0x80193c30, to: g_world_text_job_descriptions_data}
+  - {addr: 0x80193c38, to: g_world_text_name_entry_keyboard_data}
+  - {addr: 0x80193c3c, to: g_world_text_shop_dialogue_data}
+  - {addr: 0x80193cb4, to: g_world_card_save_file_name_14}
+  - {addr: 0x80193cb8, to: g_world_card_save_file_name_13}
+  - {addr: 0x80193cbc, to: g_world_card_save_file_name_12}
+  - {addr: 0x80193cc0, to: g_world_card_save_file_name_11}
+  - {addr: 0x80193cc4, to: g_world_card_save_file_name_10}
+  - {addr: 0x80193cc8, to: g_world_card_save_file_name_9}
+  - {addr: 0x80193ccc, to: g_world_card_save_file_name_8}
+  - {addr: 0x80193cd0, to: g_world_card_save_file_name_7}
+  - {addr: 0x80193cd4, to: g_world_card_save_file_name_6}
+  - {addr: 0x80193cd8, to: g_world_card_save_file_name_5}
+  - {addr: 0x80193cdc, to: g_world_card_save_file_name_4}
+  - {addr: 0x80193ce0, to: g_world_card_save_file_name_3}
+  - {addr: 0x80193ce4, to: g_world_card_save_file_name_2}
+  - {addr: 0x80193ce8, to: g_world_card_save_file_name_1}
+  - {addr: 0x80193cec, to: g_world_card_save_file_name_0}
+  - {addr: 0x80193e20, to: D_8018e0b4}
+  - {addr: 0x80193e24, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80193e30, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80193e60, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80193e6c, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x80193e9c, to: D_80193dee}
+  - {addr: 0x80193ea0, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80193eac, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80193ed8, to: D_80193dee}
+  - {addr: 0x80193edc, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80193ee8, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80193f18, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80193f24, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x80193f58, to: D_80193dee}
+  - {addr: 0x80193f5c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80193f68, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80193f94, to: D_80193dee}
+  - {addr: 0x80193f98, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80193fa4, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80193fd0, to: D_80193dee}
+  - {addr: 0x80193fd4, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80193fe0, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8019400c, to: D_80193dee}
+  - {addr: 0x80194010, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8019401c, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80194048, to: D_80193dee}
+  - {addr: 0x8019404c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80194058, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80194088, to: D_8018e0b4}
+  - {addr: 0x8019408c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80194098, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x801940c8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801940d4, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x80194100, to: D_8018e0b4}
+  - {addr: 0x80194104, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80194110, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x80194140, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x8019414c, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x80194178, to: D_8018e0b4}
+  - {addr: 0x8019417c, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80194188, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x801941b8, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801941c4, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x801941f0, to: D_80193dee}
+  - {addr: 0x801941f4, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x80194200, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x8019422c, to: D_80193dee}
+  - {addr: 0x80194230, to: world_menu_icon_linked_entry_thread}
+  - {addr: 0x8019423c, to: g_world_menu_selection_results, offset: 0x16}
+  - {addr: 0x801950e0, to: world_shop_menu_noop_callback}
+  - {addr: 0x80195108, to: D_8018e0b4}
+  - {addr: 0x8019510c, to: world_menu_labeled_number_entry_thread}
+  - {addr: 0x80195114, to: D_801950d8}
+  - {addr: 0x80195118, to: g_world_menu_selection_results, offset: 0x6}
+  - {addr: 0x80195148, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195154, to: g_world_menu_selection_results, offset: 0x8}
+  - {addr: 0x80195184, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195190, to: g_world_menu_selection_results}
+  - {addr: 0x801951c0, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801951cc, to: g_world_menu_selection_results}
+  - {addr: 0x801951fc, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195208, to: g_world_menu_selection_results}
+  - {addr: 0x8019523c, to: world_shop_run_main_menu_step}
+  - {addr: 0x80195240, to: world_shop_run_buy_list_step}
+  - {addr: 0x80195244, to: world_shop_run_buy_confirm_step}
+  - {addr: 0x80195248, to: world_shop_run_equip_candidate_step}
+  - {addr: 0x8019524c, to: world_shop_run_sell_list_step}
+  - {addr: 0x80195250, to: world_shop_run_sell_confirm_step}
+  - {addr: 0x80195254, to: world_shop_run_fitting_room_step}
+  - {addr: 0x80195258, to: world_shop_run_fitting_room_equip_menu}
+  - {addr: 0x8019525c, to: world_shop_run_best_fit_preview_step}
+  - {addr: 0x80195260, to: world_shop_run_fitting_room_remove_step}
+  - {addr: 0x80195264, to: world_shop_run_fitting_room_sell_equipped_step}
+  - {addr: 0x80195268, to: world_shop_run_fitting_room_sell_step}
+  - {addr: 0x8019526c, to: world_shop_run_fitting_room_checkout_step}
+  - {addr: 0x80195270, to: world_shop_run_exit_fade_step}
+  - {addr: 0x80195274, to: world_shop_run_fur_menu_step}
+  - {addr: 0x80195278, to: world_shop_run_fur_buy_list_step}
+  - {addr: 0x8019527c, to: world_shop_run_fur_buy_confirm_step}
+  - {addr: 0x80195280, to: world_shop_run_fur_buy_equip_step}
+  - {addr: 0x80195284, to: world_shop_run_fur_sell_list_step}
+  - {addr: 0x80195288, to: world_shop_run_fur_sell_confirm_step}
+  - {addr: 0x8019528c, to: world_shop_run_soldier_office_menu_step}
+  - {addr: 0x80195290, to: world_shop_run_recruit_unit_preview_step}
+  - {addr: 0x80195294, to: world_shop_run_hire_confirm_step}
+  - {addr: 0x80195298, to: world_shop_run_hire_name_entry_step}
+  - {addr: 0x8019529c, to: world_shop_run_hire_fee_confirm_step}
+  - {addr: 0x801952a0, to: world_shop_reopen_soldier_office_menu_step}
+  - {addr: 0x801952a4, to: world_shop_run_rename_select_unit_step}
+  - {addr: 0x801952a8, to: world_shop_run_rename_name_entry_step}
+  - {addr: 0x80195548, to: D_80195518}
+  - {addr: 0x8019554c, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195558, to: g_world_menu_selection_results, offset: 0x2}
+  - {addr: 0x80195588, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195594, to: g_world_menu_selection_results, offset: 0x4}
+  - {addr: 0x80195718, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195724, to: g_world_menu_selection_results, offset: 0x8}
+  - {addr: 0x80195754, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195760, to: g_world_menu_selection_results, offset: 0x8}
+  - {addr: 0x80195794, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801957a0, to: g_world_menu_selection_results, offset: 0xa}
+  - {addr: 0x801957d4, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x801957e0, to: g_world_menu_selection_results, offset: 0x8}
+  - {addr: 0x80195a10, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195a1c, to: g_world_menu_selection_results, offset: 0x4}
+  - {addr: 0x80195a4c, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195a58, to: g_world_menu_selection_results, offset: 0x8}
+  - {addr: 0x80195b2c, to: world_name_handle_entry_confirmed_keys}
+  - {addr: 0x80195b30, to: world_name_run_confirmation_menu}
+  - {addr: 0x80195bfc, to: world_menu_run_icon_selection_loop}
+  - {addr: 0x80195c08, to: g_world_name_confirm_result}
+
+values:
+  - {addr: 0x8013b8f8, end: 0x8014e5c0, why: "g_world_text_glyph_bitmaps: font bitmap bytes"}
+  - {addr: 0x80156750, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156764, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801567c8, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801567dc, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x8015682c, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156840, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156854, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156890, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801568a4, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801568b8, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801568cc, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156958, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x8015696c, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801569e4, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156a98, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156ad4, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156ae8, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80156b10, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80157860, end: 0x8016e1a0, why: "g_world_help_data_base: help text bytes"}
+  - {addr: 0x8016ee68, end: 0x80189c4c, why: "embedded WLDHELP text file: section offsets and text bytes"}
+  - {addr: 0x8018b804, end: 0x8018ba04, why: "g_world_formation_menu_palettes: CLUT colors"}
