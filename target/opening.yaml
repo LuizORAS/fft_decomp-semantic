@@ -186,9 +186,17 @@ data:
   - {addr: 0x800670e0, name: g_psyq_press_timeout_format}
   - {addr: 0x800707f8, name: g_open_gfx_record_36_animations}
   - {addr: 0x800707fc, name: g_open_gfx_record_36_sprites}
+  - {addr: 0x80070800, name: g_open_gfx_record_36_animations_storage}
+  - {addr: 0x80070854, name: g_open_gfx_record_36_animation_records}
+  - {addr: 0x8007096c, name: g_open_gfx_record_36_sprites_storage}
+  - {addr: 0x800709e0, name: g_open_gfx_record_36_sprite_records}
   - {addr: 0x80070cb4, name: g_open_prologue_entries}
+  - {addr: 0x80070cb8, name: g_open_prologue_entries_storage}
+  - {addr: 0x80070ce8, name: g_open_prologue_entry_records}
   - {addr: 0x80070d84, name: g_open_script_font_metrics}
   - {addr: 0x80070d88, name: g_open_script_initial_data_base}
+  - {addr: 0x80070d8c, name: g_open_script_font_metrics_storage}
+  - {addr: 0x8007148c, name: g_open_script_initial_data_base_storage}
   - {addr: 0x80073b9c, name: g_psyq_press_vlc_limit_halfwords}
   - {addr: 0x80073f10, name: g_psyq_press_vlc_state}
   - {addr: 0x80073f34, name: g_open_birthday_month_lengths}
@@ -295,3 +303,104 @@ data:
 regions:
   - {addr: 0x800707f8, end: 0x8007348c, kind: data, why: "pointer table and zero-filled region; no decoded control transfer"}
   - {addr: 0x80073b9c, end: 0x80073ba0, kind: data, why: "word 0x00ffffff before LIBPRESS code; same runtime address is a BATTLE candidate start"}
+
+relocations:
+  - {addr: 0x800707f8, to: g_open_gfx_record_36_animations_storage}
+  - {addr: 0x800707fc, to: g_open_gfx_record_36_sprites_storage}
+  - {addr: 0x80070800, to: g_open_gfx_record_36_animation_records}
+  - {addr: 0x80070804, to: g_open_gfx_record_36_animation_records, offset: 0x8}
+  - {addr: 0x80070808, to: g_open_gfx_record_36_animation_records, offset: 0x34}
+  - {addr: 0x8007080c, to: g_open_gfx_record_36_animation_records, offset: 0x50}
+  - {addr: 0x80070810, to: g_open_gfx_record_36_animation_records, offset: 0x58}
+  - {addr: 0x80070814, to: g_open_gfx_record_36_animation_records, offset: 0x60}
+  - {addr: 0x80070818, to: g_open_gfx_record_36_animation_records, offset: 0x68}
+  - {addr: 0x8007081c, to: g_open_gfx_record_36_animation_records, offset: 0x70}
+  - {addr: 0x80070820, to: g_open_gfx_record_36_animation_records, offset: 0x78}
+  - {addr: 0x80070824, to: g_open_gfx_record_36_animation_records, offset: 0x80}
+  - {addr: 0x80070828, to: g_open_gfx_record_36_animation_records, offset: 0x88}
+  - {addr: 0x8007082c, to: g_open_gfx_record_36_animation_records, offset: 0x90}
+  - {addr: 0x80070830, to: g_open_gfx_record_36_animation_records, offset: 0xbc}
+  - {addr: 0x80070834, to: g_open_gfx_record_36_animation_records, offset: 0xd8}
+  - {addr: 0x80070838, to: g_open_gfx_record_36_animation_records, offset: 0xe0}
+  - {addr: 0x8007083c, to: g_open_gfx_record_36_animation_records, offset: 0xe8}
+  - {addr: 0x80070840, to: g_open_gfx_record_36_animation_records, offset: 0xf0}
+  - {addr: 0x80070844, to: g_open_gfx_record_36_animation_records, offset: 0xf8}
+  - {addr: 0x80070848, to: g_open_gfx_record_36_animation_records, offset: 0x100}
+  - {addr: 0x8007084c, to: g_open_gfx_record_36_animation_records, offset: 0x108}
+  - {addr: 0x80070850, to: g_open_gfx_record_36_animation_records, offset: 0x110}
+  - {addr: 0x8007096c, to: g_open_gfx_record_36_sprite_records}
+  - {addr: 0x80070970, to: g_open_gfx_record_36_sprite_records, offset: 0x1c}
+  - {addr: 0x80070974, to: g_open_gfx_record_36_sprite_records, offset: 0x38}
+  - {addr: 0x80070978, to: g_open_gfx_record_36_sprite_records, offset: 0x54}
+  - {addr: 0x8007097c, to: g_open_gfx_record_36_sprite_records, offset: 0x70}
+  - {addr: 0x80070980, to: g_open_gfx_record_36_sprite_records, offset: 0x8c}
+  - {addr: 0x80070984, to: g_open_gfx_record_36_sprite_records, offset: 0xa8}
+  - {addr: 0x80070988, to: g_open_gfx_record_36_sprite_records, offset: 0xc4}
+  - {addr: 0x8007098c, to: g_open_gfx_record_36_sprite_records, offset: 0xd8}
+  - {addr: 0x80070990, to: g_open_gfx_record_36_sprite_records, offset: 0xec}
+  - {addr: 0x80070994, to: g_open_gfx_record_36_sprite_records, offset: 0x100}
+  - {addr: 0x80070998, to: g_open_gfx_record_36_sprite_records, offset: 0x114}
+  - {addr: 0x8007099c, to: g_open_gfx_record_36_sprite_records, offset: 0x128}
+  - {addr: 0x800709a0, to: g_open_gfx_record_36_sprite_records, offset: 0x13c}
+  - {addr: 0x800709a4, to: g_open_gfx_record_36_sprite_records, offset: 0x150}
+  - {addr: 0x800709a8, to: g_open_gfx_record_36_sprite_records, offset: 0x16c}
+  - {addr: 0x800709ac, to: g_open_gfx_record_36_sprite_records, offset: 0x188}
+  - {addr: 0x800709b0, to: g_open_gfx_record_36_sprite_records, offset: 0x1a4}
+  - {addr: 0x800709b4, to: g_open_gfx_record_36_sprite_records, offset: 0x1c0}
+  - {addr: 0x800709b8, to: g_open_gfx_record_36_sprite_records, offset: 0x1dc}
+  - {addr: 0x800709bc, to: g_open_gfx_record_36_sprite_records, offset: 0x1f8}
+  - {addr: 0x800709c0, to: g_open_gfx_record_36_sprite_records, offset: 0x214}
+  - {addr: 0x800709c4, to: g_open_gfx_record_36_sprite_records, offset: 0x228}
+  - {addr: 0x800709c8, to: g_open_gfx_record_36_sprite_records, offset: 0x23c}
+  - {addr: 0x800709cc, to: g_open_gfx_record_36_sprite_records, offset: 0x258}
+  - {addr: 0x800709d0, to: g_open_gfx_record_36_sprite_records, offset: 0x284}
+  - {addr: 0x800709d4, to: g_open_gfx_record_36_sprite_records, offset: 0x298}
+  - {addr: 0x800709d8, to: g_open_gfx_record_36_sprite_records, offset: 0x2ac}
+  - {addr: 0x800709dc, to: g_open_gfx_record_36_sprite_records, offset: 0x2c0}
+  - {addr: 0x80070cb4, to: g_open_prologue_entries_storage}
+  - {addr: 0x80070cb8, to: g_open_prologue_entry_records}
+  - {addr: 0x80070cbc, to: g_open_prologue_entry_records, offset: 0xc}
+  - {addr: 0x80070cc0, to: g_open_prologue_entry_records, offset: 0x14}
+  - {addr: 0x80070cc4, to: g_open_prologue_entry_records, offset: 0x28}
+  - {addr: 0x80070cc8, to: g_open_prologue_entry_records, offset: 0x34}
+  - {addr: 0x80070ccc, to: g_open_prologue_entry_records, offset: 0x44}
+  - {addr: 0x80070cd0, to: g_open_prologue_entry_records, offset: 0x54}
+  - {addr: 0x80070cd4, to: g_open_prologue_entry_records, offset: 0x60}
+  - {addr: 0x80070cd8, to: g_open_prologue_entry_records, offset: 0x70}
+  - {addr: 0x80070cdc, to: g_open_prologue_entry_records, offset: 0x7c}
+  - {addr: 0x80070ce0, to: g_open_prologue_entry_records, offset: 0x84}
+  - {addr: 0x80070ce4, to: g_open_prologue_entry_records, offset: 0x90}
+  - {addr: 0x80070d84, to: g_open_script_font_metrics_storage}
+  - {addr: 0x80070d88, to: g_open_script_initial_data_base_storage}
+  - {addr: 0x80073f78, to: open_movie_update_fftst_controller}
+  - {addr: 0x80073f7c, to: open_movie_update_fftop_controller}
+  - {addr: 0x80073f80, to: open_title_update_menu}
+  - {addr: 0x80073f84, to: open_menu_handle_sound_type_input}
+  - {addr: 0x80073f88, to: open_title_step_new_game_start}
+  - {addr: 0x80073f8c, to: open_birthday_handle_menu_input}
+  - {addr: 0x80073f90, to: open_birthday_handle_confirmation_input}
+  - {addr: 0x80073f94, to: open_menu_update_music_test}
+  - {addr: 0x80073f98, to: open_controller_wait_text_message}
+  - {addr: 0x80073f9c, to: open_movie_update_fftend_controller}
+  - {addr: 0x80073fa0, to: open_script_update_controller}
+  - {addr: 0x80073fa4, to: open_movie_update_demo_controller}
+  - {addr: 0x80073fa8, to: open_title_update_card_warning}
+  - {addr: 0x80074034, to: open_opcode_end_script}
+  - {addr: 0x80074038, to: open_opcode_create_positioned_text_record}
+  - {addr: 0x8007403c, to: open_opcode_set_timing_step}
+  - {addr: 0x80074040, to: open_opcode_start_overlay_fade_out}
+  - {addr: 0x80074044, to: open_opcode_start_overlay_fade_in}
+  - {addr: 0x80074048, to: open_opcode_wait_counted}
+  - {addr: 0x8007404c, to: open_opcode_wait_for_external_counter}
+  - {addr: 0x80074050, to: open_opcode_start_xa_audio}
+  - {addr: 0x80074054, to: open_opcode_start_sound_fade_in}
+  - {addr: 0x80074058, to: open_opcode_start_sound_fade_out}
+  - {addr: 0x8007405c, to: open_opcode_stop_xa_audio}
+  - {addr: 0x80074060, to: open_opcode_load_opntex_frame}
+  - {addr: 0x80074064, to: open_opcode_start_fade_intensity_increase}
+  - {addr: 0x80074068, to: open_opcode_start_fade_intensity_decrease}
+  - {addr: 0x8007406c, to: open_opcode_wait_for_xa_audio_idle}
+  - {addr: 0x80074070, to: open_opcode_start_opntex_sequence}
+
+values:
+  - {addr: 0x80070d8c, end: 0x8007148c, why: "open_font_metrics_t records: glyph metric bytes"}
