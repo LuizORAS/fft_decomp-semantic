@@ -2376,6 +2376,20 @@ data:
   - {addr: 0x8014d326, name: g_battle_menu_restore_unit_id}
   - {addr: 0x8014d328, name: g_menu_unit_view_cached_battle_id}
   - {addr: 0x8014d32a, name: g_menu_unit_view_cached_comparison_id}
+  - {addr: 0x8014d32c, name: g_battle_menu_command_map_00}
+  - {addr: 0x8014d334, name: g_battle_menu_command_map_20}
+  - {addr: 0x8014d33c, name: g_battle_menu_command_map_2e}
+  - {addr: 0x8014d344, name: g_battle_menu_command_map_32}
+  - {addr: 0x8014d34c, name: g_battle_menu_command_map_0f}
+  - {addr: 0x8014d350, name: g_battle_menu_command_map_10}
+  - {addr: 0x8014d354, name: g_battle_menu_command_map_11}
+  - {addr: 0x8014d358, name: g_battle_menu_command_map_12}
+  - {addr: 0x8014d35c, name: g_battle_menu_command_map_19}
+  - {addr: 0x8014d360, name: g_battle_menu_command_map_1a}
+  - {addr: 0x8014d364, name: g_battle_menu_command_map_1b}
+  - {addr: 0x8014d368, name: g_battle_menu_command_map_1c}
+  - {addr: 0x8014d36c, name: g_battle_menu_command_map_1e}
+  - {addr: 0x8014d370, name: g_battle_menu_command_map_63}
   - {addr: 0x8014d374, name: g_battle_menu_command_maps}
   - {addr: 0x8014d46c, name: g_battle_menu_unit_selection_records}
   - {addr: 0x8014d5d4, name: g_battle_menu_glyph_image_data}
@@ -2483,20 +2497,42 @@ data:
   - {addr: 0x801669c2, name: g_battle_menu_status_scroll_rows}
   - {addr: 0x801669e8, name: g_battle_menu_status_scroll_offset}
   - {addr: 0x801669ec, name: g_battle_menu_at_list_layout}
+  - {addr: 0x80166a18, name: D_80166a18}
   - {addr: 0x80166a24, name: g_battle_menu_auto_battle_row_actions}
   - {addr: 0x80166a34, name: g_battle_menu_action_slot_row_actions}
   - {addr: 0x80166a40, name: g_menu_skillset_row_actions}
   - {addr: 0x80166a58, name: g_battle_menu_wait_row_actions}
   - {addr: 0x80166a60, name: g_battle_menu_status_list_row_actions}
+  - {addr: 0x80166a70, name: D_80166a70}
+  - {addr: 0x80166a74, name: D_80166a74}
+  - {addr: 0x80166a7c, name: D_80166a7c}
+  - {addr: 0x80166a88, name: D_80166a88}
+  - {addr: 0x80166a8c, name: D_80166a8c}
+  - {addr: 0x80166a90, name: D_80166a90}
+  - {addr: 0x80166a98, name: D_80166a98}
+  - {addr: 0x80166a9c, name: D_80166a9c}
+  - {addr: 0x80166aa8, name: D_80166aa8}
+  - {addr: 0x80166ab4, name: D_80166ab4}
+  - {addr: 0x80166ab8, name: D_80166ab8}
   - {addr: 0x80166ac0, name: g_battle_menu_system_function_row_actions}
   - {addr: 0x80166adc, name: g_battle_menu_confirm_stored_unit_row_actions}
+  - {addr: 0x80166ae0, name: D_80166ae0}
   - {addr: 0x80166ae4, name: g_battle_menu_result}
+  - {addr: 0x80166ae8, name: D_80166ae8}
   - {addr: 0x80166af0, name: g_battle_menu_set_auto_battle_row_actions}
+  - {addr: 0x80166af4, name: D_80166af4}
+  - {addr: 0x80166b00, name: D_80166b00}
+  - {addr: 0x80166b0c, name: D_80166b0c}
   - {addr: 0x80166b10, name: g_battle_menu_idle_action_entries}
   - {addr: 0x80167830, name: g_battle_menu_numeric_display_texture_window}
   - {addr: 0x80167838, name: g_battle_menu_numeric_display_palette_indices}
   - {addr: 0x80167844, name: g_battle_menu_numeric_display_frame_offsets}
   - {addr: 0x801678a4, name: g_battle_text_current_line}
+  - {addr: 0x801678ac, name: g_menu_window_tween_easing_curve_0}
+  - {addr: 0x801678c0, name: g_menu_window_tween_easing_curve_1}
+  - {addr: 0x801678d8, name: g_menu_window_tween_easing_curve_2}
+  - {addr: 0x801678f0, name: g_menu_window_tween_easing_curve_3}
+  - {addr: 0x80167900, name: g_menu_window_tween_easing_curve_4}
   - {addr: 0x80167908, name: g_menu_window_tween_easing_tables}
   - {addr: 0x8016791c, name: g_text_section_pointers_saved}
   - {addr: 0x80167920, name: g_battle_status_display_image_ids}
@@ -2516,7 +2552,10 @@ data:
   - {addr: 0x801683e8, name: g_battle_menu_sprite_page_image_param_bases}
   - {addr: 0x80168454, name: g_battle_menu_attack_caster_quad_image_params}
   - {addr: 0x80168474, name: g_battle_menu_projected_label_panels}
+  - {addr: 0x80168514, name: g_battle_unit_status_quad_image_params_mode_3}
   - {addr: 0x80168544, name: g_battle_unit_status_quad_clut_pairs}
+  - {addr: 0x80168554, name: g_battle_unit_status_quad_image_params_mode_4}
+  - {addr: 0x801685a8, name: g_battle_unit_status_quad_image_params_mode_6}
   - {addr: 0x801685fc, name: g_battle_unit_status_sprite_clut_pairs}
   - {addr: 0x80168618, name: g_battle_unit_status_icon_image_params}
   - {addr: 0x80168648, name: g_menu_hovered_unit_stats_rect}
@@ -2641,6 +2680,8 @@ data:
   - {addr: 0x8016e428, name: g_battle_menu_anything_ability_id}
   - {addr: 0x8016e42c, name: g_battle_menu_selected_option}
   - {addr: 0x8016e430, name: g_battle_menu_action_slot_selected_option}
+  - {addr: 0x8016e434, name: D_8016e434}
+  - {addr: 0x8016e438, name: D_8016e438}
   - {addr: 0x8016e43c, name: g_menu_window_buffers}
   - {addr: 0x8016eacc, name: g_menu_window_buffer_pointers}
   - {addr: 0x8016eae4, name: g_gfx_tpage7_free_rect_pixels}
@@ -2829,6 +2870,10 @@ data:
   - {addr: 0x801b69d0, name: g_battle_effect_camera_position_mode}
   - {addr: 0x801b69d4, name: g_battle_effect_camera_zoom_mode}
   - {addr: 0x801b69d8, name: g_battle_camera_quadrant_block_directions}
+  - {addr: 0x801b69dc, name: g_battle_effect_projectile_model_0}
+  - {addr: 0x801b6d00, name: g_battle_effect_projectile_model_1}
+  - {addr: 0x801b6f00, name: g_battle_effect_projectile_model_2}
+  - {addr: 0x801b73b8, name: g_battle_effect_projectile_model_3}
   - {addr: 0x801b7690, name: g_battle_effect_secondary_frames}
   - {addr: 0x801b8320, name: g_battle_effect_slot_animation_scripts}
   - {addr: 0x801b84ac, name: g_battle_effect_secondary_by_charge_animation}
@@ -2972,6 +3017,7 @@ data:
   - {addr: 0x801c24d0, name: g_battle_ability_effect_id}
   - {addr: 0x801c24d4, name: g_battle_effect_root_record_index}
   - {addr: 0x801c24da, name: g_battle_effect_active_list_node_head}
+  - {addr: 0x801c2500, name: g_battle_effect_overlay_window}
   - {addr: 0x801cc074, name: g_battle_menu_scratch_buffer}
 
 imports:
@@ -3071,3 +3117,1404 @@ regions:
   - {addr: 0x8019a63c, end: 0x8019a670, kind: interior, why: "inside 0x8019a5f8: part of the weapon-inventory logic, not an ABI entry"}
   - {addr: 0x8019f2f4, end: 0x801a0e80, kind: data, why: "AI weights/tables and strings; no decoded control transfer in 1763 words"}
   - {addr: 0x801a0fd4, end: 0x801a0fd8, kind: interior, why: "inside 0x801a0fa0: delay-slot nop owned by prior routine; next ordinary routine starts at 0x801a0fd8"}
+
+relocations:
+  - {addr: 0x80093da0, to: battle_unit_animate_no_distortion}
+  - {addr: 0x80093da4, to: battle_unit_animate_squeeze_out}
+  - {addr: 0x80093da8, to: battle_move_animate_fixed_rise}
+  - {addr: 0x80093dac, to: battle_move_animate_descent_to_ground}
+  - {addr: 0x80093db0, to: battle_move_glide_to_action_target_with_height_change}
+  - {addr: 0x80093db4, to: battle_move_step_unit_to_map_tile_center_with_height_change}
+  - {addr: 0x80093db8, to: battle_move_animate_jump_arc_to_target}
+  - {addr: 0x80093dbc, to: battle_move_animate_jump_arc_to_own_tile}
+  - {addr: 0x80093dc0, to: battle_move_glide_to_action_target_no_height_change}
+  - {addr: 0x80093dc4, to: battle_move_step_unit_to_map_tile_center_no_height_change}
+  - {addr: 0x80093dc8, to: battle_unit_clear_distortion_animation_id_10}
+  - {addr: 0x80093dcc, to: battle_unit_clear_distortion_animation_id_11}
+  - {addr: 0x80093dd0, to: battle_move_animate_jump_start}
+  - {addr: 0x80093dd4, to: battle_move_animate_fall_to_target_tile}
+  - {addr: 0x80093dd8, to: battle_unit_animate_teleport_to_destination}
+  - {addr: 0x80093ddc, to: battle_unit_animate_slide_back_from_target}
+  - {addr: 0x80093de0, to: battle_move_animate_jump_arc_to_own_tile_with_fade}
+  - {addr: 0x80093de4, to: battle_move_animate_jump_rise_with_sfx}
+  - {addr: 0x8014d378, to: g_battle_menu_command_map_00}
+  - {addr: 0x8014d380, to: g_battle_menu_command_map_00}
+  - {addr: 0x8014d388, to: g_battle_menu_command_map_00}
+  - {addr: 0x8014d390, to: g_battle_menu_command_map_00}
+  - {addr: 0x8014d398, to: g_battle_menu_command_map_20}
+  - {addr: 0x8014d3a0, to: g_battle_menu_command_map_20}
+  - {addr: 0x8014d3a8, to: g_battle_menu_command_map_2e}
+  - {addr: 0x8014d3b0, to: g_battle_menu_command_map_2e}
+  - {addr: 0x8014d3b8, to: g_battle_menu_command_map_2e}
+  - {addr: 0x8014d3c0, to: g_battle_menu_command_map_2e}
+  - {addr: 0x8014d3c8, to: g_battle_menu_command_map_32}
+  - {addr: 0x8014d3d0, to: g_battle_menu_command_map_32}
+  - {addr: 0x8014d3d8, to: g_battle_menu_command_map_0f}
+  - {addr: 0x8014d3e0, to: g_battle_menu_command_map_10}
+  - {addr: 0x8014d3e8, to: g_battle_menu_command_map_11}
+  - {addr: 0x8014d3f0, to: g_battle_menu_command_map_12}
+  - {addr: 0x8014d3f8, to: g_battle_menu_command_map_19}
+  - {addr: 0x8014d400, to: g_battle_menu_command_map_1a}
+  - {addr: 0x8014d408, to: g_battle_menu_command_map_1b}
+  - {addr: 0x8014d410, to: g_battle_menu_command_map_1c}
+  - {addr: 0x8014d418, to: g_battle_menu_command_map_1e}
+  - {addr: 0x8014d420, to: g_battle_menu_command_map_19}
+  - {addr: 0x8014d428, to: g_battle_menu_command_map_63}
+  - {addr: 0x8014d430, to: g_battle_menu_command_map_1a}
+  - {addr: 0x8014d438, to: g_battle_menu_command_map_1b}
+  - {addr: 0x8014d440, to: g_battle_menu_command_map_1e}
+  - {addr: 0x8014d448, to: g_battle_menu_command_map_19}
+  - {addr: 0x8014d450, to: g_battle_menu_command_map_19}
+  - {addr: 0x8014d458, to: g_battle_menu_command_map_19}
+  - {addr: 0x8014d460, to: g_battle_menu_command_map_1b}
+  - {addr: 0x8014d468, to: g_battle_menu_command_map_1b}
+  - {addr: 0x80165f98, to: g_thread_contexts}
+  - {addr: 0x80165f9c, to: g_main_script_variables}
+  - {addr: 0x801669b0, to: g_battle_menu_ability_display_flags}
+  - {addr: 0x801669b4, to: g_battle_menu_ability_display_flags}
+  - {addr: 0x801669b8, to: g_battle_menu_ability_display_flags}
+  - {addr: 0x801669d0, to: g_battle_menu_status_left_text_ids}
+  - {addr: 0x801669d4, to: g_battle_menu_status_right_text_ids}
+  - {addr: 0x801669d8, to: g_battle_menu_status_right_text_ids}
+  - {addr: 0x801669dc, to: g_battle_menu_ability_display_flags}
+  - {addr: 0x801669e0, to: g_battle_menu_ability_display_flags}
+  - {addr: 0x801669e4, to: g_battle_menu_ability_display_flags}
+  - {addr: 0x80166b34, to: D_80166a18}
+  - {addr: 0x80166b38, to: battle_menu_build_main}
+  - {addr: 0x80166b40, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166b44, to: g_battle_menu_selected_option}
+  - {addr: 0x80166b70, to: g_battle_menu_auto_battle_row_actions}
+  - {addr: 0x80166b74, to: battle_menu_auto_battle_setting_thread}
+  - {addr: 0x80166b7c, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166b80, to: g_battle_menu_selected_option}
+  - {addr: 0x80166bac, to: g_battle_menu_auto_battle_row_actions, offset: 0xc}
+  - {addr: 0x80166bb0, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80166bb8, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166bbc, to: g_battle_menu_selected_option}
+  - {addr: 0x80166be8, to: g_battle_menu_action_slot_row_actions}
+  - {addr: 0x80166bec, to: battle_menu_select_unit_action_slots_thread}
+  - {addr: 0x80166bf4, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166bf8, to: g_battle_menu_action_slot_selected_option}
+  - {addr: 0x80166c24, to: g_menu_skillset_row_actions}
+  - {addr: 0x80166c28, to: battle_menu_run_skillset_thread}
+  - {addr: 0x80166c30, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166c34, to: D_8016e434}
+  - {addr: 0x80166c60, to: g_menu_skillset_row_actions, offset: 0xc}
+  - {addr: 0x80166c64, to: battle_menu_run_status_screen_thread}
+  - {addr: 0x80166c6c, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166c70, to: g_battle_menu_selected_option}
+  - {addr: 0x80166c9c, to: g_battle_menu_wait_row_actions}
+  - {addr: 0x80166ca0, to: battle_menu_wait_thread}
+  - {addr: 0x80166ca8, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166cac, to: g_battle_menu_selected_option}
+  - {addr: 0x80166cd8, to: g_battle_menu_wait_row_actions, offset: 0x4}
+  - {addr: 0x80166cdc, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80166ce4, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166ce8, to: g_battle_menu_selected_option}
+  - {addr: 0x80166d14, to: g_battle_menu_status_list_row_actions}
+  - {addr: 0x80166d18, to: battle_menu_build_unit_status_list}
+  - {addr: 0x80166d20, to: g_battle_menu_status_visible_rows}
+  - {addr: 0x80166d24, to: g_battle_menu_selected_option}
+  - {addr: 0x80166d50, to: D_80166a70}
+  - {addr: 0x80166d54, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80166d5c, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166d60, to: g_battle_menu_selected_option}
+  - {addr: 0x80166d8c, to: D_80166a74}
+  - {addr: 0x80166d90, to: battle_menu_display_triangle_selection}
+  - {addr: 0x80166d98, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166d9c, to: g_battle_menu_selected_option}
+  - {addr: 0x80166dc8, to: g_battle_menu_status_list_row_actions}
+  - {addr: 0x80166dcc, to: battle_menu_open_option_game_options}
+  - {addr: 0x80166dd4, to: g_battle_menu_status_visible_rows}
+  - {addr: 0x80166dd8, to: g_battle_menu_selected_option}
+  - {addr: 0x80166e04, to: g_battle_menu_status_list_row_actions}
+  - {addr: 0x80166e08, to: battle_menu_open_bunit}
+  - {addr: 0x80166e10, to: g_battle_menu_status_visible_rows}
+  - {addr: 0x80166e14, to: g_battle_menu_selected_option}
+  - {addr: 0x80166e40, to: D_80166a70}
+  - {addr: 0x80166e44, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80166e4c, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166e50, to: g_battle_menu_selected_option}
+  - {addr: 0x80166e7c, to: D_80166a7c}
+  - {addr: 0x80166e80, to: battle_menu_build_main}
+  - {addr: 0x80166e88, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166e8c, to: g_battle_menu_selected_option}
+  - {addr: 0x80166eb8, to: D_80166a88}
+  - {addr: 0x80166ebc, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80166ec4, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166ec8, to: g_battle_menu_selected_option}
+  - {addr: 0x80166ef4, to: D_80166a8c}
+  - {addr: 0x80166ef8, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80166f00, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166f04, to: g_battle_menu_selected_option}
+  - {addr: 0x80166f30, to: D_80166a90}
+  - {addr: 0x80166f34, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80166f3c, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166f40, to: g_battle_menu_selected_option}
+  - {addr: 0x80166f6c, to: D_80166a98}
+  - {addr: 0x80166f70, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80166f78, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166f7c, to: g_battle_menu_selected_option}
+  - {addr: 0x80166fa8, to: D_80166a9c}
+  - {addr: 0x80166fac, to: battle_menu_build_main}
+  - {addr: 0x80166fb4, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166fb8, to: g_battle_menu_selected_option}
+  - {addr: 0x80166fe4, to: D_80166aa8}
+  - {addr: 0x80166fe8, to: battle_menu_build_main}
+  - {addr: 0x80166ff0, to: g_battle_ability_menu_layout}
+  - {addr: 0x80166ff4, to: g_battle_menu_selected_option}
+  - {addr: 0x80167020, to: g_battle_menu_status_list_row_actions}
+  - {addr: 0x80167024, to: battle_menu_run_jobstts_thread}
+  - {addr: 0x8016702c, to: g_battle_menu_status_visible_rows}
+  - {addr: 0x80167030, to: g_battle_menu_selected_option}
+  - {addr: 0x8016705c, to: D_80166ab4}
+  - {addr: 0x80167060, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80167068, to: g_battle_ability_menu_layout}
+  - {addr: 0x8016706c, to: g_battle_menu_selected_option}
+  - {addr: 0x80167098, to: D_80166ab4}
+  - {addr: 0x8016709c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801670a4, to: g_battle_ability_menu_layout}
+  - {addr: 0x801670a8, to: g_battle_menu_selected_option}
+  - {addr: 0x801670d4, to: D_80166ab8}
+  - {addr: 0x801670d8, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801670e0, to: g_battle_ability_menu_layout}
+  - {addr: 0x801670e4, to: D_8016e438}
+  - {addr: 0x80167110, to: D_80166ab8}
+  - {addr: 0x80167114, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x8016711c, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167120, to: D_8016e438}
+  - {addr: 0x8016714c, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80167150, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80167158, to: g_battle_ability_menu_layout}
+  - {addr: 0x8016715c, to: g_battle_menu_selected_option}
+  - {addr: 0x80167188, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x8016718c, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80167194, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167198, to: g_battle_menu_selected_option}
+  - {addr: 0x801671c4, to: g_battle_menu_system_function_row_actions}
+  - {addr: 0x801671c8, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801671d0, to: g_battle_ability_menu_layout}
+  - {addr: 0x801671d4, to: g_battle_menu_selected_option}
+  - {addr: 0x80167200, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80167204, to: battle_menu_open_option_at_list}
+  - {addr: 0x8016720c, to: g_battle_menu_status_visible_rows}
+  - {addr: 0x80167210, to: g_battle_menu_selected_option}
+  - {addr: 0x8016723c, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80167240, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80167248, to: g_battle_ability_menu_layout}
+  - {addr: 0x8016724c, to: g_battle_menu_selected_option}
+  - {addr: 0x80167278, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x8016727c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80167284, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167288, to: g_battle_menu_selected_option}
+  - {addr: 0x801672b4, to: g_battle_menu_system_function_row_actions, offset: 0x14}
+  - {addr: 0x801672b8, to: battle_menu_build_main}
+  - {addr: 0x801672c0, to: g_battle_ability_menu_layout}
+  - {addr: 0x801672c4, to: g_battle_menu_selected_option}
+  - {addr: 0x801672f0, to: g_battle_menu_system_function_row_actions, offset: 0x14}
+  - {addr: 0x801672f4, to: battle_menu_build_main}
+  - {addr: 0x801672fc, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167300, to: g_battle_menu_selected_option}
+  - {addr: 0x8016732c, to: g_battle_menu_confirm_stored_unit_row_actions}
+  - {addr: 0x80167330, to: battle_menu_confirm_move_command_thread}
+  - {addr: 0x80167338, to: g_battle_ability_menu_layout}
+  - {addr: 0x8016733c, to: g_battle_menu_selected_option}
+  - {addr: 0x80167368, to: D_80166ae0}
+  - {addr: 0x8016736c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80167374, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167378, to: g_battle_menu_selected_option}
+  - {addr: 0x801673a4, to: g_battle_menu_result}
+  - {addr: 0x801673a8, to: battle_menu_validate_skill_selection_thread}
+  - {addr: 0x801673b0, to: g_battle_ability_menu_layout}
+  - {addr: 0x801673b4, to: g_battle_menu_selected_option}
+  - {addr: 0x801673e0, to: D_80166ae8}
+  - {addr: 0x801673e4, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801673ec, to: g_battle_ability_menu_layout}
+  - {addr: 0x801673f0, to: g_battle_menu_selected_option}
+  - {addr: 0x8016741c, to: D_80166ae8}
+  - {addr: 0x80167420, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80167428, to: g_battle_ability_menu_layout}
+  - {addr: 0x8016742c, to: g_battle_menu_selected_option}
+  - {addr: 0x80167458, to: g_battle_menu_set_auto_battle_row_actions}
+  - {addr: 0x8016745c, to: battle_menu_confirm_auto_battle_selection_thread}
+  - {addr: 0x80167464, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167468, to: g_battle_menu_selected_option}
+  - {addr: 0x80167494, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80167498, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801674a0, to: g_battle_ability_menu_layout}
+  - {addr: 0x801674a4, to: g_battle_menu_selected_option}
+  - {addr: 0x801674d0, to: D_80166ae8}
+  - {addr: 0x801674d4, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801674dc, to: g_battle_ability_menu_layout}
+  - {addr: 0x801674e0, to: g_battle_menu_selected_option}
+  - {addr: 0x8016750c, to: D_80166ae8}
+  - {addr: 0x80167510, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80167518, to: g_battle_ability_menu_layout}
+  - {addr: 0x8016751c, to: g_battle_menu_selected_option}
+  - {addr: 0x80167548, to: g_battle_menu_system_function_row_actions}
+  - {addr: 0x8016754c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80167554, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167558, to: g_battle_menu_selected_option}
+  - {addr: 0x80167584, to: g_battle_menu_system_function_row_actions}
+  - {addr: 0x80167588, to: battle_menu_open_debugchr}
+  - {addr: 0x80167590, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167594, to: g_battle_menu_selected_option}
+  - {addr: 0x801675c0, to: D_80166ae8}
+  - {addr: 0x801675c4, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801675cc, to: g_battle_ability_menu_layout}
+  - {addr: 0x801675d0, to: g_battle_menu_selected_option}
+  - {addr: 0x801675fc, to: D_80166af4}
+  - {addr: 0x80167600, to: battle_menu_build_main}
+  - {addr: 0x80167608, to: g_battle_ability_menu_layout}
+  - {addr: 0x8016760c, to: g_battle_menu_selected_option}
+  - {addr: 0x80167638, to: D_80166af4}
+  - {addr: 0x8016763c, to: battle_menu_build_main}
+  - {addr: 0x80167644, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167648, to: g_battle_menu_selected_option}
+  - {addr: 0x80167674, to: D_80166af4}
+  - {addr: 0x80167678, to: battle_menu_build_main}
+  - {addr: 0x80167680, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167684, to: g_battle_menu_selected_option}
+  - {addr: 0x801676b0, to: D_80166af4}
+  - {addr: 0x801676b4, to: battle_menu_build_main}
+  - {addr: 0x801676bc, to: g_battle_ability_menu_layout}
+  - {addr: 0x801676c0, to: g_battle_menu_selected_option}
+  - {addr: 0x801676ec, to: D_80166b00}
+  - {addr: 0x801676f0, to: battle_menu_build_main}
+  - {addr: 0x801676f8, to: g_battle_ability_menu_layout}
+  - {addr: 0x801676fc, to: g_battle_menu_selected_option}
+  - {addr: 0x80167728, to: D_80166b00}
+  - {addr: 0x8016772c, to: battle_menu_build_main}
+  - {addr: 0x80167734, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167738, to: g_battle_menu_selected_option}
+  - {addr: 0x80167764, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x80167768, to: battle_menu_run_scrolling_ability_list_thread}
+  - {addr: 0x80167770, to: g_battle_menu_at_list_layout}
+  - {addr: 0x80167774, to: g_battle_menu_selected_option}
+  - {addr: 0x801677a0, to: g_battle_menu_system_function_row_actions, offset: 0x4}
+  - {addr: 0x801677a4, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801677ac, to: g_battle_ability_menu_layout}
+  - {addr: 0x801677b0, to: g_battle_menu_selected_option}
+  - {addr: 0x801677dc, to: D_80166b0c}
+  - {addr: 0x801677e0, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801677e8, to: g_battle_ability_menu_layout}
+  - {addr: 0x801677ec, to: g_battle_menu_selected_option}
+  - {addr: 0x80167818, to: D_80166a8c}
+  - {addr: 0x8016781c, to: battle_menu_stop_thread_with_invalid_sound}
+  - {addr: 0x80167824, to: g_battle_ability_menu_layout}
+  - {addr: 0x80167828, to: g_battle_menu_selected_option}
+  - {addr: 0x80167908, to: g_menu_window_tween_easing_curve_0}
+  - {addr: 0x8016790c, to: g_menu_window_tween_easing_curve_1}
+  - {addr: 0x80167910, to: g_menu_window_tween_easing_curve_2}
+  - {addr: 0x80167914, to: g_menu_window_tween_easing_curve_3}
+  - {addr: 0x80167918, to: g_menu_window_tween_easing_curve_4}
+  - {addr: 0x8016866c, to: g_menu_selected_unit_status, offset: 0xc}
+  - {addr: 0x80168678, to: g_menu_selected_unit_status, offset: 0x10}
+  - {addr: 0x80168684, to: g_menu_selected_unit_status, offset: 0x12}
+  - {addr: 0x80168690, to: g_menu_selected_unit_status, offset: 0x16}
+  - {addr: 0x8016869c, to: g_menu_selected_unit_status, offset: 0x18}
+  - {addr: 0x801686a8, to: g_menu_selected_unit_status, offset: 0x1c}
+  - {addr: 0x801686b4, to: g_menu_selected_unit_status, offset: 0x4}
+  - {addr: 0x801686c0, to: g_menu_selected_unit_status, offset: 0x6}
+  - {addr: 0x801686cc, to: g_menu_selected_unit_status}
+  - {addr: 0x801686d8, to: g_menu_selected_unit_status, offset: 0x8}
+  - {addr: 0x801686e4, to: g_menu_comparison_unit_status, offset: 0xc}
+  - {addr: 0x801686f0, to: g_menu_comparison_unit_status, offset: 0x10}
+  - {addr: 0x801686fc, to: g_menu_comparison_unit_status, offset: 0x12}
+  - {addr: 0x80168708, to: g_menu_comparison_unit_status, offset: 0x16}
+  - {addr: 0x80168714, to: g_menu_comparison_unit_status, offset: 0x18}
+  - {addr: 0x80168720, to: g_menu_comparison_unit_status, offset: 0x1c}
+  - {addr: 0x8016872c, to: g_menu_comparison_unit_status, offset: 0x4}
+  - {addr: 0x80168738, to: g_menu_comparison_unit_status, offset: 0x6}
+  - {addr: 0x80168744, to: g_menu_comparison_unit_status}
+  - {addr: 0x80168750, to: g_menu_comparison_unit_status, offset: 0x8}
+  - {addr: 0x8016875c, to: g_menu_selected_unit_status, offset: 0xc}
+  - {addr: 0x80168768, to: g_menu_selected_unit_status, offset: 0x10}
+  - {addr: 0x80168774, to: g_menu_selected_unit_status, offset: 0x12}
+  - {addr: 0x80168780, to: g_menu_selected_unit_status, offset: 0x16}
+  - {addr: 0x8016878c, to: g_menu_selected_unit_status, offset: 0x18}
+  - {addr: 0x80168798, to: g_menu_selected_unit_status, offset: 0x1c}
+  - {addr: 0x801687a4, to: g_menu_selected_unit_status, offset: 0x1e}
+  - {addr: 0x801687b0, to: g_menu_selected_unit_status, offset: 0x20}
+  - {addr: 0x801687bc, to: g_menu_comparison_unit_status, offset: 0xc}
+  - {addr: 0x801687c8, to: g_menu_comparison_unit_status, offset: 0x10}
+  - {addr: 0x801687d4, to: g_menu_comparison_unit_status, offset: 0x12}
+  - {addr: 0x801687e0, to: g_menu_comparison_unit_status, offset: 0x16}
+  - {addr: 0x801687ec, to: g_menu_comparison_unit_status, offset: 0x18}
+  - {addr: 0x801687f8, to: g_menu_comparison_unit_status, offset: 0x1c}
+  - {addr: 0x80168804, to: g_menu_comparison_unit_status, offset: 0x1e}
+  - {addr: 0x80168810, to: g_menu_comparison_unit_status, offset: 0x20}
+  - {addr: 0x80168848, to: g_battle_menu_sprite_page_image_params, offset: 0x78}
+  - {addr: 0x8016884c, to: g_battle_menu_attack_caster_quad_image_params}
+  - {addr: 0x80168850, to: g_battle_menu_sprite_page_image_params, offset: 0x120}
+  - {addr: 0x80168854, to: g_battle_unit_status_quad_image_params_mode_3}
+  - {addr: 0x80168858, to: g_battle_unit_status_quad_image_params_mode_4}
+  - {addr: 0x8016885c, to: g_battle_unit_status_quad_image_params_mode_4}
+  - {addr: 0x80168860, to: g_battle_unit_status_quad_image_params_mode_6}
+  - {addr: 0x80168864, to: g_battle_unit_status_quad_image_params_mode_6}
+  - {addr: 0x801689d8, to: g_menu_billboard_data}
+  - {addr: 0x801689e4, to: g_menu_billboard_data, offset: 0x4}
+  - {addr: 0x801689f0, to: g_menu_billboard_data, offset: 0x2}
+  - {addr: 0x801689fc, to: g_menu_billboard_data, offset: 0x6}
+  - {addr: 0x80168a08, to: g_menu_billboard_data, offset: 0x8}
+  - {addr: 0x80168a14, to: g_menu_billboard_data, offset: 0xa}
+  - {addr: 0x80168a20, to: g_menu_billboard_data, offset: 0xc}
+  - {addr: 0x80168a2c, to: g_menu_billboard_data, offset: 0x12}
+  - {addr: 0x80168a38, to: g_menu_billboard_data, offset: 0x1c}
+  - {addr: 0x80168a44, to: g_menu_billboard_data, offset: 0x14}
+  - {addr: 0x80168a50, to: g_menu_billboard_data, offset: 0x1e}
+  - {addr: 0x80168a5c, to: g_menu_billboard_data, offset: 0x16}
+  - {addr: 0x80168a68, to: g_menu_billboard_data, offset: 0x20}
+  - {addr: 0x80168a74, to: g_menu_billboard_data, offset: 0x18}
+  - {addr: 0x80168a80, to: g_menu_billboard_data, offset: 0x22}
+  - {addr: 0x80169070, to: battle_menu_selected_tile_info_display_thread}
+  - {addr: 0x801690a0, to: battle_menu_selected_tile_info_display_thread}
+  - {addr: 0x801690ac, to: battle_menu_refresh_hovered_unit_stats_display}
+  - {addr: 0x801690d0, to: battle_menu_selected_tile_info_display_thread}
+  - {addr: 0x801690d4, to: battle_menu_run_unit_summary_panel_thread}
+  - {addr: 0x801690dc, to: battle_menu_refresh_hovered_unit_stats_display}
+  - {addr: 0x80169100, to: battle_menu_selected_tile_info_display_thread}
+  - {addr: 0x80169108, to: battle_menu_refresh_right_unit_stats_display}
+  - {addr: 0x80169130, to: battle_menu_selected_tile_info_display_thread}
+  - {addr: 0x80169138, to: battle_menu_preview_attack_caster_stats}
+  - {addr: 0x8016913c, to: battle_menu_preview_attack_target_stats}
+  - {addr: 0x80169160, to: battle_menu_run_numeric_display_panel_thread}
+  - {addr: 0x80169164, to: battle_menu_run_unit_summary_panel_thread}
+  - {addr: 0x8016916c, to: battle_menu_refresh_hovered_unit_stats_display}
+  - {addr: 0x801692cc, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801692e0, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801692f4, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80169308, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x8016931c, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x80169330, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x80169344, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169358, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x8016936c, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x80169380, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x80169394, to: battle_menu_icon_timed_thread}
+  - {addr: 0x801693a8, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801693bc, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801693d0, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801693e4, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x801693f8, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x8016940c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169420, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169434, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169448, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x8016945c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169470, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169484, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169498, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801694ac, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801694c0, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801694d4, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801694e8, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801694fc, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169510, to: battle_menu_icon_timed_thread}
+  - {addr: 0x80169524, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169538, to: menu_mini_menu_cancel_delay_thread}
+  - {addr: 0x8016954c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169560, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169574, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169588, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x8016959c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801695b0, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801695c4, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801695d8, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801695ec, to: battle_menu_input_loop_thread}
+  - {addr: 0x80169600, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169614, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169628, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x8016963c, to: battle_menu_icon_timed_thread}
+  - {addr: 0x80169650, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169664, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x80169678, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x8016968c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801696a0, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801696b4, to: battle_menu_icon_timed_thread}
+  - {addr: 0x8018f500, to: battle_move_spread_to_east_preset}
+  - {addr: 0x8018f504, to: battle_move_spread_to_north_preset}
+  - {addr: 0x8018f508, to: battle_move_spread_to_west_preset}
+  - {addr: 0x8018f50c, to: battle_move_spread_to_south_preset}
+  - {addr: 0x8018f614, to: battle_formula_weapon_damage}
+  - {addr: 0x8018f618, to: battle_formula_weapon_damage_with_proc}
+  - {addr: 0x8018f61c, to: battle_formula_gun_damage}
+  - {addr: 0x8018f620, to: battle_formula_magic_gun}
+  - {addr: 0x8018f624, to: battle_formula_weapon_damage_without_element}
+  - {addr: 0x8018f628, to: battle_formula_weapon_absorb_hp}
+  - {addr: 0x8018f62c, to: battle_formula_weapon_heal}
+  - {addr: 0x8018f630, to: battle_formula_magical_damage}
+  - {addr: 0x8018f634, to: battle_formula_magic_hp_percent_damage}
+  - {addr: 0x8018f638, to: battle_formula_hit_faith_ma_x_percent}
+  - {addr: 0x8018f63c, to: battle_formula_friendly_hit_faith_ma_x_percent}
+  - {addr: 0x8018f640, to: battle_formula_magical_heal}
+  - {addr: 0x8018f644, to: battle_formula_heal_y_percent_faith}
+  - {addr: 0x8018f648, to: battle_formula_damage_hp_percent_hit_faith_ma_x_percent}
+  - {addr: 0x8018f64c, to: battle_formula_absorb_mp_y_percent}
+  - {addr: 0x8018f650, to: battle_formula_absorb_hp_y_percent}
+  - {addr: 0x8018f654, to: battle_formula_11_unused}
+  - {addr: 0x8018f658, to: battle_formula_set_quick}
+  - {addr: 0x8018f65c, to: battle_formula_13_unused}
+  - {addr: 0x8018f660, to: battle_formula_set_golem}
+  - {addr: 0x8018f664, to: battle_formula_set_ct_zero}
+  - {addr: 0x8018f668, to: battle_formula_damage_mp_target_current_mp}
+  - {addr: 0x8018f66c, to: battle_formula_damage_target_hp_minus_one}
+  - {addr: 0x8018f670, to: battle_formula_18_unused}
+  - {addr: 0x8018f674, to: battle_formula_19_unused}
+  - {addr: 0x8018f678, to: battle_formula_magical_stat_reduction}
+  - {addr: 0x8018f67c, to: battle_formula_damage_mp_percent}
+  - {addr: 0x8018f680, to: battle_formula_song}
+  - {addr: 0x8018f684, to: battle_formula_dance}
+  - {addr: 0x8018f688, to: battle_formula_multihit_truth_magic}
+  - {addr: 0x8018f68c, to: battle_formula_unfaith_magical_damage}
+  - {addr: 0x8018f690, to: battle_formula_draw_out_damage}
+  - {addr: 0x8018f694, to: battle_formula_draw_out_mp_damage}
+  - {addr: 0x8018f698, to: battle_formula_draw_out_status}
+  - {addr: 0x8018f69c, to: battle_formula_draw_out_heal}
+  - {addr: 0x8018f6a0, to: battle_formula_ma_pa_half_damage}
+  - {addr: 0x8018f6a4, to: battle_formula_break_equipped_hit_pa_wp_y_percent}
+  - {addr: 0x8018f6a8, to: battle_formula_steal_equipment}
+  - {addr: 0x8018f6ac, to: battle_formula_steal_gil}
+  - {addr: 0x8018f6b0, to: battle_formula_steal_exp_hit_sp_x_percent}
+  - {addr: 0x8018f6b4, to: battle_formula_opposite_sex_hit_ma_x_percent}
+  - {addr: 0x8018f6b8, to: battle_formula_talk_skill_hit_ma_x_percent}
+  - {addr: 0x8018f6bc, to: battle_formula_physical_stat_reduction}
+  - {addr: 0x8018f6c0, to: battle_formula_physical_mp_percent_damage}
+  - {addr: 0x8018f6c4, to: battle_formula_damage_pa_times_wp_plus_y_status}
+  - {addr: 0x8018f6c8, to: battle_formula_break_equipped_damage_pa_times_wp}
+  - {addr: 0x8018f6cc, to: battle_formula_absorb_mp_pa_times_wp}
+  - {addr: 0x8018f6d0, to: battle_formula_absorb_hp_pa_times_wp}
+  - {addr: 0x8018f6d4, to: battle_formula_damage_pa_plus_y_half_times_pa}
+  - {addr: 0x8018f6d8, to: battle_formula_damage_random_x_times_pa_plus_pa_plus_y_half}
+  - {addr: 0x8018f6dc, to: battle_formula_hit_pa_x_percent}
+  - {addr: 0x8018f6e0, to: battle_formula_heal_pa_times_y_and_mp}
+  - {addr: 0x8018f6e4, to: battle_formula_heal_y_percent_hit_pa_x_percent}
+  - {addr: 0x8018f6e8, to: battle_formula_add_pa_y}
+  - {addr: 0x8018f6ec, to: battle_formula_damage_random_y_times_pa}
+  - {addr: 0x8018f6f0, to: battle_formula_apply_status_to_action}
+  - {addr: 0x8018f6f4, to: battle_formula_add_speed_y}
+  - {addr: 0x8018f6f8, to: battle_formula_add_brave_y}
+  - {addr: 0x8018f6fc, to: battle_formula_add_brave_x_stats_y}
+  - {addr: 0x8018f700, to: battle_formula_3c_damage_caster_max_hp_one_fifth_heal_target_two_fifths}
+  - {addr: 0x8018f704, to: battle_formula_hit_ma_x_percent_magical_evade}
+  - {addr: 0x8018f708, to: battle_formula_damage_target_hp_minus_one_always_hit}
+  - {addr: 0x8018f70c, to: battle_formula_hit_sp_x_percent}
+  - {addr: 0x8018f710, to: battle_formula_undead_hit_sp_x_percent}
+  - {addr: 0x8018f714, to: battle_formula_hit_ma_x_percent_miss_same_zodiac}
+  - {addr: 0x8018f718, to: battle_formula_damage_pa_times_y_damage_caster_pa_times_y_over_x}
+  - {addr: 0x8018f71c, to: battle_formula_43_damage_caster_missing_hp}
+  - {addr: 0x8018f720, to: battle_formula_damage_hp_target_current_mp}
+  - {addr: 0x8018f724, to: battle_formula_damage_target_missing_hp}
+  - {addr: 0x8018f728, to: battle_formula_46_unused}
+  - {addr: 0x8018f72c, to: battle_formula_absorb_hp_y_percent_status}
+  - {addr: 0x8018f730, to: battle_formula_heal_z_times_ten}
+  - {addr: 0x8018f734, to: battle_formula_heal_mp_z_times_ten}
+  - {addr: 0x8018f738, to: battle_formula_heal_full_hp_mp}
+  - {addr: 0x8018f73c, to: battle_formula_heal_random_one_to_z_add_status}
+  - {addr: 0x8018f740, to: battle_formula_heal_ma_times_y}
+  - {addr: 0x8018f744, to: battle_formula_absorb_hp_y_percent_hit_ma_x_percent}
+  - {addr: 0x8018f748, to: battle_formula_damage_ma_times_y}
+  - {addr: 0x8018f74c, to: battle_formula_damage_caster_missing_hp_hit_ma_x_percent}
+  - {addr: 0x8018f750, to: battle_formula_hit_ma_x_percent_physical_evade}
+  - {addr: 0x8018f754, to: battle_formula_hit_ma_x_percent_no_evade}
+  - {addr: 0x8018f758, to: battle_formula_damage_caster_missing_hp_self_sacrifice}
+  - {addr: 0x8018f75c, to: battle_formula_damage_y_percent_hit_ma_x_percent}
+  - {addr: 0x8018f760, to: battle_formula_heal_mp_ma_times_y}
+  - {addr: 0x8018f764, to: battle_formula_lower_pa_y}
+  - {addr: 0x8018f768, to: battle_formula_lower_ma_y}
+  - {addr: 0x8018f76c, to: battle_formula_raise_level_by_one_add_status_on_caster}
+  - {addr: 0x8018f770, to: battle_formula_set_morbol}
+  - {addr: 0x8018f774, to: battle_formula_lower_level_by_one}
+  - {addr: 0x8018f778, to: battle_formula_dragon_hit_100}
+  - {addr: 0x8018f77c, to: battle_formula_dragon_wish_add_status}
+  - {addr: 0x8018f780, to: battle_formula_dragon_brave_x_stats_y}
+  - {addr: 0x8018f784, to: battle_formula_dragon_set_quick}
+  - {addr: 0x8018f788, to: battle_formula_5e_damage_ma_plus_y_half_times_ma}
+  - {addr: 0x8018f78c, to: battle_formula_5f_damage_ma_plus_y_half_times_ma}
+  - {addr: 0x8018f790, to: battle_formula_60_damage_ma_plus_y_half_times_ma}
+  - {addr: 0x8018f794, to: battle_formula_lower_brave_y}
+  - {addr: 0x8018f798, to: battle_formula_lower_brave_y_without_faith}
+  - {addr: 0x8018f79c, to: battle_formula_throw_damage_sp_times_wp}
+  - {addr: 0x8018f7a0, to: battle_formula_jump_damage_pa_times_wp}
+  - {addr: 0x801b48d0, to: g_battle_effect_overlay_window, offset: 0x2080}
+  - {addr: 0x801b48d4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b48d8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b48dc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b48e0, to: g_battle_effect_overlay_window, offset: 0x2df4}
+  - {addr: 0x801b48e4, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b48e8, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b48ec, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b48f0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b48f4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b48f8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b48fc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4900, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4904, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4908, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b490c, to: g_battle_effect_overlay_window, offset: 0x33e8}
+  - {addr: 0x801b4910, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4914, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4918, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b491c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4920, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4924, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4928, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b492c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4930, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4934, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4938, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b493c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4940, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4944, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4948, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b494c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4950, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4954, to: g_battle_effect_overlay_window, offset: 0x248c}
+  - {addr: 0x801b4958, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b495c, to: g_battle_effect_overlay_window, offset: 0x248c}
+  - {addr: 0x801b4960, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4964, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4968, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b496c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4970, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4974, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4978, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b497c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4980, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4984, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4988, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b498c, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4990, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4994, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4998, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b499c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49a0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49a4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49a8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49ac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49b0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49b4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49b8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49bc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49c0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49c4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49c8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49cc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49d0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49d4, to: g_battle_effect_overlay_window, offset: 0x35f4}
+  - {addr: 0x801b49d8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b49dc, to: g_battle_effect_overlay_window, offset: 0x1dd0}
+  - {addr: 0x801b49e0, to: g_battle_effect_overlay_window, offset: 0x17fc}
+  - {addr: 0x801b49e4, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b49e8, to: g_battle_effect_overlay_window, offset: 0x41a0}
+  - {addr: 0x801b49ec, to: g_battle_effect_overlay_window, offset: 0x1bd8}
+  - {addr: 0x801b49f0, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b49f4, to: g_battle_effect_overlay_window, offset: 0x2238}
+  - {addr: 0x801b49f8, to: g_battle_effect_overlay_window, offset: 0x31a8}
+  - {addr: 0x801b49fc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a00, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4a04, to: g_battle_effect_overlay_window, offset: 0x43ec}
+  - {addr: 0x801b4a08, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a0c, to: g_battle_effect_overlay_window, offset: 0x2238}
+  - {addr: 0x801b4a10, to: g_battle_effect_overlay_window, offset: 0x2a80}
+  - {addr: 0x801b4a14, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a18, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a1c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a20, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a24, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a28, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a2c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a30, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a34, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a38, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a3c, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a40, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a44, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a48, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a4c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a50, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a54, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a58, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a5c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a60, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a64, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a68, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a6c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a70, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a74, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a78, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a7c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a80, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a84, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a88, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a8c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a90, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a94, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a98, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4a9c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4aa0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4aa4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4aa8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4aac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ab0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ab4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ab8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4abc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ac0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ac4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ac8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4acc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ad0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ad4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ad8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4adc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ae0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ae4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ae8, to: g_battle_effect_overlay_window, offset: 0x2be8}
+  - {addr: 0x801b4aec, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4af0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4af4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4af8, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4afc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b00, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b04, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b08, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b0c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b10, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b14, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b18, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b1c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b20, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b24, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b28, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b2c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b30, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b34, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b38, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b3c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b40, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b44, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b48, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b4c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b50, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b54, to: g_battle_effect_overlay_window, offset: 0x15f8}
+  - {addr: 0x801b4b58, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b5c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b60, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b64, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b68, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b6c, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4b70, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b74, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b78, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b7c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b80, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b84, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b88, to: g_battle_effect_overlay_window, offset: 0x33e8}
+  - {addr: 0x801b4b8c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b90, to: g_battle_effect_overlay_window, offset: 0x1824}
+  - {addr: 0x801b4b94, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b98, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4b9c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ba0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ba4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ba8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bb0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bb4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bb8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bbc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bc0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bc4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bc8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bcc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bd0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bd4, to: g_battle_effect_overlay_window, offset: 0x1824}
+  - {addr: 0x801b4bd8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bdc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4be0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4be4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4be8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bec, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bf0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bf4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bf8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4bfc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c00, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c04, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c08, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c0c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c10, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c14, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c18, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c1c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c20, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c24, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c28, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c2c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c30, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c34, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c38, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c3c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c40, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c44, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c48, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c4c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c50, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c54, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c58, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c5c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c60, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4c64, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4c68, to: g_battle_effect_overlay_window, offset: 0x1ce0}
+  - {addr: 0x801b4c6c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c70, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c74, to: g_battle_effect_overlay_window, offset: 0x1824}
+  - {addr: 0x801b4c78, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c7c, to: g_battle_effect_overlay_window, offset: 0x1e18}
+  - {addr: 0x801b4c80, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4c84, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c88, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c8c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4c90, to: g_battle_effect_overlay_window, offset: 0x1824}
+  - {addr: 0x801b4c94, to: g_battle_effect_overlay_window, offset: 0x2024}
+  - {addr: 0x801b4c98, to: g_battle_effect_overlay_window, offset: 0x566c}
+  - {addr: 0x801b4c9c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ca0, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4ca4, to: g_battle_effect_overlay_window, offset: 0x2024}
+  - {addr: 0x801b4ca8, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4cac, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4cb0, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4cb4, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4cb8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cbc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cc0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cc4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cc8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ccc, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4cd0, to: g_battle_effect_overlay_window, offset: 0x2be8}
+  - {addr: 0x801b4cd4, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4cd8, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4cdc, to: g_battle_effect_overlay_window, offset: 0x29a8}
+  - {addr: 0x801b4ce0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ce4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ce8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cec, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cf0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cf4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cf8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4cfc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d00, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d04, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d08, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d0c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d10, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d14, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d18, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d1c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d20, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d24, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d28, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d2c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d30, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d34, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d38, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d3c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d40, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d44, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d48, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d4c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d50, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d54, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d58, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d5c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d60, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d64, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d68, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d6c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d70, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d74, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d78, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d7c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d80, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d84, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d88, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d8c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d90, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d94, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d98, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4d9c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4da0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4da4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4da8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4db0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4db4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4db8, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4dbc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dc0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dc4, to: g_battle_effect_overlay_window, offset: 0x3874}
+  - {addr: 0x801b4dc8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dcc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dd0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dd4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dd8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ddc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4de0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4de4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4de8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dec, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4df0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4df4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4df8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4dfc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e00, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e04, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e08, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e0c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e10, to: g_battle_effect_overlay_window, offset: 0x2078}
+  - {addr: 0x801b4e14, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e18, to: g_battle_effect_overlay_window, offset: 0x13d8}
+  - {addr: 0x801b4e1c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e20, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e24, to: g_battle_effect_overlay_window, offset: 0x17fc}
+  - {addr: 0x801b4e28, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e2c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e30, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e34, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e38, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e3c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e40, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e44, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e48, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e4c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e50, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e54, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e58, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e5c, to: g_battle_effect_overlay_window, offset: 0x2078}
+  - {addr: 0x801b4e60, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e64, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e68, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e6c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e70, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e74, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e78, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e7c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e80, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e84, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e88, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e8c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e90, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e94, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e98, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4e9c, to: g_battle_effect_overlay_window, offset: 0x3690}
+  - {addr: 0x801b4ea0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ea4, to: g_battle_effect_overlay_window, offset: 0x29f0}
+  - {addr: 0x801b4ea8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4eac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4eb0, to: g_battle_effect_overlay_window, offset: 0x22b4}
+  - {addr: 0x801b4eb4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4eb8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ebc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ec0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ec4, to: g_battle_effect_overlay_window, offset: 0x22b4}
+  - {addr: 0x801b4ec8, to: g_battle_effect_overlay_window, offset: 0x22b4}
+  - {addr: 0x801b4ecc, to: g_battle_effect_overlay_window, offset: 0x43e4}
+  - {addr: 0x801b4ed0, to: g_battle_effect_overlay_window, offset: 0x42d8}
+  - {addr: 0x801b4ed4, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4ed8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4edc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ee0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ee4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ee8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4eec, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ef0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ef4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ef8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4efc, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4f00, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f04, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f08, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f0c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f10, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f14, to: g_battle_effect_overlay_window, offset: 0x22b4}
+  - {addr: 0x801b4f18, to: g_battle_effect_overlay_window, offset: 0x2078}
+  - {addr: 0x801b4f1c, to: g_battle_effect_overlay_window, offset: 0x217c}
+  - {addr: 0x801b4f20, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f24, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f28, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f2c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f30, to: g_battle_effect_overlay_window, offset: 0x2024}
+  - {addr: 0x801b4f34, to: g_battle_effect_overlay_window, offset: 0x389c}
+  - {addr: 0x801b4f38, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f3c, to: g_battle_effect_overlay_window, offset: 0x1384}
+  - {addr: 0x801b4f40, to: g_battle_effect_overlay_window, offset: 0x297c}
+  - {addr: 0x801b4f44, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f48, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f4c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f50, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f54, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f58, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f5c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f60, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f64, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f68, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f6c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f70, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f74, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f78, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f7c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f80, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f84, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f88, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f8c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f90, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f94, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f98, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4f9c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fa0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fa4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fa8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fb0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fb4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fb8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fbc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fc0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fc4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fc8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fcc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fd0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fd4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4fd8, to: g_battle_effect_overlay_window, offset: 0x1f40}
+  - {addr: 0x801b4fdc, to: g_battle_effect_overlay_window, offset: 0x2c10}
+  - {addr: 0x801b4fe0, to: g_battle_effect_overlay_window, offset: 0x31c0}
+  - {addr: 0x801b4fe4, to: g_battle_effect_overlay_window, offset: 0x4880}
+  - {addr: 0x801b4fe8, to: g_battle_effect_overlay_window, offset: 0x2528}
+  - {addr: 0x801b4fec, to: g_battle_effect_overlay_window, offset: 0x330}
+  - {addr: 0x801b4ff0, to: g_battle_effect_overlay_window, offset: 0xe3c}
+  - {addr: 0x801b4ff4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b4ff8, to: g_battle_effect_overlay_window, offset: 0x8a8}
+  - {addr: 0x801b4ffc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5000, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b5004, to: g_battle_effect_overlay_window, offset: 0x4fb8}
+  - {addr: 0x801b5008, to: g_battle_effect_overlay_window, offset: 0x4fb8}
+  - {addr: 0x801b500c, to: g_battle_effect_overlay_window, offset: 0x4fb8}
+  - {addr: 0x801b5010, to: g_battle_effect_overlay_window, offset: 0x29d4}
+  - {addr: 0x801b5014, to: g_battle_effect_overlay_window, offset: 0x4fb8}
+  - {addr: 0x801b5018, to: g_battle_effect_overlay_window, offset: 0x4fb8}
+  - {addr: 0x801b501c, to: g_battle_effect_overlay_window, offset: 0x1a04}
+  - {addr: 0x801b5020, to: g_battle_effect_overlay_window, offset: 0x1a04}
+  - {addr: 0x801b5024, to: g_battle_effect_overlay_window, offset: 0x1a04}
+  - {addr: 0x801b5028, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b502c, to: g_battle_effect_overlay_window, offset: 0x1a04}
+  - {addr: 0x801b5030, to: g_battle_effect_overlay_window, offset: 0x1a04}
+  - {addr: 0x801b5034, to: g_battle_effect_overlay_window, offset: 0x878}
+  - {addr: 0x801b5038, to: g_battle_effect_overlay_window, offset: 0x3268}
+  - {addr: 0x801b503c, to: g_battle_effect_overlay_window, offset: 0x3268}
+  - {addr: 0x801b5040, to: g_battle_effect_overlay_window, offset: 0x3268}
+  - {addr: 0x801b5044, to: g_battle_effect_overlay_window, offset: 0x3268}
+  - {addr: 0x801b5048, to: g_battle_effect_overlay_window, offset: 0x3268}
+  - {addr: 0x801b504c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5050, to: g_battle_effect_overlay_window, offset: 0x1f40}
+  - {addr: 0x801b5054, to: g_battle_effect_overlay_window, offset: 0x7d0}
+  - {addr: 0x801b5058, to: g_battle_effect_overlay_window, offset: 0x7d0}
+  - {addr: 0x801b505c, to: g_battle_effect_overlay_window, offset: 0x1384}
+  - {addr: 0x801b5060, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5064, to: g_battle_effect_overlay_window, offset: 0x2c10}
+  - {addr: 0x801b5068, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b506c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5070, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5074, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5078, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b507c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5080, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5084, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5088, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b508c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5090, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5094, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5098, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b509c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50a0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50a4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50a8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50ac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50b0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50b4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50b8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50bc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50c0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50c4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50c8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50cc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50d0, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b50d4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50d8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50dc, to: g_battle_effect_overlay_window, offset: 0x14f8}
+  - {addr: 0x801b50e0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50e4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50e8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50ec, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50f0, to: g_battle_effect_overlay_window, offset: 0x14f8}
+  - {addr: 0x801b50f4, to: g_battle_effect_overlay_window, offset: 0x2ac8}
+  - {addr: 0x801b50f8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b50fc, to: g_battle_effect_overlay_window, offset: 0x177c}
+  - {addr: 0x801b5100, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5104, to: g_battle_effect_overlay_window, offset: 0x177c}
+  - {addr: 0x801b5108, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b510c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5110, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5114, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b5118, to: g_battle_effect_overlay_window, offset: 0x1ef0}
+  - {addr: 0x801b511c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5120, to: g_battle_effect_overlay_window, offset: 0x14f8}
+  - {addr: 0x801b5124, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5128, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b512c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5130, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b5134, to: g_battle_effect_overlay_window, offset: 0x371c}
+  - {addr: 0x801b5138, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b513c, to: g_battle_effect_overlay_window, offset: 0x7ec}
+  - {addr: 0x801b5140, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5144, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5148, to: g_battle_effect_overlay_window, offset: 0x14f8}
+  - {addr: 0x801b514c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5150, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b5154, to: g_battle_effect_overlay_window, offset: 0x1ce4}
+  - {addr: 0x801b5158, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b515c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5160, to: g_battle_effect_overlay_window, offset: 0x177c}
+  - {addr: 0x801b5164, to: g_battle_effect_overlay_window, offset: 0x2c74}
+  - {addr: 0x801b5168, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b516c, to: g_battle_effect_overlay_window, offset: 0x14f8}
+  - {addr: 0x801b5170, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5174, to: g_battle_effect_overlay_window, offset: 0xb6c}
+  - {addr: 0x801b5178, to: g_battle_effect_overlay_window, offset: 0x213c}
+  - {addr: 0x801b517c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5180, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5184, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5188, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b518c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5190, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5194, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5198, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b519c, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b51a0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51a4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51a8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51ac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51b0, to: g_battle_effect_overlay_window, offset: 0x14f8}
+  - {addr: 0x801b51b4, to: g_battle_effect_overlay_window, offset: 0x2ac8}
+  - {addr: 0x801b51b8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51bc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51c0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51c4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51c8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51cc, to: g_battle_effect_overlay_window, offset: 0x77c}
+  - {addr: 0x801b51d0, to: g_battle_effect_overlay_window, offset: 0xef0}
+  - {addr: 0x801b51d4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51d8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51dc, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b51e0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51e4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51e8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51ec, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b51f0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b51f4, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b51f8, to: g_battle_effect_overlay_window, offset: 0x2714}
+  - {addr: 0x801b51fc, to: g_battle_effect_overlay_window, offset: 0x3c0c}
+  - {addr: 0x801b5200, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5204, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5208, to: g_battle_effect_overlay_window, offset: 0x177c}
+  - {addr: 0x801b520c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5210, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5214, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5218, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b521c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5220, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5224, to: g_battle_effect_overlay_window, offset: 0x14f8}
+  - {addr: 0x801b5228, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b522c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5230, to: g_battle_effect_overlay_window, offset: 0x78}
+  - {addr: 0x801b5234, to: g_battle_effect_overlay_window, offset: 0x1300}
+  - {addr: 0x801b5238, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b523c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5240, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b5244, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5248, to: g_battle_effect_overlay_window, offset: 0x78}
+  - {addr: 0x801b524c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5250, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5254, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5258, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b525c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5260, to: g_battle_effect_overlay_window, offset: 0x1648}
+  - {addr: 0x801b5264, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5268, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b526c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5270, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5274, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b5278, to: g_battle_effect_overlay_window, offset: 0x2ac8}
+  - {addr: 0x801b527c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5280, to: g_battle_effect_overlay_window, offset: 0x177c}
+  - {addr: 0x801b5284, to: g_battle_effect_overlay_window, offset: 0x3958}
+  - {addr: 0x801b5288, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b528c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5290, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5294, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5298, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b529c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52a0, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b52a4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52a8, to: g_battle_effect_overlay_window, offset: 0x177c}
+  - {addr: 0x801b52ac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52b0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52b4, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b52b8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52bc, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b52c0, to: g_battle_effect_overlay_window, offset: 0x808}
+  - {addr: 0x801b52c4, to: g_battle_effect_overlay_window, offset: 0x1dd8}
+  - {addr: 0x801b52c8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52cc, to: g_battle_effect_overlay_window, offset: 0x15f8}
+  - {addr: 0x801b52d0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52d4, to: g_battle_effect_overlay_window, offset: 0x1648}
+  - {addr: 0x801b52d8, to: g_battle_effect_overlay_window, offset: 0x28d0}
+  - {addr: 0x801b52dc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52e0, to: g_battle_effect_overlay_window, offset: 0x21dc}
+  - {addr: 0x801b52e4, to: g_battle_effect_overlay_window, offset: 0x3958}
+  - {addr: 0x801b52e8, to: g_battle_effect_overlay_window, offset: 0x44c4}
+  - {addr: 0x801b52ec, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b52f0, to: g_battle_effect_overlay_window, offset: 0x3e8}
+  - {addr: 0x801b52f4, to: g_battle_effect_overlay_window, offset: 0x4ec}
+  - {addr: 0x801b52f8, to: g_battle_effect_overlay_window, offset: 0x1c68}
+  - {addr: 0x801b52fc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5300, to: g_battle_effect_overlay_window, offset: 0x104}
+  - {addr: 0x801b5304, to: g_battle_effect_overlay_window, offset: 0x208}
+  - {addr: 0x801b5308, to: g_battle_effect_overlay_window, offset: 0x29c}
+  - {addr: 0x801b530c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5310, to: g_battle_effect_overlay_window, offset: 0xac}
+  - {addr: 0x801b5314, to: g_battle_effect_overlay_window, offset: 0xc18}
+  - {addr: 0x801b5318, to: g_battle_effect_overlay_window, offset: 0xcac}
+  - {addr: 0x801b531c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5320, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b5324, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5328, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b532c, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b5330, to: g_battle_effect_overlay_window, offset: 0x371c}
+  - {addr: 0x801b5334, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5338, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b533c, to: g_battle_effect_overlay_window, offset: 0x371c}
+  - {addr: 0x801b5340, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5344, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b5348, to: g_battle_effect_overlay_window, offset: 0x371c}
+  - {addr: 0x801b534c, to: g_battle_effect_overlay_window, offset: 0x78}
+  - {addr: 0x801b5350, to: g_battle_effect_overlay_window, offset: 0x1300}
+  - {addr: 0x801b5354, to: g_battle_effect_overlay_window, offset: 0x2654}
+  - {addr: 0x801b5358, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b535c, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b5360, to: g_battle_effect_overlay_window, offset: 0x371c}
+  - {addr: 0x801b5364, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5368, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b536c, to: g_battle_effect_overlay_window, offset: 0x371c}
+  - {addr: 0x801b5370, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5374, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5378, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b537c, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5380, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5384, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5388, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b538c, to: g_battle_effect_overlay_window, offset: 0x77c}
+  - {addr: 0x801b5390, to: g_battle_effect_overlay_window, offset: 0x1dc4}
+  - {addr: 0x801b5394, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b5398, to: g_battle_effect_overlay_window, offset: 0x77c}
+  - {addr: 0x801b539c, to: g_battle_effect_overlay_window, offset: 0x1dc4}
+  - {addr: 0x801b53a0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53a4, to: g_battle_effect_overlay_window, offset: 0x77c}
+  - {addr: 0x801b53a8, to: g_battle_effect_overlay_window, offset: 0x1dc4}
+  - {addr: 0x801b53ac, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53b0, to: g_battle_effect_overlay_window, offset: 0x77c}
+  - {addr: 0x801b53b4, to: g_battle_effect_overlay_window, offset: 0x1dc4}
+  - {addr: 0x801b53b8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53bc, to: g_battle_effect_overlay_window, offset: 0x77c}
+  - {addr: 0x801b53c0, to: g_battle_effect_overlay_window, offset: 0x1dc4}
+  - {addr: 0x801b53c4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53c8, to: g_battle_effect_overlay_window, offset: 0x774}
+  - {addr: 0x801b53cc, to: g_battle_effect_overlay_window, offset: 0x808}
+  - {addr: 0x801b53d0, to: g_battle_effect_overlay_window, offset: 0x1dd8}
+  - {addr: 0x801b53d4, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53d8, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53dc, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53e0, to: g_battle_effect_overlay_window}
+  - {addr: 0x801b53e4, to: g_battle_effect_overlay_window, offset: 0x15f8}
+  - {addr: 0x801b67c8, to: battle_effect_code_script_00_jump_and_yield}
+  - {addr: 0x801b67cc, to: battle_effect_code_script_01_jump}
+  - {addr: 0x801b67d0, to: battle_effect_code_script_02_spawn_child}
+  - {addr: 0x801b67d4, to: battle_effect_code_script_03_free_child}
+  - {addr: 0x801b67d8, to: battle_effect_code_script_04_end}
+  - {addr: 0x801b67dc, to: battle_effect_code_script_05_store_unread_value}
+  - {addr: 0x801b67e0, to: battle_effect_code_script_06_register_native_callback}
+  - {addr: 0x801b67e4, to: battle_effect_code_script_07_call_native_callback}
+  - {addr: 0x801b67e8, to: battle_effect_code_script_08_set_camera_position}
+  - {addr: 0x801b67ec, to: battle_effect_code_script_09_save_camera_position}
+  - {addr: 0x801b67f0, to: battle_effect_code_script_0a_restore_camera_position}
+  - {addr: 0x801b67f4, to: battle_effect_code_script_0b_set_camera_rotation}
+  - {addr: 0x801b67f8, to: battle_effect_code_script_0c_save_camera_rotation}
+  - {addr: 0x801b67fc, to: battle_effect_code_script_0d_restore_camera_rotation}
+  - {addr: 0x801b6800, to: battle_effect_code_script_0e_set_camera_zoom}
+  - {addr: 0x801b6804, to: battle_effect_code_script_0f_save_camera_zoom}
+  - {addr: 0x801b6808, to: battle_effect_code_script_10_set_selected_counter}
+  - {addr: 0x801b680c, to: battle_effect_code_script_11_jump_if_counter_equal}
+  - {addr: 0x801b6810, to: battle_effect_code_script_12_jump_if_counter_at_least}
+  - {addr: 0x801b6814, to: battle_effect_code_script_13_jump_if_counter_greater}
+  - {addr: 0x801b6818, to: battle_effect_code_script_14_jump_if_counter_at_most}
+  - {addr: 0x801b681c, to: battle_effect_code_script_15_jump_if_counter_less}
+  - {addr: 0x801b6820, to: battle_effect_code_script_16_jump_if_work_count_equal}
+  - {addr: 0x801b6824, to: battle_effect_code_script_17_jump_if_work_count_greater}
+  - {addr: 0x801b6828, to: battle_effect_code_script_18_jump_if_work_count_less}
+  - {addr: 0x801b682c, to: battle_effect_code_script_19_jump_if_child_count_equal}
+  - {addr: 0x801b6830, to: battle_effect_code_script_1a_jump_if_child_active}
+  - {addr: 0x801b6834, to: battle_effect_code_script_1b_jump_if_child_inactive}
+  - {addr: 0x801b6838, to: battle_effect_code_script_1c_jump_if_counter_not_equal}
+  - {addr: 0x801b683c, to: battle_effect_code_script_1d_jump_after_child_timeline_duration}
+  - {addr: 0x801b6840, to: battle_effect_code_script_1e_jump_after_total_duration}
+  - {addr: 0x801b6844, to: battle_effect_code_script_1f_jump_if_target_count_equal}
+  - {addr: 0x801b6848, to: battle_effect_code_script_20_increment_selected_counter}
+  - {addr: 0x801b684c, to: battle_effect_code_script_21_decrement_selected_counter}
+  - {addr: 0x801b6850, to: battle_effect_code_script_22_add_immediate_to_selected_counter}
+  - {addr: 0x801b6854, to: battle_effect_code_script_23_subtract_immediate_from_selected_counter}
+  - {addr: 0x801b6858, to: battle_effect_code_script_24_restore_camera_zoom}
+  - {addr: 0x801b685c, to: battle_effect_code_script_25_update_all_particles}
+  - {addr: 0x801b6860, to: battle_effect_code_script_26_spawn_emitter_particles}
+  - {addr: 0x801b6864, to: battle_effect_code_script_27_init_particle_physics}
+  - {addr: 0x801b6868, to: battle_effect_code_script_28_step_child_timeline}
+  - {addr: 0x801b686c, to: battle_effect_code_script_29_step_parent_timeline}
+  - {addr: 0x801b6870, to: battle_effect_code_script_2a_reset_child_timeline}
+  - {addr: 0x801b6874, to: battle_effect_code_script_2b_reset_parent_timeline}
+  - {addr: 0x801b6878, to: battle_effect_code_script_2c_nop}
+  - {addr: 0x801b687c, to: battle_effect_code_script_2d_nop}
+  - {addr: 0x801b6880, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6884, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6888, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b688c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6890, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6894, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6898, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b689c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68a0, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68a4, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68a8, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68ac, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68b0, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68b4, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68b8, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68bc, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68c0, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68c4, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68c8, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68cc, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68d0, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68d4, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68d8, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68dc, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68e0, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68e4, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68e8, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68ec, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68f0, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68f4, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68f8, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b68fc, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6900, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6904, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6908, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b690c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6910, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6914, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6918, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b691c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6920, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6924, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6928, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b692c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6930, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6934, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6938, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b693c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6940, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6944, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6948, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b694c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6950, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6954, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6958, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b695c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6960, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6964, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6968, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b696c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6970, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6974, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6978, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b697c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6980, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6984, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6988, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b698c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6990, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6994, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b6998, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b699c, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b69a0, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b69a4, to: battle_effect_code_script_2e_invalid}
+  - {addr: 0x801b69bc, to: battle_effect_update_node_from_work}
+  - {addr: 0x801b69c0, to: battle_effect_update_node_from_work}
+  - {addr: 0x801b69c4, to: battle_effect_update_node_from_work}
+  - {addr: 0x801b69c8, to: battle_effect_update_node_from_work}
+  - {addr: 0x801b8534, to: g_battle_effect_projectile_model_0}
+  - {addr: 0x801b8538, to: g_battle_effect_projectile_model_1}
+  - {addr: 0x801b853c, to: g_battle_effect_projectile_model_2}
+  - {addr: 0x801b8540, to: g_battle_effect_projectile_model_3}
+  - {addr: 0x801b8900, to: battle_effect_none_secondary_handler}
+  - {addr: 0x801b8904, to: battle_effect_arrow_arc_secondary_handler}
+  - {addr: 0x801b8908, to: battle_effect_weapon_hit_secondary_handler}
+  - {addr: 0x801b890c, to: battle_effect_golem_secondary_handler}
+  - {addr: 0x801b8910, to: battle_effect_spell_charge_secondary_handler}
+  - {addr: 0x801b8914, to: battle_effect_null_secondary_handler}
+  - {addr: 0x801b8918, to: battle_effect_red_orbs_secondary_handler}
+  - {addr: 0x801b891c, to: battle_effect_unused_07_secondary_handler}
+  - {addr: 0x801b8920, to: battle_effect_fall_dust_secondary_handler}
+  - {addr: 0x801b8924, to: battle_effect_splash_secondary_handler}
+  - {addr: 0x801b8928, to: battle_effect_unused_0a_secondary_handler}
+  - {addr: 0x801b892c, to: battle_effect_unused_0b_secondary_handler}
+  - {addr: 0x801b8930, to: battle_effect_trap_secondary_handler}
+  - {addr: 0x801b8934, to: battle_effect_level_up_secondary_handler}
+  - {addr: 0x801b8938, to: battle_effect_unused_0e_secondary_handler}
+  - {addr: 0x801b893c, to: battle_effect_death_smoke_secondary_handler}
+  - {addr: 0x801b8940, to: battle_effect_unused_10_secondary_handler}
+  - {addr: 0x801b8944, to: battle_effect_zodiac_poof_secondary_handler}
+  - {addr: 0x801b8948, to: battle_effect_reflect_secondary_handler}
+  - {addr: 0x801b894c, to: battle_effect_teleport_secondary_handler}
+  - {addr: 0x801b8950, to: battle_effect_linear_projectile_secondary_handler}
+  - {addr: 0x801b8954, to: battle_effect_equip_break_secondary_handler}
+  - {addr: 0x801b8958, to: battle_effect_summon_charge_secondary_handler}
+
+values:
+  - {addr: 0x8014e614, end: 0x801612dc, why: "g_battle_text_glyph_bitmaps: font bitmap bytes"}
+  - {addr: 0x801692c0, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801692d4, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169338, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x8016934c, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x8016939c, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801693b0, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801693c4, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169400, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169414, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169428, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x8016943c, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801694c8, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x801694dc, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169554, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169608, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169644, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169658, why: "battle_menu_system_function_t menu_id and text_id"}
+  - {addr: 0x80169680, why: "battle_menu_system_function_t menu_id and text_id"}
