@@ -120,6 +120,7 @@ data:
   - {addr: 0x801ca0d8, name: g_attack_panel_comparison_unit_data}
   - {addr: 0x801ca0e8, name: g_attack_editor_unit_fields}
   - {addr: 0x801ca10c, name: g_attack_editor_item_and_ability_ids}
+  - {addr: 0x801ca128, name: D_801ca128}
   - {addr: 0x801ca168, name: g_attack_editor_primary_skillset_name}
   - {addr: 0x801ca17c, name: g_attack_editor_secondary_skillset_name}
   - {addr: 0x801ca1b8, name: g_attack_editor_numeric_geometry}
@@ -165,6 +166,7 @@ data:
   - {addr: 0x801caa38, name: g_attack_editor_numeric_descriptor_a}
   - {addr: 0x801caaec, name: g_attack_editor_numeric_descriptor_b}
   - {addr: 0x801cabc4, name: g_menu_decimal_glyph}
+  - {addr: 0x801cabd4, name: g_attack_deploy_squad_data_storage}
   - {addr: 0x801ccfd4, name: g_attack_deploy_arrow_clut_data}
   - {addr: 0x801cd014, name: g_attack_formation_sprite_tall_cell}
   - {addr: 0x801cd028, name: g_attack_deploy_zodiac_draw_context}
@@ -192,6 +194,9 @@ data:
   - {addr: 0x801cd0c4, name: g_attack_deploy_tile_clut_rect}
   - {addr: 0x801cd0cc, name: g_attack_deploy_rect_0cc}
   - {addr: 0x801cd0d4, name: g_attack_deploy_texture_location}
+  - {addr: 0x801cd0dc, name: D_801cd0dc}
+  - {addr: 0x801cd0de, name: D_801cd0de}
+  - {addr: 0x801cd0e0, name: D_801cd0e0}
   - {addr: 0x801cd0e4, name: g_attack_deploy_menu_entries}
   - {addr: 0x801cd210, name: g_attack_status_display_thread_params}
   - {addr: 0x801cd214, name: g_attack_status_display_offset_y}
@@ -278,6 +283,8 @@ data:
   - {addr: 0x801dcb1c, name: g_attack_deploy_cursor_clut}
   - {addr: 0x801dcb3c, name: g_attack_deploy_tile_clut_buffer}
   - {addr: 0x801dcb9c, name: g_attack_deploy_semitrans_clut_buffer}
+  - {addr: 0x801dcbbc, name: D_801dcbbc}
+  - {addr: 0x801dcbc0, name: D_801dcbc0}
   - {addr: 0x801dcbc4, name: g_attack_deploy_confirm_result}
   - {addr: 0x801dcbc8, name: g_attack_deploy_valid_tiles}
   - {addr: 0x801dcbe4, name: g_attack_deploy_roster_id_by_tile}
@@ -314,6 +321,75 @@ overrides:
   - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_text_image_b, addr: 0x801d9b1c}
   - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_a, addr: 0x801ca4e4}
   - {function: attack_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_b, addr: 0x801ca4ec}
+
+relocations:
+  - {addr: 0x801ca21c, to: g_attack_panel_selected_billboard, offset: 0xc}
+  - {addr: 0x801ca228, to: g_attack_panel_selected_billboard, offset: 0x10}
+  - {addr: 0x801ca234, to: g_attack_panel_selected_billboard, offset: 0x12}
+  - {addr: 0x801ca240, to: g_attack_panel_selected_billboard, offset: 0x16}
+  - {addr: 0x801ca24c, to: g_attack_panel_selected_billboard, offset: 0x18}
+  - {addr: 0x801ca258, to: g_attack_panel_selected_billboard, offset: 0x1c}
+  - {addr: 0x801ca264, to: g_attack_panel_selected_billboard, offset: 0x4}
+  - {addr: 0x801ca270, to: g_attack_panel_selected_billboard, offset: 0x6}
+  - {addr: 0x801ca27c, to: g_attack_panel_selected_billboard}
+  - {addr: 0x801ca288, to: g_attack_panel_selected_billboard, offset: 0x8}
+  - {addr: 0x801ca294, to: g_attack_panel_comparison_billboard, offset: 0xc}
+  - {addr: 0x801ca2a0, to: g_attack_panel_comparison_billboard, offset: 0x10}
+  - {addr: 0x801ca2ac, to: g_attack_panel_comparison_billboard, offset: 0x12}
+  - {addr: 0x801ca2b8, to: g_attack_panel_comparison_billboard, offset: 0x16}
+  - {addr: 0x801ca2c4, to: g_attack_panel_comparison_billboard, offset: 0x18}
+  - {addr: 0x801ca2d0, to: g_attack_panel_comparison_billboard, offset: 0x1c}
+  - {addr: 0x801ca2dc, to: g_attack_panel_comparison_billboard, offset: 0x4}
+  - {addr: 0x801ca2e8, to: g_attack_panel_comparison_billboard, offset: 0x6}
+  - {addr: 0x801ca2f4, to: g_attack_panel_comparison_billboard}
+  - {addr: 0x801ca300, to: g_attack_panel_comparison_billboard, offset: 0x8}
+  - {addr: 0x801caa3c, to: g_attack_editor_unit_fields}
+  - {addr: 0x801caa48, to: g_attack_editor_unit_fields, offset: 0x4}
+  - {addr: 0x801caa54, to: g_attack_editor_unit_fields, offset: 0x2}
+  - {addr: 0x801caa60, to: g_attack_editor_unit_fields, offset: 0x6}
+  - {addr: 0x801caa6c, to: g_attack_editor_unit_fields, offset: 0x8}
+  - {addr: 0x801caa78, to: g_attack_editor_unit_fields, offset: 0xa}
+  - {addr: 0x801caa84, to: g_attack_editor_unit_fields, offset: 0xc}
+  - {addr: 0x801caa90, to: g_attack_editor_unit_fields, offset: 0x12}
+  - {addr: 0x801caa9c, to: g_attack_editor_unit_fields, offset: 0x1c}
+  - {addr: 0x801caaa8, to: g_attack_editor_unit_fields, offset: 0x14}
+  - {addr: 0x801caab4, to: g_attack_editor_unit_fields, offset: 0x1e}
+  - {addr: 0x801caac0, to: g_attack_editor_unit_fields, offset: 0x16}
+  - {addr: 0x801caacc, to: g_attack_editor_unit_fields, offset: 0x20}
+  - {addr: 0x801caad8, to: g_attack_editor_unit_fields, offset: 0x18}
+  - {addr: 0x801caae4, to: g_attack_editor_unit_fields, offset: 0x22}
+  - {addr: 0x801caaf0, to: D_801ca128}
+  - {addr: 0x801caafc, to: D_801ca128, offset: 0x4}
+  - {addr: 0x801cab08, to: D_801ca128, offset: 0x2}
+  - {addr: 0x801cab14, to: D_801ca128, offset: 0x6}
+  - {addr: 0x801cab20, to: D_801ca128, offset: 0x8}
+  - {addr: 0x801cab2c, to: D_801ca128, offset: 0xa}
+  - {addr: 0x801cab38, to: D_801ca128, offset: 0xc}
+  - {addr: 0x801cab44, to: D_801ca128, offset: 0x12}
+  - {addr: 0x801cab50, to: D_801ca128, offset: 0x1c}
+  - {addr: 0x801cab5c, to: D_801ca128, offset: 0x14}
+  - {addr: 0x801cab68, to: D_801ca128, offset: 0x1e}
+  - {addr: 0x801cab74, to: D_801ca128, offset: 0x16}
+  - {addr: 0x801cab80, to: D_801ca128, offset: 0x20}
+  - {addr: 0x801cab8c, to: D_801ca128, offset: 0x18}
+  - {addr: 0x801cab98, to: D_801ca128, offset: 0x22}
+  - {addr: 0x801cd180, to: D_801cd0dc}
+  - {addr: 0x801cd184, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801cd190, to: D_801dcbbc}
+  - {addr: 0x801cd1bc, to: D_801cd0de}
+  - {addr: 0x801cd1c0, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801cd1cc, to: D_801dcbc0}
+  - {addr: 0x801cd1f8, to: D_801cd0e0}
+  - {addr: 0x801cd1fc, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801cd208, to: g_attack_deploy_confirm_result}
+  - {addr: 0x801cd270, to: g_attack_deploy_squad_data_storage}
+  - {addr: 0x801cd274, to: g_attack_deploy_squad_data_storage}
+  - {addr: 0x801d5e78, to: g_attack_panel_selected_unit_data, offset: 0x8}
+  - {addr: 0x801d5fb8, to: g_attack_scenario_table}
+  - {addr: 0x801d5fbc, to: g_attack_scenario_table}
+
+values:
+  - {addr: 0x801ccfd4, end: 0x801cd014, why: "g_attack_deploy_arrow_clut_data: CLUT colors"}
 ---
 module: event-bunit
 file: EVENT/BUNIT.OUT
@@ -552,6 +628,7 @@ data:
   - {addr: 0x801ce944, name: g_bunit_panel_selected_unit_data}
   - {addr: 0x801ce954, name: g_bunit_panel_comparison_unit_data}
   - {addr: 0x801ce964, name: g_bunit_editor_unit_fields}
+  - {addr: 0x801ce9a4, name: D_801ce9a4}
   - {addr: 0x801cea34, name: g_bunit_editor_numeric_geometry}
   - {addr: 0x801cea3a, name: g_bunit_panel_slide_up_y}
   - {addr: 0x801cea3c, name: g_bunit_panel_item_icon_texture}
@@ -664,6 +741,7 @@ data:
   - {addr: 0x801cf8d0, name: g_bunit_unit_dot_sprite}
   - {addr: 0x801cf8e4, name: g_bunit_unit_dot_glow_timer}
   - {addr: 0x801cf8e5, name: g_bunit_unit_dot_glow_direction}
+  - {addr: 0x801cf8e8, name: D_801cf8e8}
   - {addr: 0x801cf900, name: g_bunit_menu_reorder_list_redraw_request}
   - {addr: 0x801cf904, name: g_bunit_menu_reorder_list_desc}
   - {addr: 0x801cf93c, name: g_bunit_menu_reorder_list_index}
@@ -906,6 +984,109 @@ overrides:
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801cea5c}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801cecfc}
   - {function: menu_text_render_encoded_ids_to_image, name: menu_text_render_glyph_to_4bpp_image, addr: 0x801cb52c}
+
+relocations:
+  - {addr: 0x801cea98, to: g_bunit_panel_selected_billboard, offset: 0xc}
+  - {addr: 0x801ceaa4, to: g_bunit_panel_selected_billboard, offset: 0x10}
+  - {addr: 0x801ceab0, to: g_bunit_panel_selected_billboard, offset: 0x12}
+  - {addr: 0x801ceabc, to: g_bunit_panel_selected_billboard, offset: 0x16}
+  - {addr: 0x801ceac8, to: g_bunit_panel_selected_billboard, offset: 0x18}
+  - {addr: 0x801cead4, to: g_bunit_panel_selected_billboard, offset: 0x1c}
+  - {addr: 0x801ceae0, to: g_bunit_panel_selected_billboard, offset: 0x4}
+  - {addr: 0x801ceaec, to: g_bunit_panel_selected_billboard, offset: 0x6}
+  - {addr: 0x801ceaf8, to: g_bunit_panel_selected_billboard}
+  - {addr: 0x801ceb04, to: g_bunit_panel_selected_billboard, offset: 0x8}
+  - {addr: 0x801ceb10, to: g_bunit_panel_comparison_billboard, offset: 0xc}
+  - {addr: 0x801ceb1c, to: g_bunit_panel_comparison_billboard, offset: 0x10}
+  - {addr: 0x801ceb28, to: g_bunit_panel_comparison_billboard, offset: 0x12}
+  - {addr: 0x801ceb34, to: g_bunit_panel_comparison_billboard, offset: 0x16}
+  - {addr: 0x801ceb40, to: g_bunit_panel_comparison_billboard, offset: 0x18}
+  - {addr: 0x801ceb4c, to: g_bunit_panel_comparison_billboard, offset: 0x1c}
+  - {addr: 0x801ceb58, to: g_bunit_panel_comparison_billboard, offset: 0x4}
+  - {addr: 0x801ceb64, to: g_bunit_panel_comparison_billboard, offset: 0x6}
+  - {addr: 0x801ceb70, to: g_bunit_panel_comparison_billboard}
+  - {addr: 0x801ceb7c, to: g_bunit_panel_comparison_billboard, offset: 0x8}
+  - {addr: 0x801cf2b8, to: g_bunit_editor_unit_fields}
+  - {addr: 0x801cf2c4, to: g_bunit_editor_unit_fields, offset: 0x4}
+  - {addr: 0x801cf2d0, to: g_bunit_editor_unit_fields, offset: 0x2}
+  - {addr: 0x801cf2dc, to: g_bunit_editor_unit_fields, offset: 0x6}
+  - {addr: 0x801cf2e8, to: g_bunit_editor_unit_fields, offset: 0x8}
+  - {addr: 0x801cf2f4, to: g_bunit_editor_unit_fields, offset: 0xa}
+  - {addr: 0x801cf300, to: g_bunit_editor_unit_fields, offset: 0xc}
+  - {addr: 0x801cf30c, to: g_bunit_editor_unit_fields, offset: 0x12}
+  - {addr: 0x801cf318, to: g_bunit_editor_unit_fields, offset: 0x1c}
+  - {addr: 0x801cf324, to: g_bunit_editor_unit_fields, offset: 0x14}
+  - {addr: 0x801cf330, to: g_bunit_editor_unit_fields, offset: 0x1e}
+  - {addr: 0x801cf33c, to: g_bunit_editor_unit_fields, offset: 0x16}
+  - {addr: 0x801cf348, to: g_bunit_editor_unit_fields, offset: 0x20}
+  - {addr: 0x801cf354, to: g_bunit_editor_unit_fields, offset: 0x18}
+  - {addr: 0x801cf360, to: g_bunit_editor_unit_fields, offset: 0x22}
+  - {addr: 0x801cf36c, to: D_801ce9a4}
+  - {addr: 0x801cf378, to: D_801ce9a4, offset: 0x4}
+  - {addr: 0x801cf384, to: D_801ce9a4, offset: 0x2}
+  - {addr: 0x801cf390, to: D_801ce9a4, offset: 0x6}
+  - {addr: 0x801cf39c, to: D_801ce9a4, offset: 0x8}
+  - {addr: 0x801cf3a8, to: D_801ce9a4, offset: 0xa}
+  - {addr: 0x801cf3b4, to: D_801ce9a4, offset: 0xc}
+  - {addr: 0x801cf3c0, to: D_801ce9a4, offset: 0x12}
+  - {addr: 0x801cf3cc, to: D_801ce9a4, offset: 0x1c}
+  - {addr: 0x801cf3d8, to: D_801ce9a4, offset: 0x14}
+  - {addr: 0x801cf3e4, to: D_801ce9a4, offset: 0x1e}
+  - {addr: 0x801cf3f0, to: D_801ce9a4, offset: 0x16}
+  - {addr: 0x801cf3fc, to: D_801ce9a4, offset: 0x20}
+  - {addr: 0x801cf408, to: D_801ce9a4, offset: 0x18}
+  - {addr: 0x801cf414, to: D_801ce9a4, offset: 0x22}
+  - {addr: 0x801cf53c, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801cf548, to: g_bunit_menu_primary_result}
+  - {addr: 0x801cf928, to: D_801cf8e8}
+  - {addr: 0x801cf92c, to: menu_icon_list_thread}
+  - {addr: 0x801cf934, to: g_bunit_menu_reorder_list_redraw_request}
+  - {addr: 0x801cf938, to: g_bunit_menu_reorder_result}
+  - {addr: 0x801cf98c, to: menu_script_draw_window_frame}
+  - {addr: 0x801cf990, to: menu_script_if_group}
+  - {addr: 0x801cf994, to: menu_script_if_else_group}
+  - {addr: 0x801cf99c, to: bunit_menu_script_draw_textured_quad}
+  - {addr: 0x801cf9a0, to: bunit_menu_script_draw_textured_quad}
+  - {addr: 0x801cf9a4, to: bunit_menu_script_draw_callback_quad}
+  - {addr: 0x801cf9b0, to: menu_script_set_fixed_clut}
+  - {addr: 0x801cf9b4, to: menu_script_set_clut}
+  - {addr: 0x801cf9b8, to: menu_script_set_draw_color}
+  - {addr: 0x801cf9bc, to: menu_script_set_texture_page}
+  - {addr: 0x801cf9c0, to: bunit_menu_script_draw_formatted_number}
+  - {addr: 0x801cf9c4, to: bunit_menu_script_set_semi_trans}
+  - {addr: 0x801cf9c8, to: bunit_menu_script_set_draw_priority}
+  - {addr: 0x801cf9cc, to: bunit_menu_script_draw_scrollable_list}
+  - {addr: 0x801cf9d0, to: bunit_menu_script_draw_tiled_rectangle}
+  - {addr: 0x801cf9d4, to: bunit_menu_script_draw_opening_window_frame}
+  - {addr: 0x801cf9d8, to: bunit_menu_script_clear_temporary_draw_area}
+  - {addr: 0x801cf9dc, to: bunit_menu_script_set_draw_area}
+  - {addr: 0x801cf9e0, to: bunit_menu_script_reregister_temporary_draw_area}
+  - {addr: 0x801cf9e4, to: bunit_menu_script_advance_window_scale_step}
+  - {addr: 0x801cf9e8, to: bunit_menu_script_draw_plain_number}
+  - {addr: 0x801cf9ec, to: bunit_menu_script_add_blend_draw_mode}
+  - {addr: 0x801cf9f0, to: bunit_menu_script_draw_formatted_number}
+  - {addr: 0x801cf9f4, to: bunit_menu_script_draw_formatted_number}
+  - {addr: 0x801cf9f8, to: bunit_menu_script_draw_formatted_number}
+  - {addr: 0x801cfb04, to: g_bunit_panel_selected_unit_data, offset: 0x2}
+  - {addr: 0x801cfb34, to: g_bunit_panel_selected_unit_data, offset: 0x8}
+  - {addr: 0x801cfba4, to: g_bunit_editor_unit_fields, offset: 0x24}
+  - {addr: 0x801cfbb4, to: g_bunit_editor_unit_fields, offset: 0x26}
+  - {addr: 0x801cfbc4, to: g_bunit_editor_unit_fields, offset: 0x28}
+  - {addr: 0x801cfbd4, to: g_bunit_editor_unit_fields, offset: 0x2a}
+  - {addr: 0x801cfbe4, to: g_bunit_editor_unit_fields, offset: 0x2c}
+  - {addr: 0x801cfbf4, to: g_bunit_editor_unit_fields, offset: 0x2e}
+  - {addr: 0x801cfc04, to: g_bunit_editor_unit_fields, offset: 0x30}
+  - {addr: 0x801cfc14, to: g_bunit_editor_unit_fields, offset: 0x32}
+  - {addr: 0x801cfc24, to: g_bunit_editor_unit_fields, offset: 0x34}
+  - {addr: 0x801cfc34, to: g_bunit_editor_unit_fields, offset: 0x36}
+  - {addr: 0x801cfcf4, to: g_bunit_panel_selected_unit_data, offset: 0x2}
+  - {addr: 0x801cfd24, to: g_bunit_panel_selected_unit_data, offset: 0x8}
+  - {addr: 0x801cfdb4, to: g_bunit_panel_selected_unit_data, offset: 0x2}
+  - {addr: 0x801cfde4, to: g_bunit_panel_selected_unit_data, offset: 0x8}
+
+values:
+  - {addr: 0x801bf000, end: 0x801bf200, why: "bunit_menu_clut: CLUT colors"}
+  - {addr: 0x801cfdf8, end: 0x801e345c, why: "g_bunit_help_text_table: help text bytes"}
 ---
 module: event-card
 file: EVENT/CARD.OUT
@@ -1030,6 +1211,21 @@ functions:
   - {addr: 0x801c864c, size: 48, name: gfx_store_image_and_wait, hash: 42b445a1713fca16, source: src/shared/gfx/gfx_store_image_and_wait.c}
 
 data:
+  - {addr: 0x801bf000, name: g_card_save_file_name_14}
+  - {addr: 0x801bf014, name: g_card_save_file_name_13}
+  - {addr: 0x801bf028, name: g_card_save_file_name_12}
+  - {addr: 0x801bf03c, name: g_card_save_file_name_11}
+  - {addr: 0x801bf050, name: g_card_save_file_name_10}
+  - {addr: 0x801bf064, name: g_card_save_file_name_9}
+  - {addr: 0x801bf078, name: g_card_save_file_name_8}
+  - {addr: 0x801bf08c, name: g_card_save_file_name_7}
+  - {addr: 0x801bf0a0, name: g_card_save_file_name_6}
+  - {addr: 0x801bf0b4, name: g_card_save_file_name_5}
+  - {addr: 0x801bf0c8, name: g_card_save_file_name_4}
+  - {addr: 0x801bf0dc, name: g_card_save_file_name_3}
+  - {addr: 0x801bf0f0, name: g_card_save_file_name_2}
+  - {addr: 0x801bf104, name: g_card_save_file_name_1}
+  - {addr: 0x801bf118, name: g_card_save_file_name_0}
   - {addr: 0x801bf12c, name: g_card_save_title_template}
   - {addr: 0x801bf144, name: g_card_file_slot_0_path}
   - {addr: 0x801bf14c, name: g_card_file_slot_1_path}
@@ -1048,7 +1244,9 @@ data:
   - {addr: 0x801c9574, name: g_card_save_list_scroll_base_y}
   - {addr: 0x801c9576, name: g_card_save_list_selected_slot}
   - {addr: 0x801c9578, name: g_card_save_list_top_row}
+  - {addr: 0x801c957a, name: D_801c957a}
   - {addr: 0x801c957c, name: g_card_save_initial_prompt_timer}
+  - {addr: 0x801c957e, name: D_801c957e}
   - {addr: 0x801c9580, name: g_card_menu_selection_index}
   - {addr: 0x801c9582, name: g_card_save_slot_index}
   - {addr: 0x801c9584, name: g_card_save_completed}
@@ -1187,6 +1385,71 @@ overrides:
   - {function: card_bits_read_primary, name: g_menu_bits_secondary_index, addr: 0x801ca944}
   - {function: card_bits_read_primary, name: g_menu_bits_secondary_reset, addr: 0x801ca940}
   - {function: card_bits_read_primary, name: g_menu_bits_secondary_source, addr: 0x801d9210}
+
+relocations:
+  - {addr: 0x801c8680, to: g_card_save_file_name_0}
+  - {addr: 0x801c8684, to: g_card_save_file_name_1}
+  - {addr: 0x801c8688, to: g_card_save_file_name_2}
+  - {addr: 0x801c868c, to: g_card_save_file_name_3}
+  - {addr: 0x801c8690, to: g_card_save_file_name_4}
+  - {addr: 0x801c8694, to: g_card_save_file_name_5}
+  - {addr: 0x801c8698, to: g_card_save_file_name_6}
+  - {addr: 0x801c869c, to: g_card_save_file_name_7}
+  - {addr: 0x801c86a0, to: g_card_save_file_name_8}
+  - {addr: 0x801c86a4, to: g_card_save_file_name_9}
+  - {addr: 0x801c86a8, to: g_card_save_file_name_10}
+  - {addr: 0x801c86ac, to: g_card_save_file_name_11}
+  - {addr: 0x801c86b0, to: g_card_save_file_name_12}
+  - {addr: 0x801c86b4, to: g_card_save_file_name_13}
+  - {addr: 0x801c86b8, to: g_card_save_file_name_14}
+  - {addr: 0x801c95b8, to: D_801c957e}
+  - {addr: 0x801c95bc, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c95c8, to: g_card_menu_selection_index}
+  - {addr: 0x801c95f8, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801c9604, to: g_card_save_slot_index}
+  - {addr: 0x801c9634, to: D_801c957e}
+  - {addr: 0x801c9638, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c9644, to: g_card_menu_selection_index}
+  - {addr: 0x801c9674, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801c9680, to: g_card_save_slot_index}
+  - {addr: 0x801c96b0, to: D_801c957a}
+  - {addr: 0x801c96b4, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c96c0, to: g_card_menu_selection_index}
+  - {addr: 0x801c96f0, to: D_801c957a}
+  - {addr: 0x801c96f4, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c9700, to: g_card_menu_selection_index}
+  - {addr: 0x801c972c, to: D_801c957a}
+  - {addr: 0x801c9730, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c973c, to: g_card_menu_selection_index}
+  - {addr: 0x801c9768, to: D_801c957a}
+  - {addr: 0x801c976c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c9778, to: g_card_menu_selection_index}
+  - {addr: 0x801c97a8, to: D_801c957e}
+  - {addr: 0x801c97ac, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c97b8, to: g_card_menu_selection_index}
+  - {addr: 0x801c97e8, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801c97f4, to: g_card_save_slot_index}
+  - {addr: 0x801c9820, to: D_801c957e}
+  - {addr: 0x801c9824, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c9830, to: g_card_menu_selection_index}
+  - {addr: 0x801c9860, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801c986c, to: g_card_save_slot_index}
+  - {addr: 0x801c9898, to: D_801c957a}
+  - {addr: 0x801c989c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c98a8, to: g_card_menu_selection_index}
+  - {addr: 0x801c98d4, to: D_801c957a}
+  - {addr: 0x801c98d8, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c98e4, to: g_card_menu_selection_index}
+  - {addr: 0x801ca8c8, to: card_menu_script_draw_window_frame}
+  - {addr: 0x801ca8d8, to: card_menu_script_draw_textured_quad}
+  - {addr: 0x801ca8dc, to: card_menu_script_draw_textured_quad}
+  - {addr: 0x801ca8f8, to: card_menu_script_set_texture_page}
+  - {addr: 0x801ca8fc, to: card_menu_script_draw_formatted_number}
+  - {addr: 0x801ca904, to: card_menu_script_set_draw_priority}
+  - {addr: 0x801ca90c, to: card_menu_script_draw_tiled_rectangle}
+
+values:
+  - {addr: 0x801c9370, end: 0x801c9570, why: "g_card_save_menu_palette_image: CLUT colors"}
 ---
 module: event-debugchr
 file: EVENT/DEBUGCHR.OUT
@@ -1267,6 +1530,7 @@ data:
   - {addr: 0x801c5344, name: g_menu_status_panel_fields}
   - {addr: 0x801c5346, name: g_debugchr_editor_speed}
   - {addr: 0x801c5348, name: g_debugchr_editor_jump}
+  - {addr: 0x801c5384, name: D_801c5384}
   - {addr: 0x801c53c4, name: g_debugchr_editor_primary_skillset_name}
   - {addr: 0x801c53d8, name: g_debugchr_editor_secondary_skillset_name}
   - {addr: 0x801c53ec, name: g_debugchr_editor_unit_name}
@@ -1369,6 +1633,80 @@ overrides:
   - {function: menu_build_unit_portrait_transition, name: attack_gfx_build_portrait_poly_ft4, addr: 0x801bf230}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_origin, addr: 0x801c543c}
   - {function: menu_build_unit_portrait_transition, name: g_gfx_portrait_transition_offsets, addr: 0x801c56dc}
+
+relocations:
+  - {addr: 0x801c5478, to: g_debugchr_editor_values}
+  - {addr: 0x801c5484, to: g_debugchr_editor_hp_max}
+  - {addr: 0x801c5490, to: g_debugchr_panel_selected_billboard, offset: 0x12}
+  - {addr: 0x801c549c, to: g_debugchr_editor_mp_max}
+  - {addr: 0x801c54a8, to: g_debugchr_panel_selected_billboard, offset: 0x18}
+  - {addr: 0x801c54b4, to: g_debugchr_editor_ct_max}
+  - {addr: 0x801c54c0, to: g_debugchr_panel_selected_billboard, offset: 0x4}
+  - {addr: 0x801c54cc, to: g_debugchr_panel_selected_billboard, offset: 0x6}
+  - {addr: 0x801c54d8, to: g_debugchr_panel_selected_billboard}
+  - {addr: 0x801c54e4, to: g_debugchr_panel_selected_billboard, offset: 0x8}
+  - {addr: 0x801c54f0, to: g_debugchr_panel_comparison_billboard, offset: 0xc}
+  - {addr: 0x801c54fc, to: g_debugchr_panel_comparison_billboard, offset: 0x10}
+  - {addr: 0x801c5508, to: g_debugchr_panel_comparison_billboard, offset: 0x12}
+  - {addr: 0x801c5514, to: g_debugchr_panel_comparison_billboard, offset: 0x16}
+  - {addr: 0x801c5520, to: g_debugchr_panel_comparison_billboard, offset: 0x18}
+  - {addr: 0x801c552c, to: g_debugchr_panel_comparison_billboard, offset: 0x1c}
+  - {addr: 0x801c5538, to: g_debugchr_panel_comparison_billboard, offset: 0x4}
+  - {addr: 0x801c5544, to: g_debugchr_panel_comparison_billboard, offset: 0x6}
+  - {addr: 0x801c5550, to: g_debugchr_panel_comparison_billboard}
+  - {addr: 0x801c555c, to: g_debugchr_panel_comparison_billboard, offset: 0x8}
+  - {addr: 0x801c5c98, to: g_menu_status_panel_fields}
+  - {addr: 0x801c5ca4, to: g_debugchr_editor_jump}
+  - {addr: 0x801c5cb0, to: g_debugchr_editor_speed}
+  - {addr: 0x801c5cbc, to: g_menu_status_panel_fields, offset: 0x6}
+  - {addr: 0x801c5cc8, to: g_menu_status_panel_fields, offset: 0x8}
+  - {addr: 0x801c5cd4, to: g_menu_status_panel_fields, offset: 0xa}
+  - {addr: 0x801c5ce0, to: g_menu_status_panel_fields, offset: 0xc}
+  - {addr: 0x801c5cec, to: g_menu_status_panel_fields, offset: 0x12}
+  - {addr: 0x801c5cf8, to: g_menu_status_panel_fields, offset: 0x1c}
+  - {addr: 0x801c5d04, to: g_menu_status_panel_fields, offset: 0x14}
+  - {addr: 0x801c5d10, to: g_menu_status_panel_fields, offset: 0x1e}
+  - {addr: 0x801c5d1c, to: g_menu_status_panel_fields, offset: 0x16}
+  - {addr: 0x801c5d28, to: g_menu_status_panel_fields, offset: 0x20}
+  - {addr: 0x801c5d34, to: g_menu_status_panel_fields, offset: 0x18}
+  - {addr: 0x801c5d40, to: g_menu_status_panel_fields, offset: 0x22}
+  - {addr: 0x801c5d4c, to: D_801c5384}
+  - {addr: 0x801c5d58, to: D_801c5384, offset: 0x4}
+  - {addr: 0x801c5d64, to: D_801c5384, offset: 0x2}
+  - {addr: 0x801c5d70, to: D_801c5384, offset: 0x6}
+  - {addr: 0x801c5d7c, to: D_801c5384, offset: 0x8}
+  - {addr: 0x801c5d88, to: D_801c5384, offset: 0xa}
+  - {addr: 0x801c5d94, to: D_801c5384, offset: 0xc}
+  - {addr: 0x801c5da0, to: D_801c5384, offset: 0x12}
+  - {addr: 0x801c5dac, to: D_801c5384, offset: 0x1c}
+  - {addr: 0x801c5db8, to: D_801c5384, offset: 0x14}
+  - {addr: 0x801c5dc4, to: D_801c5384, offset: 0x1e}
+  - {addr: 0x801c5dd0, to: D_801c5384, offset: 0x16}
+  - {addr: 0x801c5ddc, to: D_801c5384, offset: 0x20}
+  - {addr: 0x801c5de8, to: D_801c5384, offset: 0x18}
+  - {addr: 0x801c5df4, to: D_801c5384, offset: 0x22}
+  - {addr: 0x801c6044, to: g_debugchr_panel_selected_billboard}
+  - {addr: 0x801c6054, to: g_debugchr_panel_selected_billboard, offset: 0x8}
+  - {addr: 0x801c6064, to: g_debugchr_panel_selected_unit_data, offset: 0x2}
+  - {addr: 0x801c6074, to: g_debugchr_panel_selected_unit_data, offset: 0x4}
+  - {addr: 0x801c6084, to: g_debugchr_panel_selected_unit_data, offset: 0x6}
+  - {addr: 0x801c6094, to: g_debugchr_panel_selected_unit_data, offset: 0x8}
+  - {addr: 0x801c60a4, to: g_menu_status_panel_fields}
+  - {addr: 0x801c60b4, to: g_debugchr_editor_jump}
+  - {addr: 0x801c60c4, to: g_debugchr_editor_speed}
+  - {addr: 0x801c60d4, to: g_menu_status_panel_fields, offset: 0x24}
+  - {addr: 0x801c60e4, to: g_menu_status_panel_fields, offset: 0x26}
+  - {addr: 0x801c60f4, to: g_menu_status_panel_fields, offset: 0x28}
+  - {addr: 0x801c6104, to: g_menu_status_panel_fields, offset: 0x2a}
+  - {addr: 0x801c6114, to: g_menu_status_panel_fields, offset: 0x2c}
+  - {addr: 0x801c6124, to: g_menu_status_panel_fields, offset: 0x2e}
+  - {addr: 0x801c6134, to: g_menu_status_panel_fields, offset: 0x30}
+  - {addr: 0x801c6144, to: g_menu_status_panel_fields, offset: 0x32}
+  - {addr: 0x801c6154, to: g_menu_status_panel_fields, offset: 0x34}
+  - {addr: 0x801c6164, to: g_menu_status_panel_fields, offset: 0x36}
+  - {addr: 0x801c6174, to: g_debugchr_editor_values}
+  - {addr: 0x801c6184, to: g_debugchr_panel_selected_billboard, offset: 0x12}
+  - {addr: 0x801c6194, to: g_debugchr_panel_selected_billboard, offset: 0x18}
 ---
 module: event-equip
 file: EVENT/EQUIP.OUT
@@ -1677,6 +2015,7 @@ data:
   - {addr: 0x801ceef0, name: g_equip_editor_numeric_descriptor_b}
   - {addr: 0x801cefc8, name: g_menu_decimal_glyph}
   - {addr: 0x801ceff0, name: g_equip_menu_text_redraw_flag}
+  - {addr: 0x801ceff4, name: D_801ceff4}
   - {addr: 0x801ceffc, name: g_equip_menu_command_entry}
   - {addr: 0x801cf038, name: g_equip_menu_thread_running}
   - {addr: 0x801cf03a, name: g_equip_thread_idle_stop_pending}
@@ -1693,6 +2032,9 @@ data:
   - {addr: 0x801cf120, name: g_equip_remove_item_marker_rect}
   - {addr: 0x801cf124, name: g_equip_menu_clear_all_prompt_draw_params}
   - {addr: 0x801cf128, name: g_equip_status_label_image}
+  - {addr: 0x801cf6a8, name: D_801cf6a8}
+  - {addr: 0x801cf6b4, name: D_801cf6b4}
+  - {addr: 0x801cf6bc, name: D_801cf6bc}
   - {addr: 0x801cf6c4, name: g_equip_item_action_menu}
   - {addr: 0x801cf700, name: g_equip_item_action_menu_single_item}
   - {addr: 0x801cf73c, name: g_equip_equipment_render_commands}
@@ -1930,6 +2272,152 @@ overrides:
   - {function: menu_script_draw_window_frame, name: bunit_menu_script_draw_tiled_rectangle, addr: 0x801cb800}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801cdf50}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801cdf88}
+
+relocations:
+  - {addr: 0x801ce1d4, to: equip_menu_update_screen_state}
+  - {addr: 0x801ce1d8, to: equip_menu_update_screen_state}
+  - {addr: 0x801ce1dc, to: equip_menu_update_screen_state}
+  - {addr: 0x801ce1e0, to: equip_menu_update_screen_state}
+  - {addr: 0x801ce1e4, to: equip_menu_update_screen_state}
+  - {addr: 0x801ce5c0, to: g_equip_selected_unit_stat_summary, offset: 0xc}
+  - {addr: 0x801ce5cc, to: g_equip_selected_unit_stat_summary, offset: 0x10}
+  - {addr: 0x801ce5d8, to: g_equip_selected_unit_stat_summary, offset: 0x12}
+  - {addr: 0x801ce5e4, to: g_equip_selected_unit_stat_summary, offset: 0x16}
+  - {addr: 0x801ce5f0, to: g_equip_selected_unit_stat_summary, offset: 0x18}
+  - {addr: 0x801ce5fc, to: g_equip_selected_unit_stat_summary, offset: 0x1c}
+  - {addr: 0x801ce608, to: g_equip_selected_unit_stat_summary, offset: 0x4}
+  - {addr: 0x801ce614, to: g_equip_selected_unit_stat_summary, offset: 0x6}
+  - {addr: 0x801ce620, to: g_equip_selected_unit_stat_summary}
+  - {addr: 0x801ce62c, to: g_equip_selected_unit_stat_summary, offset: 0x8}
+  - {addr: 0x801ce638, to: g_equip_selected_unit_stat_summary, offset: 0xe}
+  - {addr: 0x801ce644, to: g_equip_selected_unit_stat_summary, offset: 0x10}
+  - {addr: 0x801ce650, to: g_equip_selected_unit_stat_summary, offset: 0x14}
+  - {addr: 0x801ce65c, to: g_equip_selected_unit_stat_summary, offset: 0x16}
+  - {addr: 0x801ce668, to: g_equip_panel_comparison_billboard, offset: 0xc}
+  - {addr: 0x801ce674, to: g_equip_panel_comparison_billboard, offset: 0x10}
+  - {addr: 0x801ce680, to: g_equip_panel_comparison_billboard, offset: 0x12}
+  - {addr: 0x801ce68c, to: g_equip_panel_comparison_billboard, offset: 0x16}
+  - {addr: 0x801ce698, to: g_equip_panel_comparison_billboard, offset: 0x18}
+  - {addr: 0x801ce6a4, to: g_equip_panel_comparison_billboard, offset: 0x1c}
+  - {addr: 0x801ce6b0, to: g_equip_panel_comparison_billboard, offset: 0x4}
+  - {addr: 0x801ce6bc, to: g_equip_panel_comparison_billboard, offset: 0x6}
+  - {addr: 0x801ce6c8, to: g_equip_panel_comparison_billboard}
+  - {addr: 0x801ce6d4, to: g_equip_panel_comparison_billboard, offset: 0x8}
+  - {addr: 0x801ce6e0, to: g_equip_panel_comparison_billboard, offset: 0xe}
+  - {addr: 0x801ce6ec, to: g_equip_panel_comparison_billboard, offset: 0x10}
+  - {addr: 0x801ce6f8, to: g_equip_panel_comparison_billboard, offset: 0x14}
+  - {addr: 0x801ce704, to: g_equip_panel_comparison_billboard, offset: 0x16}
+  - {addr: 0x801cee40, to: g_menu_status_panel_fields}
+  - {addr: 0x801cee4c, to: g_menu_status_panel_fields, offset: 0x4}
+  - {addr: 0x801cee58, to: g_menu_status_panel_fields, offset: 0x2}
+  - {addr: 0x801cee64, to: g_menu_status_panel_fields, offset: 0x6}
+  - {addr: 0x801cee70, to: g_menu_status_panel_fields, offset: 0x8}
+  - {addr: 0x801cee7c, to: g_menu_status_panel_fields, offset: 0xa}
+  - {addr: 0x801cee88, to: g_menu_status_panel_fields, offset: 0xc}
+  - {addr: 0x801cee94, to: g_menu_status_panel_fields, offset: 0x12}
+  - {addr: 0x801ceea0, to: g_menu_status_panel_fields, offset: 0x1c}
+  - {addr: 0x801ceeac, to: g_menu_status_panel_fields, offset: 0x14}
+  - {addr: 0x801ceeb8, to: g_menu_status_panel_fields, offset: 0x1e}
+  - {addr: 0x801ceec4, to: g_menu_status_panel_fields, offset: 0x16}
+  - {addr: 0x801ceed0, to: g_menu_status_panel_fields, offset: 0x20}
+  - {addr: 0x801ceedc, to: g_menu_status_panel_fields, offset: 0x18}
+  - {addr: 0x801ceee8, to: g_menu_status_panel_fields, offset: 0x22}
+  - {addr: 0x801ceef4, to: g_equip_item_preview_stat_detail}
+  - {addr: 0x801cef00, to: g_equip_item_preview_stat_detail, offset: 0x4}
+  - {addr: 0x801cef0c, to: g_equip_item_preview_stat_detail, offset: 0x2}
+  - {addr: 0x801cef18, to: g_equip_item_preview_stat_detail, offset: 0x6}
+  - {addr: 0x801cef24, to: g_equip_item_preview_stat_detail, offset: 0x8}
+  - {addr: 0x801cef30, to: g_equip_item_preview_stat_detail, offset: 0xa}
+  - {addr: 0x801cef3c, to: g_equip_item_preview_stat_detail, offset: 0xc}
+  - {addr: 0x801cef48, to: g_equip_item_preview_stat_detail, offset: 0x12}
+  - {addr: 0x801cef54, to: g_equip_item_preview_stat_detail, offset: 0x1c}
+  - {addr: 0x801cef60, to: g_equip_item_preview_stat_detail, offset: 0x14}
+  - {addr: 0x801cef6c, to: g_equip_item_preview_stat_detail, offset: 0x1e}
+  - {addr: 0x801cef78, to: g_equip_item_preview_stat_detail, offset: 0x16}
+  - {addr: 0x801cef84, to: g_equip_item_preview_stat_detail, offset: 0x20}
+  - {addr: 0x801cef90, to: g_equip_item_preview_stat_detail, offset: 0x18}
+  - {addr: 0x801cef9c, to: g_equip_item_preview_stat_detail, offset: 0x22}
+  - {addr: 0x801cefdc, to: equip_menu_update_screen_state}
+  - {addr: 0x801cefe0, to: equip_menu_update_screen_state}
+  - {addr: 0x801cefe4, to: equip_menu_update_screen_state}
+  - {addr: 0x801cefe8, to: equip_menu_update_screen_state}
+  - {addr: 0x801cefec, to: equip_menu_update_screen_state}
+  - {addr: 0x801cf020, to: D_801ceff4}
+  - {addr: 0x801cf024, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801cf02c, to: g_equip_menu_text_redraw_flag}
+  - {addr: 0x801cf030, to: g_equip_menu_result_rows}
+  - {addr: 0x801cf6e8, to: D_801cf6b4}
+  - {addr: 0x801cf6ec, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801cf6f8, to: g_equip_menu_result_rows, offset: 0x2}
+  - {addr: 0x801cf724, to: D_801cf6bc}
+  - {addr: 0x801cf728, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801cf734, to: g_equip_menu_result_rows, offset: 0x2}
+  - {addr: 0x801cf898, to: D_801cf6a8}
+  - {addr: 0x801cf89c, to: menu_icon_list_thread}
+  - {addr: 0x801cf8a4, to: g_equip_menu_text_redraw_flag}
+  - {addr: 0x801cf8a8, to: g_equip_menu_result_rows, offset: 0x4}
+  - {addr: 0x801cf8d4, to: D_801cf6a8}
+  - {addr: 0x801cf8d8, to: menu_icon_list_thread}
+  - {addr: 0x801cf8e0, to: g_equip_menu_text_redraw_flag}
+  - {addr: 0x801cf8e4, to: g_equip_menu_result_rows, offset: 0x4}
+  - {addr: 0x801cfb30, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfb34, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfb38, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfb3c, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfb40, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfb48, to: g_main_item_type_order_2}
+  - {addr: 0x801cfb4c, to: g_main_item_type_order_3}
+  - {addr: 0x801cfb50, to: g_main_item_type_order_4}
+  - {addr: 0x801cfb54, to: g_main_item_type_order_5}
+  - {addr: 0x801cfb58, to: g_main_item_type_order_6}
+  - {addr: 0x801cfb5c, to: g_main_weapon_page_order}
+  - {addr: 0x801cfb60, to: g_main_helmet_page_order}
+  - {addr: 0x801cfb64, to: g_main_armor_page_order}
+  - {addr: 0x801cfb68, to: g_main_accessory_page_order}
+  - {addr: 0x801cfb6c, to: g_main_item_page_order}
+  - {addr: 0x801cfbc0, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfbc4, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfbc8, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfbcc, to: equip_menu_update_screen_state}
+  - {addr: 0x801cfbd0, to: equip_menu_update_screen_state}
+  - {addr: 0x801d8694, to: equip_menu_update_screen_state}
+  - {addr: 0x801d8698, to: equip_menu_update_screen_state}
+  - {addr: 0x801d869c, to: equip_menu_update_screen_state}
+  - {addr: 0x801d86a0, to: equip_menu_update_screen_state}
+  - {addr: 0x801d86a4, to: equip_menu_update_screen_state}
+  - {addr: 0x801d86ec, to: equip_menu_update_screen_state}
+  - {addr: 0x801d86f0, to: equip_menu_update_screen_state}
+  - {addr: 0x801d86f4, to: equip_menu_update_screen_state}
+  - {addr: 0x801d86f8, to: equip_menu_update_screen_state}
+  - {addr: 0x801d86fc, to: equip_menu_update_screen_state}
+  - {addr: 0x801d8700, to: menu_script_draw_window_frame}
+  - {addr: 0x801d8704, to: menu_script_if_group}
+  - {addr: 0x801d8708, to: menu_script_if_else_group}
+  - {addr: 0x801d870c, to: equip_menu_script_draw_tile}
+  - {addr: 0x801d8710, to: equip_menu_script_draw_textured_quad}
+  - {addr: 0x801d8714, to: equip_menu_script_draw_textured_quad}
+  - {addr: 0x801d8718, to: equip_menu_script_draw_callback_quad}
+  - {addr: 0x801d871c, to: equip_menu_script_draw_line}
+  - {addr: 0x801d8724, to: menu_script_set_fixed_clut}
+  - {addr: 0x801d8728, to: menu_script_set_clut}
+  - {addr: 0x801d872c, to: menu_script_set_draw_color}
+  - {addr: 0x801d8730, to: menu_script_set_texture_page}
+  - {addr: 0x801d8734, to: equip_menu_script_draw_formatted_number}
+  - {addr: 0x801d8738, to: equip_menu_script_set_semi_trans}
+  - {addr: 0x801d873c, to: equip_menu_script_set_draw_priority}
+  - {addr: 0x801d8740, to: equip_menu_script_draw_scrollable_list}
+  - {addr: 0x801d8744, to: equip_menu_script_draw_tiled_rectangle}
+  - {addr: 0x801d8748, to: equip_menu_script_draw_opening_window_frame}
+  - {addr: 0x801d874c, to: equip_menu_script_clear_temporary_draw_area}
+  - {addr: 0x801d8750, to: equip_menu_script_set_draw_area}
+  - {addr: 0x801d8754, to: equip_menu_script_reregister_temporary_draw_area}
+  - {addr: 0x801d8758, to: equip_menu_script_advance_window_scale_step}
+  - {addr: 0x801d875c, to: equip_menu_script_draw_plain_number}
+  - {addr: 0x801d8760, to: equip_menu_script_add_blend_draw_mode}
+
+values:
+  - {addr: 0x801ce1e8, end: 0x801ce3e8, why: "g_equip_menu_palette_image: CLUT colors"}
+  - {addr: 0x801cfbd8, end: 0x801d8694, why: "g_equip_help_text_table: help text bytes"}
 ---
 module: event-etc
 file: EVENT/ETC.OUT
@@ -1955,10 +2443,75 @@ functions:
 
 data:
   - {addr: 0x801bf000, name: g_etc_allocation_wait_message}
+  - {addr: 0x801c0648, name: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c0650, name: g_etc_graphic_game_over_framebuffer_rect}
   - {addr: 0x801c0658, name: g_etc_graphic_game_over_palette_rect}
+  - {addr: 0x801c0668, name: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c06f8, name: D_801c06f8}
+  - {addr: 0x801c0728, name: D_801c0728}
+  - {addr: 0x801c072c, name: g_etc_graphic_game_over_dimensions}
+  - {addr: 0x801c075c, name: D_801c075c}
+  - {addr: 0x801c076c, name: D_801c076c}
+  - {addr: 0x801c0770, name: g_etc_graphic_path_chapter1}
+  - {addr: 0x801c0790, name: g_etc_graphic_path_chapter2}
+  - {addr: 0x801c07b0, name: g_etc_graphic_path_chapter3}
+  - {addr: 0x801c07d0, name: g_etc_graphic_path_chapter4}
+  - {addr: 0x801c07f0, name: g_etc_graphic_path_gameover}
+  - {addr: 0x801c0810, name: g_etc_graphic_path_end1}
+  - {addr: 0x801c082c, name: g_etc_graphic_path_end2}
+  - {addr: 0x801c0848, name: g_etc_graphic_path_end3}
+  - {addr: 0x801c0864, name: g_etc_graphic_path_end4}
+  - {addr: 0x801c0880, name: g_etc_graphic_path_end5}
   - {addr: 0x801c089c, name: g_etc_graphics}
   - {addr: 0x801c0a3c, name: g_etc_graphic_chapter_primitives_a}
   - {addr: 0x801c0bdc, name: g_etc_graphic_chapter_primitives_b}
+
+relocations:
+  - {addr: 0x801c089c, to: g_etc_graphic_path_chapter1}
+  - {addr: 0x801c08a8, to: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c08ac, to: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c08b0, to: D_801c0728}
+  - {addr: 0x801c08b4, to: D_801c06f8}
+  - {addr: 0x801c08bc, to: g_etc_graphic_path_chapter1}
+  - {addr: 0x801c08c8, to: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c08cc, to: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c08d0, to: D_801c0728}
+  - {addr: 0x801c08d4, to: D_801c06f8}
+  - {addr: 0x801c08dc, to: g_etc_graphic_path_chapter2}
+  - {addr: 0x801c08e8, to: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c08ec, to: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c08f0, to: D_801c0728}
+  - {addr: 0x801c08f4, to: D_801c06f8}
+  - {addr: 0x801c08fc, to: g_etc_graphic_path_chapter3}
+  - {addr: 0x801c0908, to: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c090c, to: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c0910, to: D_801c0728}
+  - {addr: 0x801c0914, to: D_801c06f8}
+  - {addr: 0x801c091c, to: g_etc_graphic_path_chapter4}
+  - {addr: 0x801c0928, to: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c092c, to: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c0930, to: D_801c0728}
+  - {addr: 0x801c0934, to: D_801c06f8}
+  - {addr: 0x801c093c, to: g_etc_graphic_path_chapter1}
+  - {addr: 0x801c0948, to: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c094c, to: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c0950, to: D_801c0728}
+  - {addr: 0x801c0954, to: D_801c06f8}
+  - {addr: 0x801c095c, to: g_etc_graphic_path_chapter1}
+  - {addr: 0x801c0968, to: g_etc_graphic_chapter_framebuffer_rect}
+  - {addr: 0x801c096c, to: g_etc_graphic_chapter_dimensions}
+  - {addr: 0x801c0970, to: D_801c0728}
+  - {addr: 0x801c0974, to: D_801c06f8}
+  - {addr: 0x801c097c, to: g_etc_graphic_path_gameover}
+  - {addr: 0x801c0988, to: g_etc_graphic_game_over_framebuffer_rect}
+  - {addr: 0x801c098c, to: g_etc_graphic_game_over_dimensions}
+  - {addr: 0x801c0990, to: D_801c076c}
+  - {addr: 0x801c0994, to: D_801c075c}
+  - {addr: 0x801c099c, to: g_etc_graphic_path_end1}
+  - {addr: 0x801c09bc, to: g_etc_graphic_path_end2}
+  - {addr: 0x801c09dc, to: g_etc_graphic_path_end3}
+  - {addr: 0x801c09fc, to: g_etc_graphic_path_end4}
+  - {addr: 0x801c0a1c, to: g_etc_graphic_path_end5}
 ---
 module: event-helpmenu
 file: EVENT/HELPMENU.OUT
@@ -1989,12 +2542,56 @@ data:
   - {addr: 0x801e078c, name: g_helpmenu_view_mode_4_navigation}
   - {addr: 0x801e07fc, name: g_helpmenu_view_mode_3_navigation}
   - {addr: 0x801e084c, name: g_helpmenu_require_navigation}
+  - {addr: 0x801e0a3c, name: g_helpmenu_menu_text_id_lists}
   - {addr: 0x801e0ad4, name: g_helpmenu_menu_text_id_tables}
   - {addr: 0x801e0b30, name: g_helpmenu_text_section_offsets}
   - {addr: 0x801e0bb0, name: g_helpmenu_text_data}
   - {addr: 0x801f74f8, name: g_helpmenu_controller_state_ptr}
   - {addr: 0x801f74fc, name: g_helpmenu_current_text_ids}
   - {addr: 0x801f7504, name: g_helpmenu_text_saved_pointers}
+
+relocations:
+  - {addr: 0x801e06cc, to: g_helpmenu_menu_cursor_tile}
+  - {addr: 0x801e06fc, to: g_helpmenu_menu_cursor_tile}
+  - {addr: 0x801e080c, to: g_helpmenu_active_unit_data, offset: 0x2}
+  - {addr: 0x801e08cc, to: g_helpmenu_active_unit_data, offset: 0x2}
+  - {addr: 0x801e08fc, to: g_helpmenu_active_unit_data, offset: 0x8}
+  - {addr: 0x801e096c, to: g_helpmenu_billboard, offset: 0x24}
+  - {addr: 0x801e097c, to: g_helpmenu_billboard, offset: 0x26}
+  - {addr: 0x801e098c, to: g_helpmenu_billboard, offset: 0x28}
+  - {addr: 0x801e099c, to: g_helpmenu_billboard, offset: 0x2a}
+  - {addr: 0x801e09ac, to: g_helpmenu_billboard, offset: 0x2c}
+  - {addr: 0x801e09bc, to: g_helpmenu_billboard, offset: 0x2e}
+  - {addr: 0x801e09cc, to: g_helpmenu_billboard, offset: 0x30}
+  - {addr: 0x801e09dc, to: g_helpmenu_billboard, offset: 0x32}
+  - {addr: 0x801e09ec, to: g_helpmenu_billboard, offset: 0x34}
+  - {addr: 0x801e09fc, to: g_helpmenu_billboard, offset: 0x36}
+  - {addr: 0x801e0ad4, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0ad8, to: g_helpmenu_menu_text_id_lists, offset: 0x20}
+  - {addr: 0x801e0adc, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0ae0, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0ae4, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0ae8, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0aec, to: g_helpmenu_menu_text_id_lists, offset: 0x3c}
+  - {addr: 0x801e0af0, to: g_helpmenu_menu_text_id_lists, offset: 0x42}
+  - {addr: 0x801e0af4, to: g_helpmenu_menu_text_id_lists, offset: 0x48}
+  - {addr: 0x801e0af8, to: g_helpmenu_menu_text_id_lists, offset: 0x52}
+  - {addr: 0x801e0afc, to: g_helpmenu_menu_text_id_lists, offset: 0x58}
+  - {addr: 0x801e0b00, to: g_helpmenu_menu_text_id_lists, offset: 0x60}
+  - {addr: 0x801e0b04, to: g_helpmenu_menu_text_id_lists, offset: 0x68}
+  - {addr: 0x801e0b08, to: g_helpmenu_menu_text_id_lists, offset: 0x6c}
+  - {addr: 0x801e0b0c, to: g_helpmenu_menu_text_id_lists, offset: 0x74}
+  - {addr: 0x801e0b10, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0b14, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0b18, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0b1c, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0b20, to: g_helpmenu_menu_text_id_lists}
+  - {addr: 0x801e0b24, to: g_helpmenu_menu_text_id_lists, offset: 0x78}
+  - {addr: 0x801e0b28, to: g_helpmenu_menu_text_id_lists, offset: 0x84}
+  - {addr: 0x801e0b2c, to: g_helpmenu_menu_text_id_lists, offset: 0x90}
+
+values:
+  - {addr: 0x801e0bb0, end: 0x801f74f8, why: "g_helpmenu_text_data: help text bytes"}
 ---
 module: event-jobstts
 file: EVENT/JOBSTTS.OUT
@@ -2311,6 +2908,29 @@ overrides:
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_init_primary_reader, addr: 0x801e4e98}
   - {function: menu_text_render_glyph_to_4bpp_image, name: card_bits_read_primary, addr: 0x801e4ed0}
   - {function: menu_update_and_draw_animated_cursor, name: menu_gfx_enqueue_textured_quad, addr: 0x801e15d4}
+
+relocations:
+  - {addr: 0x801eff9c, to: jobstts_menu_script_draw_window_frame}
+  - {addr: 0x801effa0, to: jobstts_menu_script_if_group}
+  - {addr: 0x801effa4, to: jobstts_menu_script_if_else_group}
+  - {addr: 0x801effac, to: jobstts_menu_script_draw_textured_quad}
+  - {addr: 0x801effb0, to: jobstts_menu_script_draw_textured_quad}
+  - {addr: 0x801effc0, to: menu_script_set_fixed_clut}
+  - {addr: 0x801effc4, to: menu_script_set_clut}
+  - {addr: 0x801effcc, to: menu_script_set_texture_page}
+  - {addr: 0x801effd0, to: jobstts_menu_script_draw_formatted_number}
+  - {addr: 0x801effd4, to: jobstts_menu_script_set_semi_trans}
+  - {addr: 0x801effd8, to: jobstts_menu_script_set_draw_priority}
+  - {addr: 0x801effdc, to: jobstts_menu_script_draw_scrollable_list}
+  - {addr: 0x801effe0, to: jobstts_menu_script_draw_tiled_rectangle}
+  - {addr: 0x801effe4, to: jobstts_menu_script_draw_opening_window_frame}
+  - {addr: 0x801effe8, to: jobstts_menu_script_clear_temporary_draw_area}
+  - {addr: 0x801effec, to: jobstts_menu_script_set_draw_area}
+  - {addr: 0x801efff0, to: jobstts_menu_script_reregister_temporary_draw_area}
+
+values:
+  - {addr: 0x801e502c, end: 0x801e522c, why: "g_jobstts_menu_palette_image: CLUT colors"}
+  - {addr: 0x801e5508, end: 0x801eff60, why: "g_jobstts_help_text_table: help text bytes"}
 ---
 module: event-option
 file: EVENT/OPTION.OUT
@@ -2354,10 +2974,25 @@ data:
   - {addr: 0x801c3490, name: g_option_menu_thin_panel_texture_windows}
   - {addr: 0x801c34c8, name: g_option_menu_panel_texture_windows}
   - {addr: 0x801c3514, name: g_menu_draw_area_scale_percent}
+  - {addr: 0x801c352c, name: g_option_menu_entry_table_text_ids}
+  - {addr: 0x801c355c, name: g_option_menu_entry_table_text_colors}
   - {addr: 0x801c3580, name: g_option_menu_entry_table}
   - {addr: 0x801c35ac, name: g_option_menu_at_list_entry_table}
   - {addr: 0x801c35d8, name: g_option_crystal_pickup_menu_entries}
+  - {addr: 0x801c3604, name: D_801c3604}
+  - {addr: 0x801c3614, name: D_801c3614}
+  - {addr: 0x801c3618, name: D_801c3618}
+  - {addr: 0x801c361c, name: D_801c361c}
+  - {addr: 0x801c3620, name: D_801c3620}
+  - {addr: 0x801c3624, name: D_801c3624}
   - {addr: 0x801c3628, name: g_option_crystal_pickup_menu}
+  - {addr: 0x801c37cc, name: D_801c37cc}
+  - {addr: 0x801c37ce, name: D_801c37ce}
+  - {addr: 0x801c37d0, name: D_801c37d0}
+  - {addr: 0x801c37d2, name: D_801c37d2}
+  - {addr: 0x801c37d4, name: D_801c37d4}
+  - {addr: 0x801c3894, name: D_801c3894}
+  - {addr: 0x801c38a8, name: D_801c38a8}
   - {addr: 0x801c38ac, name: g_option_menu_at_list_state}
   - {addr: 0x801c38dc, name: g_option_menu_at_list_entry_table_pointer}
   - {addr: 0x801c38e4, name: g_option_menu_transition_duration}
@@ -2380,8 +3015,12 @@ data:
   - {addr: 0x801ca70c, name: g_option_menu_at_list_indices}
   - {addr: 0x801ca90c, name: g_option_crystal_pickup_menu_flags}
   - {addr: 0x801cad0c, name: g_option_menu_at_list_flags}
+  - {addr: 0x801caf0c, name: D_801caf0c}
+  - {addr: 0x801caf10, name: D_801caf10}
   - {addr: 0x801caf14, name: g_option_crystal_pickup_primary_result}
   - {addr: 0x801caf18, name: g_option_crystal_pickup_secondary_result}
+  - {addr: 0x801cb6f4, name: D_801cb6f4}
+  - {addr: 0x801cb6f8, name: D_801cb6f8}
   - {addr: 0x801cb6fc, name: g_option_menu_at_list_descriptors}
   - {addr: 0x801cb79c, name: g_option_menu_at_list_text}
   - {addr: 0x801cbc4c, name: g_option_menu_title_image_rect}
@@ -2389,6 +3028,55 @@ data:
   - {addr: 0x801cbc5c, name: g_option_menu_pages}
   - {addr: 0x801cbf7c, name: g_option_picker_icon_records}
   - {addr: 0x801cc074, name: g_option_menu_panel_frames}
+
+relocations:
+  - {addr: 0x801c3590, to: g_option_menu_entry_table_text_ids}
+  - {addr: 0x801c359c, to: g_option_menu_entry_table_text_colors}
+  - {addr: 0x801c35a0, to: g_option_menu_entry_table_text_colors}
+  - {addr: 0x801c35a4, to: g_option_menu_entry_table_text_colors}
+  - {addr: 0x801c35bc, to: g_option_menu_at_list_indices}
+  - {addr: 0x801c35c0, to: g_option_menu_at_list_primary_values}
+  - {addr: 0x801c35c4, to: g_option_menu_at_list_secondary_values}
+  - {addr: 0x801c35c8, to: g_option_crystal_pickup_menu_flags}
+  - {addr: 0x801c35cc, to: g_option_menu_at_list_flags}
+  - {addr: 0x801c35d0, to: g_option_menu_at_list_flags}
+  - {addr: 0x801c35e8, to: g_option_menu_at_list_primary_values}
+  - {addr: 0x801c35f4, to: g_option_crystal_pickup_menu_flags}
+  - {addr: 0x801c35f8, to: g_option_crystal_pickup_menu_flags}
+  - {addr: 0x801c35fc, to: g_option_crystal_pickup_menu_flags}
+  - {addr: 0x801c364c, to: D_801c3604}
+  - {addr: 0x801c3650, to: option_menu_run_list_thread}
+  - {addr: 0x801c3658, to: g_option_crystal_pickup_menu_entries}
+  - {addr: 0x801c365c, to: D_801caf0c}
+  - {addr: 0x801c3688, to: D_801c3614}
+  - {addr: 0x801c368c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c3698, to: D_801caf10}
+  - {addr: 0x801c36c4, to: D_801c361c}
+  - {addr: 0x801c36c8, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801c36d4, to: g_option_crystal_pickup_primary_result}
+  - {addr: 0x801c3700, to: D_801c3618}
+  - {addr: 0x801c3704, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c3710, to: D_801caf10}
+  - {addr: 0x801c373c, to: D_801c3620}
+  - {addr: 0x801c3740, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801c374c, to: g_option_crystal_pickup_primary_result}
+  - {addr: 0x801c3778, to: D_801c3614}
+  - {addr: 0x801c377c, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801c3788, to: D_801caf10}
+  - {addr: 0x801c37b4, to: D_801c3624}
+  - {addr: 0x801c37b8, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801c37c4, to: g_option_crystal_pickup_secondary_result}
+  - {addr: 0x801c385c, to: D_801c37cc}
+  - {addr: 0x801c3868, to: D_801c37ce}
+  - {addr: 0x801c3874, to: D_801c37d0}
+  - {addr: 0x801c3880, to: D_801c37d2}
+  - {addr: 0x801c388c, to: D_801c37d4}
+  - {addr: 0x801c38d0, to: D_801c3894}
+  - {addr: 0x801c38d4, to: option_menu_run_list_thread}
+  - {addr: 0x801c38e0, to: D_801cb6f4}
+  - {addr: 0x801c390c, to: D_801c38a8}
+  - {addr: 0x801c3910, to: option_menu_at_list_select_unit_thread}
+  - {addr: 0x801c391c, to: D_801cb6f8}
 ---
 module: event-require
 file: EVENT/REQUIRE.OUT
@@ -2511,6 +3199,7 @@ data:
   - {addr: 0x801cb364, name: g_require_active_unit_data}
   - {addr: 0x801cb374, name: g_require_panel_comparison_unit_data}
   - {addr: 0x801cb384, name: g_require_editor_unit_fields}
+  - {addr: 0x801cb3c4, name: D_801cb3c4}
   - {addr: 0x801cb404, name: g_require_editor_primary_skillset_name}
   - {addr: 0x801cb418, name: g_require_editor_secondary_skillset_name}
   - {addr: 0x801cb42c, name: g_require_editor_unit_name}
@@ -2576,6 +3265,11 @@ data:
   - {addr: 0x801d00b0, name: g_require_character_status_redraw_request}
   - {addr: 0x801d00b4, name: g_require_panel_dim_c}
   - {addr: 0x801d00b8, name: g_menu_gfx_scaled_sprite_texture_page}
+  - {addr: 0x801d00c0, name: D_801d00c0}
+  - {addr: 0x801d00c8, name: D_801d00c8}
+  - {addr: 0x801d00d0, name: D_801d00d0}
+  - {addr: 0x801d00d8, name: D_801d00d8}
+  - {addr: 0x801d00dc, name: D_801d00dc}
   - {addr: 0x801d00e0, name: g_require_join_menu_descriptor}
   - {addr: 0x801d0158, name: g_require_party_removal_menus}
   - {addr: 0x801d02f0, name: g_menu_panel_status_uv_rects}
@@ -2721,6 +3415,85 @@ overrides:
   - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_a, addr: 0x801cb780}
   - {function: require_panel_run_character_status_thread, name: g_menu_status_panel_text_upload_rect_b, addr: 0x801cb788}
   - {function: require_panel_run_character_status_thread, name: menu_build_scaled_draw_area_packets, addr: 0x801bf01c}
+
+relocations:
+  - {addr: 0x801cb4b8, to: g_require_panel_selected_billboard, offset: 0xc}
+  - {addr: 0x801cb4c4, to: g_require_panel_selected_billboard, offset: 0x10}
+  - {addr: 0x801cb4d0, to: g_require_panel_selected_billboard, offset: 0x12}
+  - {addr: 0x801cb4dc, to: g_require_panel_selected_billboard, offset: 0x16}
+  - {addr: 0x801cb4e8, to: g_require_panel_selected_billboard, offset: 0x18}
+  - {addr: 0x801cb4f4, to: g_require_panel_selected_billboard, offset: 0x1c}
+  - {addr: 0x801cb500, to: g_require_panel_selected_billboard, offset: 0x4}
+  - {addr: 0x801cb50c, to: g_require_panel_selected_billboard, offset: 0x6}
+  - {addr: 0x801cb518, to: g_require_panel_selected_billboard}
+  - {addr: 0x801cb524, to: g_require_panel_selected_billboard, offset: 0x8}
+  - {addr: 0x801cb530, to: g_require_panel_comparison_billboard, offset: 0xc}
+  - {addr: 0x801cb53c, to: g_require_panel_comparison_billboard, offset: 0x10}
+  - {addr: 0x801cb548, to: g_require_panel_comparison_billboard, offset: 0x12}
+  - {addr: 0x801cb554, to: g_require_panel_comparison_billboard, offset: 0x16}
+  - {addr: 0x801cb560, to: g_require_panel_comparison_billboard, offset: 0x18}
+  - {addr: 0x801cb56c, to: g_require_panel_comparison_billboard, offset: 0x1c}
+  - {addr: 0x801cb578, to: g_require_panel_comparison_billboard, offset: 0x4}
+  - {addr: 0x801cb584, to: g_require_panel_comparison_billboard, offset: 0x6}
+  - {addr: 0x801cb590, to: g_require_panel_comparison_billboard}
+  - {addr: 0x801cb59c, to: g_require_panel_comparison_billboard, offset: 0x8}
+  - {addr: 0x801cbcd8, to: g_require_editor_unit_fields}
+  - {addr: 0x801cbce4, to: g_require_editor_unit_fields, offset: 0x4}
+  - {addr: 0x801cbcf0, to: g_require_editor_unit_fields, offset: 0x2}
+  - {addr: 0x801cbcfc, to: g_require_editor_unit_fields, offset: 0x6}
+  - {addr: 0x801cbd08, to: g_require_editor_unit_fields, offset: 0x8}
+  - {addr: 0x801cbd14, to: g_require_editor_unit_fields, offset: 0xa}
+  - {addr: 0x801cbd20, to: g_require_editor_unit_fields, offset: 0xc}
+  - {addr: 0x801cbd2c, to: g_require_editor_unit_fields, offset: 0x12}
+  - {addr: 0x801cbd38, to: g_require_editor_unit_fields, offset: 0x1c}
+  - {addr: 0x801cbd44, to: g_require_editor_unit_fields, offset: 0x14}
+  - {addr: 0x801cbd50, to: g_require_editor_unit_fields, offset: 0x1e}
+  - {addr: 0x801cbd5c, to: g_require_editor_unit_fields, offset: 0x16}
+  - {addr: 0x801cbd68, to: g_require_editor_unit_fields, offset: 0x20}
+  - {addr: 0x801cbd74, to: g_require_editor_unit_fields, offset: 0x18}
+  - {addr: 0x801cbd80, to: g_require_editor_unit_fields, offset: 0x22}
+  - {addr: 0x801cbd8c, to: D_801cb3c4}
+  - {addr: 0x801cbd98, to: D_801cb3c4, offset: 0x4}
+  - {addr: 0x801cbda4, to: D_801cb3c4, offset: 0x2}
+  - {addr: 0x801cbdb0, to: D_801cb3c4, offset: 0x6}
+  - {addr: 0x801cbdbc, to: D_801cb3c4, offset: 0x8}
+  - {addr: 0x801cbdc8, to: D_801cb3c4, offset: 0xa}
+  - {addr: 0x801cbdd4, to: D_801cb3c4, offset: 0xc}
+  - {addr: 0x801cbde0, to: D_801cb3c4, offset: 0x12}
+  - {addr: 0x801cbdec, to: D_801cb3c4, offset: 0x1c}
+  - {addr: 0x801cbdf8, to: D_801cb3c4, offset: 0x14}
+  - {addr: 0x801cbe04, to: D_801cb3c4, offset: 0x1e}
+  - {addr: 0x801cbe10, to: D_801cb3c4, offset: 0x16}
+  - {addr: 0x801cbe1c, to: D_801cb3c4, offset: 0x20}
+  - {addr: 0x801cbe28, to: D_801cb3c4, offset: 0x18}
+  - {addr: 0x801cbe34, to: D_801cb3c4, offset: 0x22}
+  - {addr: 0x801d0104, to: D_801d00d0}
+  - {addr: 0x801d0108, to: menu_icon_strip_thread}
+  - {addr: 0x801d0114, to: g_require_message_menu_result}
+  - {addr: 0x801d0140, to: D_801d00c8}
+  - {addr: 0x801d0144, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801d0150, to: g_require_menu_selection_result}
+  - {addr: 0x801d017c, to: D_801d00c0}
+  - {addr: 0x801d0180, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801d018c, to: g_require_menu_selection_result}
+  - {addr: 0x801d01b8, to: D_801d00c0}
+  - {addr: 0x801d01bc, to: require_overlay_open_jobstts_thread}
+  - {addr: 0x801d01c8, to: g_require_menu_selection_result}
+  - {addr: 0x801d01f4, to: D_801d00d8}
+  - {addr: 0x801d01f8, to: menu_icon_strip_thread}
+  - {addr: 0x801d0204, to: g_require_message_menu_result}
+  - {addr: 0x801d0230, to: D_801d00dc}
+  - {addr: 0x801d0234, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801d0240, to: g_require_party_removal_result}
+  - {addr: 0x801d026c, to: D_801d00c0}
+  - {addr: 0x801d0270, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801d027c, to: g_require_message_menu_result}
+  - {addr: 0x801d02a8, to: D_801d00c0}
+  - {addr: 0x801d02ac, to: battle_menu_icon_linked_entry_thread}
+  - {addr: 0x801d02b8, to: g_require_message_menu_result}
+  - {addr: 0x801d02e4, to: D_801d00c8}
+  - {addr: 0x801d02e8, to: battle_menu_run_icon_selection_loop}
+  - {addr: 0x801d02f4, to: g_require_menu_selection_result}
 ---
 module: event-small
 file: EVENT/SMALL.OUT
