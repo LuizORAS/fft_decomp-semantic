@@ -475,10 +475,21 @@ data:
   - {addr: 0x80092b2c, name: g_wldcore_anim_sequence_table}
   - {addr: 0x80092b30, name: g_wldcore_anim_cel_table}
   - {addr: 0x80092b34, name: g_wldcore_location_frame_tim}
+  - {addr: 0x80092b38, name: g_wldcore_anim_sequence_table_storage}
+  - {addr: 0x80092d20, name: g_wldcore_anim_sequence_records}
+  - {addr: 0x8009324c, name: g_wldcore_anim_cel_table_storage}
+  - {addr: 0x80093480, name: g_wldcore_anim_cel_records}
+  - {addr: 0x800944b4, name: g_wldcore_location_frame_tim_storage}
   - {addr: 0x80094df4, name: g_wldcore_map_dot_sources}
   - {addr: 0x80094df8, name: g_wldcore_location_records}
+  - {addr: 0x80094dfc, name: g_wldcore_map_dot_sources_storage}
+  - {addr: 0x80094f54, name: g_wldcore_location_records_storage}
   - {addr: 0x80095000, name: g_wldcore_map_route_tables}
   - {addr: 0x80095004, name: g_wldcore_map_route_polylines}
+  - {addr: 0x80095008, name: g_wldcore_map_route_tables_storage}
+  - {addr: 0x800950c8, name: g_wldcore_map_route_records}
+  - {addr: 0x80095fb0, name: g_wldcore_map_route_polylines_storage}
+  - {addr: 0x80096070, name: g_wldcore_map_route_polyline_records}
   - {addr: 0x80096a40, name: g_wldcore_random_battle_data}
   - {addr: 0x80096a44, name: g_wldcore_deep_dungeon_battles}
   - {addr: 0x80096a48, name: g_wldcore_brave_story_birthdays}
@@ -488,8 +499,17 @@ data:
   - {addr: 0x80096a58, name: g_wldcore_default_sound_novel_sound_resource}
   - {addr: 0x80096a5c, name: g_wldcore_map_tile_descriptors}
   - {addr: 0x80096a60, name: g_wldcore_dissolve_band_order}
+  - {addr: 0x80096a64, name: g_wldcore_random_battle_data_storage}
+  - {addr: 0x80096fc0, name: g_wldcore_deep_dungeon_battles_storage}
   - {addr: 0x80097028, name: g_wldcore_brave_story_birthday_table}
+  - {addr: 0x800970ac, name: g_wldcore_rumor_location_masks_storage}
+  - {addr: 0x800971b0, name: g_wldcore_story_event_ids_storage}
+  - {addr: 0x80097234, name: g_wldcore_default_script_base_storage}
+  - {addr: 0x80098238, name: g_wldcore_default_sound_novel_sound_resource_storage}
+  - {addr: 0x80099b3c, name: g_wldcore_map_tile_descriptors_storage}
+  - {addr: 0x8009cb40, name: g_wldcore_dissolve_band_order_storage}
   - {addr: 0x8009d340, name: g_wldcore_proposition_data_base}
+  - {addr: 0x8009d344, name: g_wldcore_proposition_data_base_storage}
   - {addr: 0x8009e0ec, name: g_wldcore_picture_sector_offsets}
   - {addr: 0x8009e260, name: g_wldcore_background_sector_offsets}
   - {addr: 0x8009e470, name: g_wldcore_message_block_sector_offsets}
@@ -657,3 +677,601 @@ data:
   - {addr: 0x800d48fc, name: g_wldcore_sound_novel_wait_frames}
   - {addr: 0x800d4900, name: g_wldcore_saved_context_value_display_position}
   - {addr: 0x800d4908, name: g_wldcore_gfx_aux_ot_tags}
+
+relocations:
+  - {addr: 0x80092b2c, to: g_wldcore_anim_sequence_table_storage}
+  - {addr: 0x80092b30, to: g_wldcore_anim_cel_table_storage}
+  - {addr: 0x80092b34, to: g_wldcore_location_frame_tim_storage}
+  - {addr: 0x80092b38, to: g_wldcore_anim_sequence_records}
+  - {addr: 0x80092b3c, to: g_wldcore_anim_sequence_records, offset: 0x8}
+  - {addr: 0x80092b40, to: g_wldcore_anim_sequence_records, offset: 0x34}
+  - {addr: 0x80092b44, to: g_wldcore_anim_sequence_records, offset: 0x50}
+  - {addr: 0x80092b48, to: g_wldcore_anim_sequence_records, offset: 0x64}
+  - {addr: 0x80092b4c, to: g_wldcore_anim_sequence_records, offset: 0x6c}
+  - {addr: 0x80092b50, to: g_wldcore_anim_sequence_records, offset: 0x74}
+  - {addr: 0x80092b54, to: g_wldcore_anim_sequence_records, offset: 0x7c}
+  - {addr: 0x80092b58, to: g_wldcore_anim_sequence_records, offset: 0x84}
+  - {addr: 0x80092b5c, to: g_wldcore_anim_sequence_records, offset: 0x98}
+  - {addr: 0x80092b60, to: g_wldcore_anim_sequence_records, offset: 0xa0}
+  - {addr: 0x80092b64, to: g_wldcore_anim_sequence_records, offset: 0xa8}
+  - {addr: 0x80092b68, to: g_wldcore_anim_sequence_records, offset: 0xb0}
+  - {addr: 0x80092b6c, to: g_wldcore_anim_sequence_records, offset: 0xb8}
+  - {addr: 0x80092b70, to: g_wldcore_anim_sequence_records, offset: 0xc4}
+  - {addr: 0x80092b74, to: g_wldcore_anim_sequence_records, offset: 0xcc}
+  - {addr: 0x80092b78, to: g_wldcore_anim_sequence_records, offset: 0xd4}
+  - {addr: 0x80092b7c, to: g_wldcore_anim_sequence_records, offset: 0xe8}
+  - {addr: 0x80092b80, to: g_wldcore_anim_sequence_records, offset: 0xfc}
+  - {addr: 0x80092b84, to: g_wldcore_anim_sequence_records, offset: 0x110}
+  - {addr: 0x80092b88, to: g_wldcore_anim_sequence_records, offset: 0x124}
+  - {addr: 0x80092b8c, to: g_wldcore_anim_sequence_records, offset: 0x138}
+  - {addr: 0x80092b90, to: g_wldcore_anim_sequence_records, offset: 0x14c}
+  - {addr: 0x80092b94, to: g_wldcore_anim_sequence_records, offset: 0x160}
+  - {addr: 0x80092b98, to: g_wldcore_anim_sequence_records, offset: 0x174}
+  - {addr: 0x80092b9c, to: g_wldcore_anim_sequence_records, offset: 0x188}
+  - {addr: 0x80092ba0, to: g_wldcore_anim_sequence_records, offset: 0x19c}
+  - {addr: 0x80092ba4, to: g_wldcore_anim_sequence_records, offset: 0x1b0}
+  - {addr: 0x80092ba8, to: g_wldcore_anim_sequence_records, offset: 0x1c4}
+  - {addr: 0x80092bac, to: g_wldcore_anim_sequence_records, offset: 0x1d8}
+  - {addr: 0x80092bb0, to: g_wldcore_anim_sequence_records, offset: 0x1ec}
+  - {addr: 0x80092bb4, to: g_wldcore_anim_sequence_records, offset: 0x200}
+  - {addr: 0x80092bb8, to: g_wldcore_anim_sequence_records, offset: 0x214}
+  - {addr: 0x80092bbc, to: g_wldcore_anim_sequence_records, offset: 0x21c}
+  - {addr: 0x80092bc0, to: g_wldcore_anim_sequence_records, offset: 0x224}
+  - {addr: 0x80092bc4, to: g_wldcore_anim_sequence_records, offset: 0x22c}
+  - {addr: 0x80092bc8, to: g_wldcore_anim_sequence_records, offset: 0x234}
+  - {addr: 0x80092bcc, to: g_wldcore_anim_sequence_records, offset: 0x23c}
+  - {addr: 0x80092bd0, to: g_wldcore_anim_sequence_records, offset: 0x244}
+  - {addr: 0x80092bd4, to: g_wldcore_anim_sequence_records, offset: 0x24c}
+  - {addr: 0x80092bd8, to: g_wldcore_anim_sequence_records, offset: 0x254}
+  - {addr: 0x80092bdc, to: g_wldcore_anim_sequence_records, offset: 0x25c}
+  - {addr: 0x80092be0, to: g_wldcore_anim_sequence_records, offset: 0x264}
+  - {addr: 0x80092be4, to: g_wldcore_anim_sequence_records, offset: 0x26c}
+  - {addr: 0x80092be8, to: g_wldcore_anim_sequence_records, offset: 0x274}
+  - {addr: 0x80092bec, to: g_wldcore_anim_sequence_records, offset: 0x27c}
+  - {addr: 0x80092bf0, to: g_wldcore_anim_sequence_records, offset: 0x284}
+  - {addr: 0x80092bf4, to: g_wldcore_anim_sequence_records, offset: 0x28c}
+  - {addr: 0x80092bf8, to: g_wldcore_anim_sequence_records, offset: 0x294}
+  - {addr: 0x80092bfc, to: g_wldcore_anim_sequence_records, offset: 0x29c}
+  - {addr: 0x80092c00, to: g_wldcore_anim_sequence_records, offset: 0x2a4}
+  - {addr: 0x80092c04, to: g_wldcore_anim_sequence_records, offset: 0x2ac}
+  - {addr: 0x80092c08, to: g_wldcore_anim_sequence_records, offset: 0x2b4}
+  - {addr: 0x80092c0c, to: g_wldcore_anim_sequence_records, offset: 0x2bc}
+  - {addr: 0x80092c10, to: g_wldcore_anim_sequence_records, offset: 0x2c4}
+  - {addr: 0x80092c14, to: g_wldcore_anim_sequence_records, offset: 0x2cc}
+  - {addr: 0x80092c18, to: g_wldcore_anim_sequence_records, offset: 0x2d4}
+  - {addr: 0x80092c1c, to: g_wldcore_anim_sequence_records, offset: 0x2dc}
+  - {addr: 0x80092c20, to: g_wldcore_anim_sequence_records, offset: 0x2e4}
+  - {addr: 0x80092c24, to: g_wldcore_anim_sequence_records, offset: 0x2ec}
+  - {addr: 0x80092c28, to: g_wldcore_anim_sequence_records, offset: 0x2f4}
+  - {addr: 0x80092c2c, to: g_wldcore_anim_sequence_records, offset: 0x2fc}
+  - {addr: 0x80092c30, to: g_wldcore_anim_sequence_records, offset: 0x304}
+  - {addr: 0x80092c34, to: g_wldcore_anim_sequence_records, offset: 0x30c}
+  - {addr: 0x80092c38, to: g_wldcore_anim_sequence_records, offset: 0x314}
+  - {addr: 0x80092c3c, to: g_wldcore_anim_sequence_records, offset: 0x31c}
+  - {addr: 0x80092c40, to: g_wldcore_anim_sequence_records, offset: 0x324}
+  - {addr: 0x80092c44, to: g_wldcore_anim_sequence_records, offset: 0x32c}
+  - {addr: 0x80092c48, to: g_wldcore_anim_sequence_records, offset: 0x334}
+  - {addr: 0x80092c4c, to: g_wldcore_anim_sequence_records, offset: 0x33c}
+  - {addr: 0x80092c50, to: g_wldcore_anim_sequence_records, offset: 0x344}
+  - {addr: 0x80092c54, to: g_wldcore_anim_sequence_records, offset: 0x34c}
+  - {addr: 0x80092c58, to: g_wldcore_anim_sequence_records, offset: 0x354}
+  - {addr: 0x80092c5c, to: g_wldcore_anim_sequence_records, offset: 0x35c}
+  - {addr: 0x80092c60, to: g_wldcore_anim_sequence_records, offset: 0x364}
+  - {addr: 0x80092c64, to: g_wldcore_anim_sequence_records, offset: 0x36c}
+  - {addr: 0x80092c68, to: g_wldcore_anim_sequence_records, offset: 0x374}
+  - {addr: 0x80092c6c, to: g_wldcore_anim_sequence_records, offset: 0x37c}
+  - {addr: 0x80092c70, to: g_wldcore_anim_sequence_records, offset: 0x384}
+  - {addr: 0x80092c74, to: g_wldcore_anim_sequence_records, offset: 0x38c}
+  - {addr: 0x80092c78, to: g_wldcore_anim_sequence_records, offset: 0x394}
+  - {addr: 0x80092c7c, to: g_wldcore_anim_sequence_records, offset: 0x39c}
+  - {addr: 0x80092c80, to: g_wldcore_anim_sequence_records, offset: 0x3a4}
+  - {addr: 0x80092c84, to: g_wldcore_anim_sequence_records, offset: 0x3ac}
+  - {addr: 0x80092c88, to: g_wldcore_anim_sequence_records, offset: 0x3b4}
+  - {addr: 0x80092c8c, to: g_wldcore_anim_sequence_records, offset: 0x3bc}
+  - {addr: 0x80092c90, to: g_wldcore_anim_sequence_records, offset: 0x3c4}
+  - {addr: 0x80092c94, to: g_wldcore_anim_sequence_records, offset: 0x3cc}
+  - {addr: 0x80092c98, to: g_wldcore_anim_sequence_records, offset: 0x3d4}
+  - {addr: 0x80092c9c, to: g_wldcore_anim_sequence_records, offset: 0x3dc}
+  - {addr: 0x80092ca0, to: g_wldcore_anim_sequence_records, offset: 0x3e4}
+  - {addr: 0x80092ca4, to: g_wldcore_anim_sequence_records, offset: 0x3ec}
+  - {addr: 0x80092ca8, to: g_wldcore_anim_sequence_records, offset: 0x3f4}
+  - {addr: 0x80092cac, to: g_wldcore_anim_sequence_records, offset: 0x3fc}
+  - {addr: 0x80092cb0, to: g_wldcore_anim_sequence_records, offset: 0x404}
+  - {addr: 0x80092cb4, to: g_wldcore_anim_sequence_records, offset: 0x40c}
+  - {addr: 0x80092cb8, to: g_wldcore_anim_sequence_records, offset: 0x414}
+  - {addr: 0x80092cbc, to: g_wldcore_anim_sequence_records, offset: 0x41c}
+  - {addr: 0x80092cc0, to: g_wldcore_anim_sequence_records, offset: 0x424}
+  - {addr: 0x80092cc4, to: g_wldcore_anim_sequence_records, offset: 0x42c}
+  - {addr: 0x80092cc8, to: g_wldcore_anim_sequence_records, offset: 0x434}
+  - {addr: 0x80092ccc, to: g_wldcore_anim_sequence_records, offset: 0x43c}
+  - {addr: 0x80092cd0, to: g_wldcore_anim_sequence_records, offset: 0x444}
+  - {addr: 0x80092cd4, to: g_wldcore_anim_sequence_records, offset: 0x44c}
+  - {addr: 0x80092cd8, to: g_wldcore_anim_sequence_records, offset: 0x458}
+  - {addr: 0x80092cdc, to: g_wldcore_anim_sequence_records, offset: 0x460}
+  - {addr: 0x80092ce0, to: g_wldcore_anim_sequence_records, offset: 0x46c}
+  - {addr: 0x80092ce4, to: g_wldcore_anim_sequence_records, offset: 0x474}
+  - {addr: 0x80092ce8, to: g_wldcore_anim_sequence_records, offset: 0x47c}
+  - {addr: 0x80092cec, to: g_wldcore_anim_sequence_records, offset: 0x484}
+  - {addr: 0x80092cf0, to: g_wldcore_anim_sequence_records, offset: 0x48c}
+  - {addr: 0x80092cf4, to: g_wldcore_anim_sequence_records, offset: 0x494}
+  - {addr: 0x80092cf8, to: g_wldcore_anim_sequence_records, offset: 0x4a0}
+  - {addr: 0x80092cfc, to: g_wldcore_anim_sequence_records, offset: 0x4a8}
+  - {addr: 0x80092d00, to: g_wldcore_anim_sequence_records, offset: 0x4b4}
+  - {addr: 0x80092d04, to: g_wldcore_anim_sequence_records, offset: 0x4bc}
+  - {addr: 0x80092d08, to: g_wldcore_anim_sequence_records, offset: 0x4c4}
+  - {addr: 0x80092d0c, to: g_wldcore_anim_sequence_records, offset: 0x4cc}
+  - {addr: 0x80092d10, to: g_wldcore_anim_sequence_records, offset: 0x4d4}
+  - {addr: 0x80092d14, to: g_wldcore_anim_sequence_records, offset: 0x4dc}
+  - {addr: 0x80092d18, to: g_wldcore_anim_sequence_records, offset: 0x508}
+  - {addr: 0x80092d1c, to: g_wldcore_anim_sequence_records, offset: 0x524}
+  - {addr: 0x8009324c, to: g_wldcore_anim_cel_records}
+  - {addr: 0x80093250, to: g_wldcore_anim_cel_records, offset: 0x1c}
+  - {addr: 0x80093254, to: g_wldcore_anim_cel_records, offset: 0x38}
+  - {addr: 0x80093258, to: g_wldcore_anim_cel_records, offset: 0x54}
+  - {addr: 0x8009325c, to: g_wldcore_anim_cel_records, offset: 0x70}
+  - {addr: 0x80093260, to: g_wldcore_anim_cel_records, offset: 0x8c}
+  - {addr: 0x80093264, to: g_wldcore_anim_cel_records, offset: 0xa8}
+  - {addr: 0x80093268, to: g_wldcore_anim_cel_records, offset: 0xc4}
+  - {addr: 0x8009326c, to: g_wldcore_anim_cel_records, offset: 0xd8}
+  - {addr: 0x80093270, to: g_wldcore_anim_cel_records, offset: 0x1a4}
+  - {addr: 0x80093274, to: g_wldcore_anim_cel_records, offset: 0x230}
+  - {addr: 0x80093278, to: g_wldcore_anim_cel_records, offset: 0x244}
+  - {addr: 0x8009327c, to: g_wldcore_anim_cel_records, offset: 0x258}
+  - {addr: 0x80093280, to: g_wldcore_anim_cel_records, offset: 0x26c}
+  - {addr: 0x80093284, to: g_wldcore_anim_cel_records, offset: 0x280}
+  - {addr: 0x80093288, to: g_wldcore_anim_cel_records, offset: 0x294}
+  - {addr: 0x8009328c, to: g_wldcore_anim_cel_records, offset: 0x380}
+  - {addr: 0x80093290, to: g_wldcore_anim_cel_records, offset: 0x39c}
+  - {addr: 0x80093294, to: g_wldcore_anim_cel_records, offset: 0x3b8}
+  - {addr: 0x80093298, to: g_wldcore_anim_cel_records, offset: 0x3d4}
+  - {addr: 0x8009329c, to: g_wldcore_anim_cel_records, offset: 0x3f0}
+  - {addr: 0x800932a0, to: g_wldcore_anim_cel_records, offset: 0x40c}
+  - {addr: 0x800932a4, to: g_wldcore_anim_cel_records, offset: 0x428}
+  - {addr: 0x800932a8, to: g_wldcore_anim_cel_records, offset: 0x444}
+  - {addr: 0x800932ac, to: g_wldcore_anim_cel_records, offset: 0x460}
+  - {addr: 0x800932b0, to: g_wldcore_anim_cel_records, offset: 0x47c}
+  - {addr: 0x800932b4, to: g_wldcore_anim_cel_records, offset: 0x498}
+  - {addr: 0x800932b8, to: g_wldcore_anim_cel_records, offset: 0x4b4}
+  - {addr: 0x800932bc, to: g_wldcore_anim_cel_records, offset: 0x4d0}
+  - {addr: 0x800932c0, to: g_wldcore_anim_cel_records, offset: 0x4ec}
+  - {addr: 0x800932c4, to: g_wldcore_anim_cel_records, offset: 0x508}
+  - {addr: 0x800932c8, to: g_wldcore_anim_cel_records, offset: 0x524}
+  - {addr: 0x800932cc, to: g_wldcore_anim_cel_records, offset: 0x540}
+  - {addr: 0x800932d0, to: g_wldcore_anim_cel_records, offset: 0x55c}
+  - {addr: 0x800932d4, to: g_wldcore_anim_cel_records, offset: 0x578}
+  - {addr: 0x800932d8, to: g_wldcore_anim_cel_records, offset: 0x594}
+  - {addr: 0x800932dc, to: g_wldcore_anim_cel_records, offset: 0x5b0}
+  - {addr: 0x800932e0, to: g_wldcore_anim_cel_records, offset: 0x5cc}
+  - {addr: 0x800932e4, to: g_wldcore_anim_cel_records, offset: 0x5e8}
+  - {addr: 0x800932e8, to: g_wldcore_anim_cel_records, offset: 0x604}
+  - {addr: 0x800932ec, to: g_wldcore_anim_cel_records, offset: 0x620}
+  - {addr: 0x800932f0, to: g_wldcore_anim_cel_records, offset: 0x634}
+  - {addr: 0x800932f4, to: g_wldcore_anim_cel_records, offset: 0x660}
+  - {addr: 0x800932f8, to: g_wldcore_anim_cel_records, offset: 0x68c}
+  - {addr: 0x800932fc, to: g_wldcore_anim_cel_records, offset: 0x6a0}
+  - {addr: 0x80093300, to: g_wldcore_anim_cel_records, offset: 0x6b4}
+  - {addr: 0x80093304, to: g_wldcore_anim_cel_records, offset: 0x6c8}
+  - {addr: 0x80093308, to: g_wldcore_anim_cel_records, offset: 0x6dc}
+  - {addr: 0x8009330c, to: g_wldcore_anim_cel_records, offset: 0x6f0}
+  - {addr: 0x80093310, to: g_wldcore_anim_cel_records, offset: 0x704}
+  - {addr: 0x80093314, to: g_wldcore_anim_cel_records, offset: 0x718}
+  - {addr: 0x80093318, to: g_wldcore_anim_cel_records, offset: 0x72c}
+  - {addr: 0x8009331c, to: g_wldcore_anim_cel_records, offset: 0x740}
+  - {addr: 0x80093320, to: g_wldcore_anim_cel_records, offset: 0x754}
+  - {addr: 0x80093324, to: g_wldcore_anim_cel_records, offset: 0x768}
+  - {addr: 0x80093328, to: g_wldcore_anim_cel_records, offset: 0x77c}
+  - {addr: 0x8009332c, to: g_wldcore_anim_cel_records, offset: 0x790}
+  - {addr: 0x80093330, to: g_wldcore_anim_cel_records, offset: 0x7a4}
+  - {addr: 0x80093334, to: g_wldcore_anim_cel_records, offset: 0x7b8}
+  - {addr: 0x80093338, to: g_wldcore_anim_cel_records, offset: 0x7cc}
+  - {addr: 0x8009333c, to: g_wldcore_anim_cel_records, offset: 0x7e0}
+  - {addr: 0x80093340, to: g_wldcore_anim_cel_records, offset: 0x7f4}
+  - {addr: 0x80093344, to: g_wldcore_anim_cel_records, offset: 0x808}
+  - {addr: 0x80093348, to: g_wldcore_anim_cel_records, offset: 0x81c}
+  - {addr: 0x8009334c, to: g_wldcore_anim_cel_records, offset: 0x830}
+  - {addr: 0x80093350, to: g_wldcore_anim_cel_records, offset: 0x844}
+  - {addr: 0x80093354, to: g_wldcore_anim_cel_records, offset: 0x858}
+  - {addr: 0x80093358, to: g_wldcore_anim_cel_records, offset: 0x86c}
+  - {addr: 0x8009335c, to: g_wldcore_anim_cel_records, offset: 0x880}
+  - {addr: 0x80093360, to: g_wldcore_anim_cel_records, offset: 0x894}
+  - {addr: 0x80093364, to: g_wldcore_anim_cel_records, offset: 0x8a8}
+  - {addr: 0x80093368, to: g_wldcore_anim_cel_records, offset: 0x8bc}
+  - {addr: 0x8009336c, to: g_wldcore_anim_cel_records, offset: 0x8d0}
+  - {addr: 0x80093370, to: g_wldcore_anim_cel_records, offset: 0x8e4}
+  - {addr: 0x80093374, to: g_wldcore_anim_cel_records, offset: 0x8f8}
+  - {addr: 0x80093378, to: g_wldcore_anim_cel_records, offset: 0x90c}
+  - {addr: 0x8009337c, to: g_wldcore_anim_cel_records, offset: 0x920}
+  - {addr: 0x80093380, to: g_wldcore_anim_cel_records, offset: 0x934}
+  - {addr: 0x80093384, to: g_wldcore_anim_cel_records, offset: 0x948}
+  - {addr: 0x80093388, to: g_wldcore_anim_cel_records, offset: 0x95c}
+  - {addr: 0x8009338c, to: g_wldcore_anim_cel_records, offset: 0x970}
+  - {addr: 0x80093390, to: g_wldcore_anim_cel_records, offset: 0x984}
+  - {addr: 0x80093394, to: g_wldcore_anim_cel_records, offset: 0x998}
+  - {addr: 0x80093398, to: g_wldcore_anim_cel_records, offset: 0x9ac}
+  - {addr: 0x8009339c, to: g_wldcore_anim_cel_records, offset: 0x9c0}
+  - {addr: 0x800933a0, to: g_wldcore_anim_cel_records, offset: 0x9d4}
+  - {addr: 0x800933a4, to: g_wldcore_anim_cel_records, offset: 0x9e8}
+  - {addr: 0x800933a8, to: g_wldcore_anim_cel_records, offset: 0x9fc}
+  - {addr: 0x800933ac, to: g_wldcore_anim_cel_records, offset: 0xa10}
+  - {addr: 0x800933b0, to: g_wldcore_anim_cel_records, offset: 0xa24}
+  - {addr: 0x800933b4, to: g_wldcore_anim_cel_records, offset: 0xa38}
+  - {addr: 0x800933b8, to: g_wldcore_anim_cel_records, offset: 0xa4c}
+  - {addr: 0x800933bc, to: g_wldcore_anim_cel_records, offset: 0xa60}
+  - {addr: 0x800933c0, to: g_wldcore_anim_cel_records, offset: 0xa74}
+  - {addr: 0x800933c4, to: g_wldcore_anim_cel_records, offset: 0xa88}
+  - {addr: 0x800933c8, to: g_wldcore_anim_cel_records, offset: 0xa9c}
+  - {addr: 0x800933cc, to: g_wldcore_anim_cel_records, offset: 0xab0}
+  - {addr: 0x800933d0, to: g_wldcore_anim_cel_records, offset: 0xac4}
+  - {addr: 0x800933d4, to: g_wldcore_anim_cel_records, offset: 0xad8}
+  - {addr: 0x800933d8, to: g_wldcore_anim_cel_records, offset: 0xaec}
+  - {addr: 0x800933dc, to: g_wldcore_anim_cel_records, offset: 0xb00}
+  - {addr: 0x800933e0, to: g_wldcore_anim_cel_records, offset: 0xb14}
+  - {addr: 0x800933e4, to: g_wldcore_anim_cel_records, offset: 0xb28}
+  - {addr: 0x800933e8, to: g_wldcore_anim_cel_records, offset: 0xb3c}
+  - {addr: 0x800933ec, to: g_wldcore_anim_cel_records, offset: 0xb50}
+  - {addr: 0x800933f0, to: g_wldcore_anim_cel_records, offset: 0xb64}
+  - {addr: 0x800933f4, to: g_wldcore_anim_cel_records, offset: 0xb78}
+  - {addr: 0x800933f8, to: g_wldcore_anim_cel_records, offset: 0xb8c}
+  - {addr: 0x800933fc, to: g_wldcore_anim_cel_records, offset: 0xba0}
+  - {addr: 0x80093400, to: g_wldcore_anim_cel_records, offset: 0xbb4}
+  - {addr: 0x80093404, to: g_wldcore_anim_cel_records, offset: 0xbc8}
+  - {addr: 0x80093408, to: g_wldcore_anim_cel_records, offset: 0xbdc}
+  - {addr: 0x8009340c, to: g_wldcore_anim_cel_records, offset: 0xbf8}
+  - {addr: 0x80093410, to: g_wldcore_anim_cel_records, offset: 0xc14}
+  - {addr: 0x80093414, to: g_wldcore_anim_cel_records, offset: 0xc28}
+  - {addr: 0x80093418, to: g_wldcore_anim_cel_records, offset: 0xc44}
+  - {addr: 0x8009341c, to: g_wldcore_anim_cel_records, offset: 0xc58}
+  - {addr: 0x80093420, to: g_wldcore_anim_cel_records, offset: 0xc84}
+  - {addr: 0x80093424, to: g_wldcore_anim_cel_records, offset: 0xcb0}
+  - {addr: 0x80093428, to: g_wldcore_anim_cel_records, offset: 0xcdc}
+  - {addr: 0x8009342c, to: g_wldcore_anim_cel_records, offset: 0xd08}
+  - {addr: 0x80093430, to: g_wldcore_anim_cel_records, offset: 0xd1c}
+  - {addr: 0x80093434, to: g_wldcore_anim_cel_records, offset: 0xd30}
+  - {addr: 0x80093438, to: g_wldcore_anim_cel_records, offset: 0xd44}
+  - {addr: 0x8009343c, to: g_wldcore_anim_cel_records, offset: 0xd58}
+  - {addr: 0x80093440, to: g_wldcore_anim_cel_records, offset: 0xd94}
+  - {addr: 0x80093444, to: g_wldcore_anim_cel_records, offset: 0xdd0}
+  - {addr: 0x80093448, to: g_wldcore_anim_cel_records, offset: 0xe1c}
+  - {addr: 0x8009344c, to: g_wldcore_anim_cel_records, offset: 0xe68}
+  - {addr: 0x80093450, to: g_wldcore_anim_cel_records, offset: 0xebc}
+  - {addr: 0x80093454, to: g_wldcore_anim_cel_records, offset: 0xf00}
+  - {addr: 0x80093458, to: g_wldcore_anim_cel_records, offset: 0xf34}
+  - {addr: 0x8009345c, to: g_wldcore_anim_cel_records, offset: 0xf48}
+  - {addr: 0x80093460, to: g_wldcore_anim_cel_records, offset: 0xf5c}
+  - {addr: 0x80093464, to: g_wldcore_anim_cel_records, offset: 0xf78}
+  - {addr: 0x80093468, to: g_wldcore_anim_cel_records, offset: 0xf94}
+  - {addr: 0x8009346c, to: g_wldcore_anim_cel_records, offset: 0xfb0}
+  - {addr: 0x80093470, to: g_wldcore_anim_cel_records, offset: 0xfcc}
+  - {addr: 0x80093474, to: g_wldcore_anim_cel_records, offset: 0xfe8}
+  - {addr: 0x80093478, to: g_wldcore_anim_cel_records, offset: 0x1004}
+  - {addr: 0x8009347c, to: g_wldcore_anim_cel_records, offset: 0x1020}
+  - {addr: 0x80094df4, to: g_wldcore_map_dot_sources_storage}
+  - {addr: 0x80094df8, to: g_wldcore_location_records_storage}
+  - {addr: 0x80095000, to: g_wldcore_map_route_tables_storage}
+  - {addr: 0x80095004, to: g_wldcore_map_route_polylines_storage}
+  - {addr: 0x80095008, to: g_wldcore_map_route_records}
+  - {addr: 0x8009500c, to: g_wldcore_map_route_records, offset: 0x4c}
+  - {addr: 0x80095010, to: g_wldcore_map_route_records, offset: 0xb0}
+  - {addr: 0x80095014, to: g_wldcore_map_route_records, offset: 0xfc}
+  - {addr: 0x80095018, to: g_wldcore_map_route_records, offset: 0x148}
+  - {addr: 0x8009501c, to: g_wldcore_map_route_records, offset: 0x194}
+  - {addr: 0x80095020, to: g_wldcore_map_route_records, offset: 0x1e0}
+  - {addr: 0x80095024, to: g_wldcore_map_route_records, offset: 0x22c}
+  - {addr: 0x80095028, to: g_wldcore_map_route_records, offset: 0x26c}
+  - {addr: 0x8009502c, to: g_wldcore_map_route_records, offset: 0x2c4}
+  - {addr: 0x80095030, to: g_wldcore_map_route_records, offset: 0x328}
+  - {addr: 0x80095034, to: g_wldcore_map_route_records, offset: 0x374}
+  - {addr: 0x80095038, to: g_wldcore_map_route_records, offset: 0x3cc}
+  - {addr: 0x8009503c, to: g_wldcore_map_route_records, offset: 0x418}
+  - {addr: 0x80095040, to: g_wldcore_map_route_records, offset: 0x458}
+  - {addr: 0x80095044, to: g_wldcore_map_route_records, offset: 0x4a4}
+  - {addr: 0x80095048, to: g_wldcore_map_route_records, offset: 0x508}
+  - {addr: 0x8009504c, to: g_wldcore_map_route_records, offset: 0x554}
+  - {addr: 0x80095050, to: g_wldcore_map_route_records, offset: 0x588}
+  - {addr: 0x80095054, to: g_wldcore_map_route_records, offset: 0x5c8}
+  - {addr: 0x80095058, to: g_wldcore_map_route_records, offset: 0x614}
+  - {addr: 0x8009505c, to: g_wldcore_map_route_records, offset: 0x660}
+  - {addr: 0x80095060, to: g_wldcore_map_route_records, offset: 0x6a0}
+  - {addr: 0x80095064, to: g_wldcore_map_route_records, offset: 0x6ec}
+  - {addr: 0x80095068, to: g_wldcore_map_route_records, offset: 0x738}
+  - {addr: 0x8009506c, to: g_wldcore_map_route_records, offset: 0x790}
+  - {addr: 0x80095070, to: g_wldcore_map_route_records, offset: 0x7dc}
+  - {addr: 0x80095074, to: g_wldcore_map_route_records, offset: 0x834}
+  - {addr: 0x80095078, to: g_wldcore_map_route_records, offset: 0x880}
+  - {addr: 0x8009507c, to: g_wldcore_map_route_records, offset: 0x8d8}
+  - {addr: 0x80095080, to: g_wldcore_map_route_records, offset: 0x930}
+  - {addr: 0x80095084, to: g_wldcore_map_route_records, offset: 0x988}
+  - {addr: 0x80095088, to: g_wldcore_map_route_records, offset: 0x9d4}
+  - {addr: 0x8009508c, to: g_wldcore_map_route_records, offset: 0xa20}
+  - {addr: 0x80095090, to: g_wldcore_map_route_records, offset: 0xa78}
+  - {addr: 0x80095094, to: g_wldcore_map_route_records, offset: 0xac4}
+  - {addr: 0x80095098, to: g_wldcore_map_route_records, offset: 0xb1c}
+  - {addr: 0x8009509c, to: g_wldcore_map_route_records, offset: 0xb68}
+  - {addr: 0x800950a0, to: g_wldcore_map_route_records, offset: 0xbb4}
+  - {addr: 0x800950a4, to: g_wldcore_map_route_records, offset: 0xc00}
+  - {addr: 0x800950a8, to: g_wldcore_map_route_records, offset: 0xc40}
+  - {addr: 0x800950ac, to: g_wldcore_map_route_records, offset: 0xc8c}
+  - {addr: 0x800950b0, to: g_wldcore_map_route_records, offset: 0xcd8}
+  - {addr: 0x800950b4, to: g_wldcore_map_route_records, offset: 0xd24}
+  - {addr: 0x800950b8, to: g_wldcore_map_route_records, offset: 0xd70}
+  - {addr: 0x800950bc, to: g_wldcore_map_route_records, offset: 0xdc8}
+  - {addr: 0x800950c0, to: g_wldcore_map_route_records, offset: 0xe20}
+  - {addr: 0x800950c4, to: g_wldcore_map_route_records, offset: 0xe60}
+  - {addr: 0x80095fb0, to: g_wldcore_map_route_polyline_records}
+  - {addr: 0x80095fb4, to: g_wldcore_map_route_polyline_records, offset: 0x32}
+  - {addr: 0x80095fb8, to: g_wldcore_map_route_polyline_records, offset: 0x74}
+  - {addr: 0x80095fbc, to: g_wldcore_map_route_polyline_records, offset: 0xa6}
+  - {addr: 0x80095fc0, to: g_wldcore_map_route_polyline_records, offset: 0xd8}
+  - {addr: 0x80095fc4, to: g_wldcore_map_route_polyline_records, offset: 0x10a}
+  - {addr: 0x80095fc8, to: g_wldcore_map_route_polyline_records, offset: 0x13c}
+  - {addr: 0x80095fcc, to: g_wldcore_map_route_polyline_records, offset: 0x16e}
+  - {addr: 0x80095fd0, to: g_wldcore_map_route_polyline_records, offset: 0x198}
+  - {addr: 0x80095fd4, to: g_wldcore_map_route_polyline_records, offset: 0x1d2}
+  - {addr: 0x80095fd8, to: g_wldcore_map_route_polyline_records, offset: 0x214}
+  - {addr: 0x80095fdc, to: g_wldcore_map_route_polyline_records, offset: 0x246}
+  - {addr: 0x80095fe0, to: g_wldcore_map_route_polyline_records, offset: 0x280}
+  - {addr: 0x80095fe4, to: g_wldcore_map_route_polyline_records, offset: 0x2b2}
+  - {addr: 0x80095fe8, to: g_wldcore_map_route_polyline_records, offset: 0x2dc}
+  - {addr: 0x80095fec, to: g_wldcore_map_route_polyline_records, offset: 0x30e}
+  - {addr: 0x80095ff0, to: g_wldcore_map_route_polyline_records, offset: 0x350}
+  - {addr: 0x80095ff4, to: g_wldcore_map_route_polyline_records, offset: 0x382}
+  - {addr: 0x80095ff8, to: g_wldcore_map_route_polyline_records, offset: 0x3a4}
+  - {addr: 0x80095ffc, to: g_wldcore_map_route_polyline_records, offset: 0x3ce}
+  - {addr: 0x80096000, to: g_wldcore_map_route_polyline_records, offset: 0x400}
+  - {addr: 0x80096004, to: g_wldcore_map_route_polyline_records, offset: 0x432}
+  - {addr: 0x80096008, to: g_wldcore_map_route_polyline_records, offset: 0x45c}
+  - {addr: 0x8009600c, to: g_wldcore_map_route_polyline_records, offset: 0x48e}
+  - {addr: 0x80096010, to: g_wldcore_map_route_polyline_records, offset: 0x4c0}
+  - {addr: 0x80096014, to: g_wldcore_map_route_polyline_records, offset: 0x4fa}
+  - {addr: 0x80096018, to: g_wldcore_map_route_polyline_records, offset: 0x52c}
+  - {addr: 0x8009601c, to: g_wldcore_map_route_polyline_records, offset: 0x566}
+  - {addr: 0x80096020, to: g_wldcore_map_route_polyline_records, offset: 0x598}
+  - {addr: 0x80096024, to: g_wldcore_map_route_polyline_records, offset: 0x5d2}
+  - {addr: 0x80096028, to: g_wldcore_map_route_polyline_records, offset: 0x60c}
+  - {addr: 0x8009602c, to: g_wldcore_map_route_polyline_records, offset: 0x646}
+  - {addr: 0x80096030, to: g_wldcore_map_route_polyline_records, offset: 0x678}
+  - {addr: 0x80096034, to: g_wldcore_map_route_polyline_records, offset: 0x6aa}
+  - {addr: 0x80096038, to: g_wldcore_map_route_polyline_records, offset: 0x6e4}
+  - {addr: 0x8009603c, to: g_wldcore_map_route_polyline_records, offset: 0x716}
+  - {addr: 0x80096040, to: g_wldcore_map_route_polyline_records, offset: 0x750}
+  - {addr: 0x80096044, to: g_wldcore_map_route_polyline_records, offset: 0x782}
+  - {addr: 0x80096048, to: g_wldcore_map_route_polyline_records, offset: 0x7b4}
+  - {addr: 0x8009604c, to: g_wldcore_map_route_polyline_records, offset: 0x7e6}
+  - {addr: 0x80096050, to: g_wldcore_map_route_polyline_records, offset: 0x810}
+  - {addr: 0x80096054, to: g_wldcore_map_route_polyline_records, offset: 0x842}
+  - {addr: 0x80096058, to: g_wldcore_map_route_polyline_records, offset: 0x874}
+  - {addr: 0x8009605c, to: g_wldcore_map_route_polyline_records, offset: 0x8a6}
+  - {addr: 0x80096060, to: g_wldcore_map_route_polyline_records, offset: 0x8d8}
+  - {addr: 0x80096064, to: g_wldcore_map_route_polyline_records, offset: 0x912}
+  - {addr: 0x80096068, to: g_wldcore_map_route_polyline_records, offset: 0x94c}
+  - {addr: 0x8009606c, to: g_wldcore_map_route_polyline_records, offset: 0x976}
+  - {addr: 0x80096a40, to: g_wldcore_random_battle_data_storage}
+  - {addr: 0x80096a44, to: g_wldcore_deep_dungeon_battles_storage}
+  - {addr: 0x80096a48, to: g_wldcore_brave_story_birthday_table}
+  - {addr: 0x80096a4c, to: g_wldcore_rumor_location_masks_storage}
+  - {addr: 0x80096a50, to: g_wldcore_story_event_ids_storage}
+  - {addr: 0x80096a54, to: g_wldcore_default_script_base_storage}
+  - {addr: 0x80096a58, to: g_wldcore_default_sound_novel_sound_resource_storage}
+  - {addr: 0x80096a5c, to: g_wldcore_map_tile_descriptors_storage}
+  - {addr: 0x80096a60, to: g_wldcore_dissolve_band_order_storage}
+  - {addr: 0x8009d340, to: g_wldcore_proposition_data_base_storage}
+  - {addr: 0x8009e690, to: wldcore_menu_step_map_cursor_level}
+  - {addr: 0x8009e694, to: wldcore_menu_step_world_menu_level}
+  - {addr: 0x8009e698, to: wldcore_menu_wait_text_then_pop_level}
+  - {addr: 0x8009e69c, to: wldcore_menu_finish_close_request}
+  - {addr: 0x8009e6a0, to: wldcore_menu_step_location_menu_level}
+  - {addr: 0x8009e6a4, to: wldcore_bar_handle_menu_input}
+  - {addr: 0x8009e6a8, to: wldcore_bar_handle_rumors_input}
+  - {addr: 0x8009e6ac, to: wldcore_proposition_handle_available_list_input}
+  - {addr: 0x8009e6b0, to: wldcore_bar_wait_rumor_text_then_pop_level}
+  - {addr: 0x8009e6b4, to: wldcore_proposition_handle_accept_input}
+  - {addr: 0x8009e6b8, to: wldcore_proposition_handle_accept_confirm_input}
+  - {addr: 0x8009e6bc, to: wldcore_menu_handle_debug_variable_list_input}
+  - {addr: 0x8009e6c0, to: wldcore_proposition_step_days_level}
+  - {addr: 0x8009e6c4, to: wldcore_proposition_handle_dispatch_confirm_input}
+  - {addr: 0x8009e6c8, to: wldcore_proposition_handle_report_list_input}
+  - {addr: 0x8009e6cc, to: wldcore_proposition_handle_report_confirm_input}
+  - {addr: 0x8009e6d0, to: wldcore_proposition_step_report_level}
+  - {addr: 0x8009e6d4, to: wldcore_proposition_step_result_level}
+  - {addr: 0x8009e6d8, to: wldcore_proposition_handle_active_list_input}
+  - {addr: 0x8009e6dc, to: wldcore_proposition_handle_recall_input}
+  - {addr: 0x8009e6e0, to: wldcore_menu_step_sound_novel_resume_level}
+  - {addr: 0x8009e6e4, to: wldcore_menu_step_sound_novel_level}
+  - {addr: 0x8009e6e8, to: wldcore_menu_step_sound_novel_quit_level}
+  - {addr: 0x8009e6ec, to: wldcore_menu_step_sound_novel_history_level}
+  - {addr: 0x8009e6f0, to: wldcore_list_handle_unexplored_lands_input}
+  - {addr: 0x8009e6f4, to: wldcore_menu_step_unexplored_land_detail_level}
+  - {addr: 0x8009e6f8, to: wldcore_list_handle_treasures_input}
+  - {addr: 0x8009e6fc, to: wldcore_menu_step_treasure_detail_level}
+  - {addr: 0x8009e700, to: wldcore_menu_handle_brave_story_input}
+  - {addr: 0x8009e704, to: wldcore_list_handle_story_events_input}
+  - {addr: 0x8009e708, to: wldcore_menu_handle_story_event_text_input}
+  - {addr: 0x8009e70c, to: wldcore_list_handle_persons_input}
+  - {addr: 0x8009e710, to: wldcore_menu_step_person_detail_level}
+  - {addr: 0x8009e714, to: wldcore_list_handle_tutorial_topics_input}
+  - {addr: 0x8009e718, to: wldcore_menu_wait_tutorial_topic_text_then_pop_level}
+  - {addr: 0x8009e71c, to: wldcore_menu_step_event_transition_level}
+  - {addr: 0x8009e720, to: wldcore_proposition_step_send_unit_level}
+  - {addr: 0x8009e724, to: wldcore_menu_handle_proposition_category_input}
+  - {addr: 0x8009e728, to: wldcore_list_handle_active_propositions_input}
+  - {addr: 0x8009e72c, to: wldcore_menu_handle_participant_list_input}
+  - {addr: 0x8009e730, to: wldcore_menu_handle_participant_detail_input}
+  - {addr: 0x8009e734, to: wldcore_list_handle_proposition_history_input}
+  - {addr: 0x8009e738, to: wldcore_menu_close_proposition_attempt_detail_level}
+  - {addr: 0x8009e73c, to: wldcore_list_handle_tutorial_categories_input}
+  - {addr: 0x8009e740, to: wldcore_list_handle_formation_tutorials_input}
+  - {addr: 0x8009e744, to: wldcore_list_handle_battle_tutorials_input}
+  - {addr: 0x8009e748, to: wldcore_list_handle_facts_input}
+  - {addr: 0x8009e74c, to: wldcore_menu_close_fact_detail_level}
+  - {addr: 0x8009e750, to: wldcore_menu_step_variable_value_panel_level}
+  - {addr: 0x8009e754, to: wldcore_menu_step_screen_transition_level}
+  - {addr: 0x8009e758, to: wldcore_menu_step_focus_location_level}
+  - {addr: 0x8009e75c, to: wldcore_menu_step_scrollable_text_window_level}
+  - {addr: 0x8009e760, to: wldcore_menu_step_party_number_panel_level}
+  - {addr: 0x8009e764, to: wldcore_menu_step_map_path_level}
+  - {addr: 0x8009e768, to: wldcore_menu_step_map_location_visibility_level}
+  - {addr: 0x8009e76c, to: wldcore_proposition_step_milestone_level}
+  - {addr: 0x8009e770, to: wldcore_menu_handle_status_help_input}
+  - {addr: 0x8009e774, to: wldcore_menu_resume_root_level}
+  - {addr: 0x8009e784, to: wldcore_menu_resume_location_menu_level}
+  - {addr: 0x8009e788, to: wldcore_menu_resume_bar_menu_level}
+  - {addr: 0x8009e78c, to: wldcore_bar_rumors_restore_prompt}
+  - {addr: 0x8009e790, to: wldcore_proposition_available_list_restore_prompt}
+  - {addr: 0x8009e798, to: wldcore_menu_resume_proposition_detail_level}
+  - {addr: 0x8009e7ac, to: wldcore_proposition_report_list_restore_prompt}
+  - {addr: 0x8009e7bc, to: wldcore_proposition_active_list_restore_prompt}
+  - {addr: 0x8009e7c8, to: wldcore_menu_resume_sound_novel_level}
+  - {addr: 0x8009e7cc, to: wldcore_menu_resume_sound_novel_quit_level}
+  - {addr: 0x8009e7d4, to: wldcore_list_unexplored_lands_restore_prompt}
+  - {addr: 0x8009e7dc, to: wldcore_list_treasures_restore_prompt}
+  - {addr: 0x8009e7e4, to: wldcore_menu_resume_brave_story_level}
+  - {addr: 0x8009e7e8, to: wldcore_list_story_events_restore_prompt}
+  - {addr: 0x8009e7f0, to: wldcore_list_persons_restore_prompt}
+  - {addr: 0x8009e7f8, to: wldcore_list_tutorial_topics_restore_blocked_buttons}
+  - {addr: 0x8009e804, to: wldcore_menu_resume_proposition_send_unit_level}
+  - {addr: 0x8009e808, to: wldcore_menu_resume_proposition_category_level}
+  - {addr: 0x8009e80c, to: wldcore_menu_resume_active_propositions_level}
+  - {addr: 0x8009e814, to: wldcore_menu_resume_participant_detail_level}
+  - {addr: 0x8009e818, to: wldcore_menu_resume_proposition_history_level}
+  - {addr: 0x8009e820, to: wldcore_menu_resume_tutorial_categories_level}
+  - {addr: 0x8009e824, to: wldcore_list_formation_tutorials_restore_blocked_buttons}
+  - {addr: 0x8009e828, to: wldcore_list_battle_tutorials_restore_blocked_buttons}
+  - {addr: 0x8009e82c, to: wldcore_list_facts_restore_blocked_buttons}
+  - {addr: 0x8009e854, to: wldcore_menu_resume_status_help_level}
+  - {addr: 0x8009e858, to: wldcore_menu_suspend_root_level}
+  - {addr: 0x8009e868, to: wldcore_menu_suspend_location_menu_level}
+  - {addr: 0x8009e86c, to: wldcore_menu_suspend_bar_menu_level}
+  - {addr: 0x8009e870, to: wldcore_bar_rumors_block_all_buttons}
+  - {addr: 0x8009e874, to: wldcore_proposition_available_list_block_all_buttons}
+  - {addr: 0x8009e87c, to: wldcore_menu_suspend_proposition_detail_level}
+  - {addr: 0x8009e890, to: wldcore_proposition_report_list_block_all_buttons}
+  - {addr: 0x8009e8a0, to: wldcore_proposition_active_list_block_all_buttons}
+  - {addr: 0x8009e8ac, to: wldcore_menu_suspend_sound_novel_level}
+  - {addr: 0x8009e8b0, to: wldcore_menu_suspend_sound_novel_quit_level}
+  - {addr: 0x8009e8b8, to: wldcore_list_unexplored_lands_block_all_buttons}
+  - {addr: 0x8009e8c0, to: wldcore_list_treasures_block_all_buttons}
+  - {addr: 0x8009e8c8, to: wldcore_menu_suspend_brave_story_level}
+  - {addr: 0x8009e8cc, to: wldcore_list_story_events_block_all_buttons}
+  - {addr: 0x8009e8d4, to: wldcore_list_persons_block_all_buttons}
+  - {addr: 0x8009e8dc, to: wldcore_list_tutorial_topics_block_all_buttons}
+  - {addr: 0x8009e8e8, to: wldcore_menu_suspend_proposition_send_unit_level}
+  - {addr: 0x8009e8ec, to: wldcore_menu_suspend_proposition_category_level}
+  - {addr: 0x8009e8f0, to: wldcore_menu_suspend_active_propositions_level}
+  - {addr: 0x8009e8f8, to: wldcore_menu_suspend_participant_detail_level}
+  - {addr: 0x8009e8fc, to: wldcore_menu_suspend_proposition_history_level}
+  - {addr: 0x8009e904, to: wldcore_menu_suspend_tutorial_categories_level}
+  - {addr: 0x8009e908, to: wldcore_list_formation_tutorials_block_all_buttons}
+  - {addr: 0x8009e90c, to: wldcore_list_battle_tutorials_block_all_buttons}
+  - {addr: 0x8009e910, to: wldcore_list_facts_block_all_buttons}
+  - {addr: 0x8009e938, to: wldcore_menu_suspend_status_help_level}
+  - {addr: 0x8009e9bc, to: g_world_selected_unit_identity, offset: 0x2}
+  - {addr: 0x8009e9ec, to: g_world_selected_unit_identity, offset: 0x8}
+  - {addr: 0x8009ea5c, to: g_world_selected_unit_stat_detail, offset: 0x24}
+  - {addr: 0x8009ea6c, to: g_world_selected_unit_stat_detail, offset: 0x26}
+  - {addr: 0x8009ea7c, to: g_world_selected_unit_stat_detail, offset: 0x28}
+  - {addr: 0x8009ea8c, to: g_world_selected_unit_stat_detail, offset: 0x2a}
+  - {addr: 0x8009ea9c, to: g_world_selected_unit_stat_detail, offset: 0x2c}
+  - {addr: 0x8009eaac, to: g_world_selected_unit_stat_detail, offset: 0x2e}
+  - {addr: 0x8009eabc, to: g_world_selected_unit_stat_detail, offset: 0x30}
+  - {addr: 0x8009eacc, to: g_world_selected_unit_stat_detail, offset: 0x32}
+  - {addr: 0x8009eadc, to: g_world_selected_unit_stat_detail, offset: 0x34}
+  - {addr: 0x8009eaec, to: g_world_selected_unit_stat_detail, offset: 0x36}
+  - {addr: 0x8009ecfc, to: wldcore_sound_novel_end_script}
+  - {addr: 0x8009ed00, to: wldcore_sound_novel_end_section}
+  - {addr: 0x8009ed04, to: wldcore_sound_novel_nop}
+  - {addr: 0x8009ed08, to: wldcore_sound_novel_start_text_thread_and_push_history}
+  - {addr: 0x8009ed0c, to: wldcore_sound_novel_wait_for_text_thread}
+  - {addr: 0x8009ed10, to: wldcore_sound_novel_load_background_set}
+  - {addr: 0x8009ed14, to: wldcore_sound_novel_branch_to_section}
+  - {addr: 0x8009ed18, to: wldcore_sound_novel_branch_if_dialog_option_equal}
+  - {addr: 0x8009ed1c, to: wldcore_sound_novel_branch_if_dialog_option_not_equal}
+  - {addr: 0x8009ed20, to: wldcore_sound_novel_wait_frames}
+  - {addr: 0x8009ed24, to: wldcore_sound_novel_load_picture}
+  - {addr: 0x8009ed28, to: wldcore_sound_novel_hide_picture}
+  - {addr: 0x8009ed2c, to: wldcore_sound_novel_set_parent_windows_visible}
+  - {addr: 0x8009ed30, to: wldcore_sound_novel_start_text_thread}
+  - {addr: 0x8009ed34, to: wldcore_sound_novel_branch_to_random_section}
+  - {addr: 0x8009ed38, to: wldcore_sound_novel_branch_if_section_read}
+  - {addr: 0x8009ed3c, to: wldcore_sound_novel_branch_if_section_unread}
+  - {addr: 0x8009ed40, to: wldcore_sound_novel_branch_if_saved_flag_set}
+  - {addr: 0x8009ed44, to: wldcore_sound_novel_branch_if_saved_flag_clear}
+  - {addr: 0x8009ed48, to: wldcore_sound_novel_branch_if_local_flag_set}
+  - {addr: 0x8009ed4c, to: wldcore_sound_novel_branch_if_local_flag_clear}
+  - {addr: 0x8009ed50, to: wldcore_sound_novel_set_saved_flag}
+  - {addr: 0x8009ed54, to: wldcore_sound_novel_clear_saved_flag}
+  - {addr: 0x8009ed58, to: wldcore_sound_novel_set_local_flag}
+  - {addr: 0x8009ed5c, to: wldcore_sound_novel_clear_local_flag}
+  - {addr: 0x8009ed60, to: wldcore_sound_novel_set_counter}
+  - {addr: 0x8009ed64, to: wldcore_sound_novel_add_counter_delta}
+  - {addr: 0x8009ed68, to: wldcore_sound_novel_subtract_counter_delta}
+  - {addr: 0x8009ed6c, to: wldcore_sound_novel_show_value_display}
+  - {addr: 0x8009ed70, to: wldcore_sound_novel_hide_value_display}
+  - {addr: 0x8009ed74, to: wldcore_sound_novel_apply_counter_delta}
+  - {addr: 0x8009ed78, to: wldcore_sound_novel_play_sound}
+  - {addr: 0x8009ed7c, to: wldcore_sound_novel_play_music}
+  - {addr: 0x8009ed80, to: wldcore_sound_novel_set_sound_mode}
+  - {addr: 0x8009ed84, to: wldcore_sound_novel_branch_if_counter_equal}
+  - {addr: 0x8009ed88, to: wldcore_sound_novel_branch_if_counter_not_equal}
+  - {addr: 0x8009ed8c, to: wldcore_sound_novel_branch_if_counter_less}
+  - {addr: 0x8009ed90, to: wldcore_sound_novel_branch_if_counter_greater}
+  - {addr: 0x8009ed94, to: wldcore_sound_novel_fade_out_music}
+  - {addr: 0x8009ed98, to: wldcore_sound_novel_switch_music_track}
+  - {addr: 0x8009ed9c, to: wldcore_sound_novel_fade_screen_out}
+  - {addr: 0x8009eda0, to: wldcore_sound_novel_fade_screen_in}
+  - {addr: 0x8009eda4, to: wldcore_sound_novel_set_white_screen_overlay}
+  - {addr: 0x8009eda8, to: wldcore_sound_novel_wait_for_circle_press}
+  - {addr: 0x8009edac, to: wldcore_sound_novel_play_sound_quad}
+  - {addr: 0x8009edb0, to: wldcore_sound_novel_stop_background_sound}
+  - {addr: 0x8009edb4, to: wldcore_sound_novel_start_countdown_timer}
+  - {addr: 0x8009edb8, to: wldcore_sound_novel_play_background_sound}
+  - {addr: 0x8009edbc, to: wldcore_sound_novel_set_master_volume}
+  - {addr: 0x8009edc0, to: wldcore_sound_novel_stop_music}
+  - {addr: 0x8009edc4, to: wldcore_sound_novel_set_menu_brightness}
+  - {addr: 0x8009edc8, to: wldcore_sound_novel_add_counter_delta_if_choice}
+  - {addr: 0x8009edcc, to: wldcore_sound_novel_wait_for_fade}
+  - {addr: 0x8009edd0, to: wldcore_sound_novel_push_text_history}
+  - {addr: 0x8009ee50, to: wldcore_script_nop}
+  - {addr: 0x8009ee54, to: wldcore_script_check_var_equal}
+  - {addr: 0x8009ee58, to: wldcore_script_check_var_at_least}
+  - {addr: 0x8009ee5c, to: wldcore_script_check_var_at_most}
+  - {addr: 0x8009ee60, to: wldcore_script_check_roster_has_sprite_set}
+  - {addr: 0x8009ee64, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009ee68, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009ee6c, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009ee70, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009ee74, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009ee78, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009ee7c, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009ee80, to: wldcore_script_skip_1_operand_2}
+  - {addr: 0x8009ee84, to: wldcore_script_skip_1_operand_3}
+  - {addr: 0x8009ee88, to: wldcore_script_check_war_funds_at_least}
+  - {addr: 0x8009ee8c, to: wldcore_script_check_war_funds_at_most}
+  - {addr: 0x8009ee90, to: wldcore_script_check_date_on_or_after}
+  - {addr: 0x8009ee94, to: wldcore_script_check_date_on_or_before}
+  - {addr: 0x8009ee98, to: wldcore_script_check_casualties_at_least}
+  - {addr: 0x8009ee9c, to: wldcore_script_check_casualties_at_most}
+  - {addr: 0x8009eea0, to: wldcore_script_skip_1_operand}
+  - {addr: 0x8009eea4, to: wldcore_script_skip_1_operand}
+  - {addr: 0x8009eea8, to: wldcore_script_nop}
+  - {addr: 0x8009eeac, to: wldcore_script_skip_3_operands}
+  - {addr: 0x8009eeb0, to: wldcore_script_skip_4_operands}
+  - {addr: 0x8009eeb4, to: wldcore_script_request_load_event}
+  - {addr: 0x8009eeb8, to: wldcore_script_request_choice}
+  - {addr: 0x8009eebc, to: wldcore_script_skip_2_operands}
+  - {addr: 0x8009eec0, to: wldcore_script_set_var}
+  - {addr: 0x8009eec4, to: wldcore_script_request_text}
+  - {addr: 0x8009eec8, to: wldcore_script_request_deep_dungeon_entry}
+  - {addr: 0x8009eecc, to: wldcore_script_request_set_var_2}
+  - {addr: 0x8009eed0, to: wldcore_script_request_draw_path}
+  - {addr: 0x8009eed4, to: wldcore_script_request_erase_path}
+  - {addr: 0x8009eed8, to: wldcore_script_request_draw_location}
+  - {addr: 0x8009eedc, to: wldcore_script_request_erase_location}
+  - {addr: 0x8009eee0, to: wldcore_script_focus_location}
+  - {addr: 0x8009eee4, to: wldcore_script_check_ramza_brave_at_least}
+  - {addr: 0x8009eee8, to: wldcore_script_check_ramza_brave_at_most}
+  - {addr: 0x8009eeec, to: wldcore_script_check_ramza_faith_at_least}
+  - {addr: 0x8009eef0, to: wldcore_script_check_ramza_faith_at_most}
+
+values:
+  - {addr: 0x800944b4, end: 0x80094df4, why: "location frame TIM: header, CLUT colors and pixels"}
+  - {addr: 0x80098238, end: 0x80099b3c, why: "default sound novel feds block: sound data bytes"}
