@@ -1137,21 +1137,21 @@ data:
   - {addr: 0x800e0054, name: g_menu_wait_for_file_allocation_message}
   - {addr: 0x800e0070, name: g_script_pause_message}
   - {addr: 0x800e007c, name: g_world_script_reading_character_message}
-  - {addr: 0x800e00bc, name: g_world_card_save_file_name_0}
-  - {addr: 0x800e00d0, name: g_world_card_save_file_name_1}
-  - {addr: 0x800e00e4, name: g_world_card_save_file_name_2}
-  - {addr: 0x800e00f8, name: g_world_card_save_file_name_3}
-  - {addr: 0x800e010c, name: g_world_card_save_file_name_4}
-  - {addr: 0x800e0120, name: g_world_card_save_file_name_5}
-  - {addr: 0x800e0134, name: g_world_card_save_file_name_6}
+  - {addr: 0x800e00bc, name: g_world_card_save_file_name_14}
+  - {addr: 0x800e00d0, name: g_world_card_save_file_name_13}
+  - {addr: 0x800e00e4, name: g_world_card_save_file_name_12}
+  - {addr: 0x800e00f8, name: g_world_card_save_file_name_11}
+  - {addr: 0x800e010c, name: g_world_card_save_file_name_10}
+  - {addr: 0x800e0120, name: g_world_card_save_file_name_9}
+  - {addr: 0x800e0134, name: g_world_card_save_file_name_8}
   - {addr: 0x800e0148, name: g_world_card_save_file_name_7}
-  - {addr: 0x800e015c, name: g_world_card_save_file_name_8}
-  - {addr: 0x800e0170, name: g_world_card_save_file_name_9}
-  - {addr: 0x800e0184, name: g_world_card_save_file_name_10}
-  - {addr: 0x800e0198, name: g_world_card_save_file_name_11}
-  - {addr: 0x800e01ac, name: g_world_card_save_file_name_12}
-  - {addr: 0x800e01c0, name: g_world_card_save_file_name_13}
-  - {addr: 0x800e01d4, name: g_world_card_save_file_name_14}
+  - {addr: 0x800e015c, name: g_world_card_save_file_name_6}
+  - {addr: 0x800e0170, name: g_world_card_save_file_name_5}
+  - {addr: 0x800e0184, name: g_world_card_save_file_name_4}
+  - {addr: 0x800e0198, name: g_world_card_save_file_name_3}
+  - {addr: 0x800e01ac, name: g_world_card_save_file_name_2}
+  - {addr: 0x800e01c0, name: g_world_card_save_file_name_1}
+  - {addr: 0x800e01d4, name: g_world_card_save_file_name_0}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
   - {addr: 0x800eda00, name: g_open_work_buffer_1}
   - {addr: 0x8010042c, name: g_thread_call_saved_ra}
@@ -4197,21 +4197,21 @@ relocations:
   - {addr: 0x80193c30, to: g_world_text_job_descriptions_data}
   - {addr: 0x80193c38, to: g_world_text_name_entry_keyboard_data}
   - {addr: 0x80193c3c, to: g_world_text_shop_dialogue_data}
-  - {addr: 0x80193cb4, to: g_world_card_save_file_name_14}
-  - {addr: 0x80193cb8, to: g_world_card_save_file_name_13}
-  - {addr: 0x80193cbc, to: g_world_card_save_file_name_12}
-  - {addr: 0x80193cc0, to: g_world_card_save_file_name_11}
-  - {addr: 0x80193cc4, to: g_world_card_save_file_name_10}
-  - {addr: 0x80193cc8, to: g_world_card_save_file_name_9}
-  - {addr: 0x80193ccc, to: g_world_card_save_file_name_8}
+  - {addr: 0x80193cb4, to: g_world_card_save_file_name_0}
+  - {addr: 0x80193cb8, to: g_world_card_save_file_name_1}
+  - {addr: 0x80193cbc, to: g_world_card_save_file_name_2}
+  - {addr: 0x80193cc0, to: g_world_card_save_file_name_3}
+  - {addr: 0x80193cc4, to: g_world_card_save_file_name_4}
+  - {addr: 0x80193cc8, to: g_world_card_save_file_name_5}
+  - {addr: 0x80193ccc, to: g_world_card_save_file_name_6}
   - {addr: 0x80193cd0, to: g_world_card_save_file_name_7}
-  - {addr: 0x80193cd4, to: g_world_card_save_file_name_6}
-  - {addr: 0x80193cd8, to: g_world_card_save_file_name_5}
-  - {addr: 0x80193cdc, to: g_world_card_save_file_name_4}
-  - {addr: 0x80193ce0, to: g_world_card_save_file_name_3}
-  - {addr: 0x80193ce4, to: g_world_card_save_file_name_2}
-  - {addr: 0x80193ce8, to: g_world_card_save_file_name_1}
-  - {addr: 0x80193cec, to: g_world_card_save_file_name_0}
+  - {addr: 0x80193cd4, to: g_world_card_save_file_name_8}
+  - {addr: 0x80193cd8, to: g_world_card_save_file_name_9}
+  - {addr: 0x80193cdc, to: g_world_card_save_file_name_10}
+  - {addr: 0x80193ce0, to: g_world_card_save_file_name_11}
+  - {addr: 0x80193ce4, to: g_world_card_save_file_name_12}
+  - {addr: 0x80193ce8, to: g_world_card_save_file_name_13}
+  - {addr: 0x80193cec, to: g_world_card_save_file_name_14}
   - {addr: 0x80193e20, to: D_8018e0b4}
   - {addr: 0x80193e24, to: world_menu_icon_linked_entry_thread}
   - {addr: 0x80193e30, to: g_world_menu_selection_results, offset: 0x16}
