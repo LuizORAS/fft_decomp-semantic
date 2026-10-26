@@ -890,12 +890,42 @@ data:
   - {addr: 0x80010064, name: g_psyq_spu_fifo_ready_timeout_name}
   - {addr: 0x80010078, name: g_psyq_spu_status_restore_timeout_name}
   - {addr: 0x80010108, name: g_psyq_etc_vsync_timeout_message}
+  - {addr: 0x80010118, name: g_psyq_etc_intr_rcs_id}
   - {addr: 0x8001014c, name: g_psyq_etc_uninitialized_irq_format}
   - {addr: 0x80010168, name: g_psyq_etc_unhandled_irq_format}
   - {addr: 0x80010184, name: g_psyq_etc_dma_error_format}
   - {addr: 0x800101a0, name: g_psyq_etc_dma_channel_address_format}
   - {addr: 0x800101b0, name: g_psyq_cd_init_failure_message}
   - {addr: 0x800101c8, name: g_psyq_cd_unknown_name}
+  - {addr: 0x800101d0, name: g_psyq_cd_command_name_reads}
+  - {addr: 0x800101dc, name: g_psyq_cd_command_name_seekp}
+  - {addr: 0x800101e8, name: g_psyq_cd_command_name_seekl}
+  - {addr: 0x800101f4, name: g_psyq_cd_command_name_gettd}
+  - {addr: 0x80010200, name: g_psyq_cd_command_name_gettn}
+  - {addr: 0x8001020c, name: g_psyq_cd_command_name_getlocp}
+  - {addr: 0x80010218, name: g_psyq_cd_command_name_getlocl}
+  - {addr: 0x80010224, name: g_psyq_cd_unassigned_name}
+  - {addr: 0x80010228, name: g_psyq_cd_command_name_setmode}
+  - {addr: 0x80010234, name: g_psyq_cd_command_name_setfilter}
+  - {addr: 0x80010244, name: g_psyq_cd_command_name_demute}
+  - {addr: 0x80010250, name: g_psyq_cd_command_name_mute}
+  - {addr: 0x80010258, name: g_psyq_cd_command_name_reset}
+  - {addr: 0x80010264, name: g_psyq_cd_command_name_pause}
+  - {addr: 0x80010270, name: g_psyq_cd_command_name_stop}
+  - {addr: 0x80010278, name: g_psyq_cd_command_name_standby}
+  - {addr: 0x80010284, name: g_psyq_cd_command_name_readn}
+  - {addr: 0x80010290, name: g_psyq_cd_command_name_backward}
+  - {addr: 0x8001029c, name: g_psyq_cd_command_name_forward}
+  - {addr: 0x800102a8, name: g_psyq_cd_command_name_play}
+  - {addr: 0x800102b0, name: g_psyq_cd_command_name_setloc}
+  - {addr: 0x800102bc, name: g_psyq_cd_command_name_nop}
+  - {addr: 0x800102c4, name: g_psyq_cd_command_name_sync}
+  - {addr: 0x800102cc, name: g_psyq_cd_interrupt_name_diskerror}
+  - {addr: 0x800102d8, name: g_psyq_cd_interrupt_name_dataend}
+  - {addr: 0x800102e0, name: g_psyq_cd_interrupt_name_acknowledge}
+  - {addr: 0x800102ec, name: g_psyq_cd_interrupt_name_complete}
+  - {addr: 0x800102f8, name: g_psyq_cd_interrupt_name_dataready}
+  - {addr: 0x80010304, name: g_psyq_cd_interrupt_name_nointr}
   - {addr: 0x8001030c, name: g_psyq_cd_timeout_message}
   - {addr: 0x8001031c, name: g_psyq_cd_timeout_format}
   - {addr: 0x80010338, name: g_psyq_cd_disk_error_message}
@@ -907,6 +937,7 @@ data:
   - {addr: 0x800103a8, name: g_psyq_cd_command_trace_format}
   - {addr: 0x800103b0, name: g_psyq_cd_missing_parameters_format}
   - {addr: 0x800103c0, name: g_psyq_cd_command_timeout_name}
+  - {addr: 0x800103c8, name: g_psyq_cd_bios_rcs_id}
   - {addr: 0x800103fc, name: g_psyq_cd_init_message}
   - {addr: 0x80010408, name: g_psyq_cd_init_address_format}
   - {addr: 0x80010414, name: g_psyq_cd_data_sync_timeout_name}
@@ -916,6 +947,7 @@ data:
   - {addr: 0x80010464, name: g_psyq_cd_dma_timeout_format}
   - {addr: 0x8001047c, name: g_psyq_libc_uppercase_digits}
   - {addr: 0x80010490, name: g_psyq_libc_lowercase_digits}
+  - {addr: 0x80010558, name: g_psyq_gpu_uppercase_digits}
   - {addr: 0x800105f4, name: g_psyq_gpu_tpage_format}
   - {addr: 0x8001060c, name: g_psyq_gpu_clut_format}
   - {addr: 0x8001061c, name: g_psyq_gpu_draw_clip_format}
@@ -927,6 +959,7 @@ data:
   - {addr: 0x80010690, name: g_psyq_gpu_screen_rectangle_format}
   - {addr: 0x800106ac, name: g_psyq_gpu_interlace_format}
   - {addr: 0x800106b8, name: g_psyq_gpu_rgb24_format}
+  - {addr: 0x800106c4, name: g_psyq_gpu_sys_rcs_id}
   - {addr: 0x800106f8, name: g_psyq_gpu_reset_addresses_format}
   - {addr: 0x80010718, name: g_psyq_gpu_reset_graph_format}
   - {addr: 0x8001072c, name: g_psyq_gpu_graph_reverse_format}
@@ -1058,6 +1091,7 @@ data:
   - {addr: 0x8003072e, name: g_psyq_etc_saved_irq_mask}
   - {addr: 0x80030730, name: g_psyq_etc_saved_dma_dpcr}
   - {addr: 0x80030738, name: g_psyq_etc_saved_stack_pointer}
+  - {addr: 0x80031764, name: g_psyq_etc_interrupt_dispatch}
   - {addr: 0x80031784, name: g_psyq_etc_dispatch}
   - {addr: 0x80031788, name: g_psyq_etc_irq_status}
   - {addr: 0x8003178c, name: g_psyq_etc_irq_mask}
@@ -1243,6 +1277,7 @@ data:
   - {addr: 0x8004091c, name: g_psyq_crt_bss_end}
   - {addr: 0x80042880, name: get_entd}
   - {addr: 0x800454cc, name: g_main_brave_story_ages_source}
+  - {addr: 0x800454d0, name: g_main_brave_story_initial_ages}
   - {addr: 0x8004593c, name: _ramsize}
   - {addr: 0x80045940, name: _stacksize}
   - {addr: 0x80045944, name: g_main_input_current_buttons}
@@ -1423,6 +1458,7 @@ data:
   - {addr: 0x8006628e, name: g_main_crystal_treasure_item_id}
   - {addr: 0x800662d0, name: g_main_status_check_sets}
   - {addr: 0x80066308, name: g_main_party_highest_level}
+  - {addr: 0x80067000, name: g_main_low_overlay_window}
   - {addr: 0x800670f0, name: open_system_run_main_loop}
   - {addr: 0x8006720c, name: open_system_run_ending_cutscene}
   - {addr: 0x800672f8, name: wldcore_entrypoint}
@@ -1430,6 +1466,7 @@ data:
   - {addr: 0x80093170, name: battle_map_color_field}
   - {addr: 0x800a778c, name: g_main_system_game_flow_state}
   - {addr: 0x800d0bbc, name: g_main_save_slot_buffer}
+  - {addr: 0x800e0000, name: g_main_world_overlay_window}
   - {addr: 0x800e6edc, name: world_text_find_entry}
   - {addr: 0x800ef25c, name: world_script_set_variable}
   - {addr: 0x800fc55c, name: g_battle_render_buffers}
@@ -1441,6 +1478,8 @@ data:
   - {addr: 0x8014a81c, name: battle_return_zero}
   - {addr: 0x8018e9bc, name: battle_status_queue_graphics_change_if_executing}
   - {addr: 0x801908cc, name: g_battle_unit_stats}
+  - {addr: 0x801bf000, name: g_main_companion_overlay_window}
+  - {addr: 0x801df000, name: g_main_high_overlay_window}
 
 overrides:
   - {function: main_party_init_new_game, name: script_set_variable, addr: 0x800ef25c}
@@ -1449,3 +1488,236 @@ regions:
   - {addr: 0x8001c2e8, end: 0x8001c2f4, kind: interior, why: "inside 0x8001c268: branch target inside SquareRoot12"}
   - {addr: 0x800454cc, end: 0x80045514, kind: data, why: "pointer plus 0x40-byte Brave Story age table and padding"}
   - {addr: 0x8004f1d0, end: 0x8004f210, kind: data, why: "Geomancy tile-to-ability lookup table"}
+
+relocations:
+  - {addr: 0x80010000, to: g_main_low_overlay_window}
+  - {addr: 0x80010004, to: g_main_world_overlay_window}
+  - {addr: 0x80010008, to: g_main_companion_overlay_window}
+  - {addr: 0x8001000c, to: g_main_high_overlay_window}
+  - {addr: 0x80010010, to: g_main_high_overlay_window}
+  - {addr: 0x80028af0, to: __SN_ENTRY_POINT}
+  - {addr: 0x80028af8, to: g_psyq_crt_constructors_ran}
+  - {addr: 0x80028b00, to: g_main_gfx_now_loading_otags}
+  - {addr: 0x80028b0c, to: suzuki_smd_rest}
+  - {addr: 0x80028b10, to: suzuki_smd_fermata}
+  - {addr: 0x80028b14, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b18, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b1c, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b20, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b24, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b28, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b2c, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b30, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b34, to: suzuki_smd_opcode_8a}
+  - {addr: 0x80028b38, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b3c, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b40, to: suzuki_smd_loop_point_if_selected}
+  - {addr: 0x80028b44, to: suzuki_smd_opcode_8e}
+  - {addr: 0x80028b48, to: suzuki_smd_opcode_8f}
+  - {addr: 0x80028b4c, to: suzuki_smd_end_bar}
+  - {addr: 0x80028b50, to: suzuki_smd_loop}
+  - {addr: 0x80028b54, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b58, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b5c, to: suzuki_smd_octave}
+  - {addr: 0x80028b60, to: suzuki_smd_raise_octave}
+  - {addr: 0x80028b64, to: suzuki_smd_lower_octave}
+  - {addr: 0x80028b68, to: suzuki_smd_time_signature}
+  - {addr: 0x80028b6c, to: suzuki_smd_repeat}
+  - {addr: 0x80028b70, to: suzuki_smd_coda}
+  - {addr: 0x80028b74, to: suzuki_smd_to_coda}
+  - {addr: 0x80028b78, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b7c, to: suzuki_smd_play_sfx}
+  - {addr: 0x80028b80, to: suzuki_smd_stop_sfx}
+  - {addr: 0x80028b84, to: suzuki_smd_play_vfx}
+  - {addr: 0x80028b88, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b8c, to: suzuki_smd_tempo}
+  - {addr: 0x80028b90, to: suzuki_smd_accelerando}
+  - {addr: 0x80028b94, to: suzuki_smd_tempo_ramp}
+  - {addr: 0x80028b98, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028b9c, to: suzuki_smd_opcode_a4}
+  - {addr: 0x80028ba0, to: suzuki_smd_opcode_a5}
+  - {addr: 0x80028ba4, to: suzuki_smd_master_volume}
+  - {addr: 0x80028ba8, to: suzuki_smd_master_volume_ramp}
+  - {addr: 0x80028bac, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028bb0, to: suzuki_smd_gate_time}
+  - {addr: 0x80028bb4, to: suzuki_smd_set_voice}
+  - {addr: 0x80028bb8, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028bbc, to: suzuki_smd_instrument}
+  - {addr: 0x80028bc0, to: suzuki_smd_length_adjust}
+  - {addr: 0x80028bc4, to: suzuki_smd_opcode_ae}
+  - {addr: 0x80028bc8, to: suzuki_smd_opcode_af}
+  - {addr: 0x80028bcc, to: suzuki_smd_slur_on}
+  - {addr: 0x80028bd0, to: suzuki_smd_slur_off}
+  - {addr: 0x80028bd4, to: suzuki_smd_enable_lfo}
+  - {addr: 0x80028bd8, to: suzuki_smd_disable_lfo}
+  - {addr: 0x80028bdc, to: suzuki_smd_enable_noise}
+  - {addr: 0x80028be0, to: suzuki_smd_increase_noise}
+  - {addr: 0x80028be4, to: suzuki_smd_turn_on_noise}
+  - {addr: 0x80028be8, to: suzuki_smd_disable_noise}
+  - {addr: 0x80028bec, to: suzuki_smd_acoustics}
+  - {addr: 0x80028bf0, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028bf4, to: suzuki_smd_enable_reverb}
+  - {addr: 0x80028bf8, to: suzuki_smd_disable_reverb}
+  - {addr: 0x80028bfc, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c00, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c04, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c08, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c0c, to: suzuki_smd_naturale}
+  - {addr: 0x80028c10, to: suzuki_smd_envelope_shape}
+  - {addr: 0x80028c14, to: suzuki_smd_attack_time}
+  - {addr: 0x80028c18, to: suzuki_smd_decay_time}
+  - {addr: 0x80028c1c, to: suzuki_smd_sustain_time}
+  - {addr: 0x80028c20, to: suzuki_smd_release}
+  - {addr: 0x80028c24, to: suzuki_smd_sustain_level}
+  - {addr: 0x80028c28, to: suzuki_smd_envelope_tail}
+  - {addr: 0x80028c2c, to: suzuki_smd_attack_mode}
+  - {addr: 0x80028c30, to: suzuki_smd_sustain_mode}
+  - {addr: 0x80028c34, to: suzuki_smd_release_mode}
+  - {addr: 0x80028c38, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c3c, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c40, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c44, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c48, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c4c, to: suzuki_smd_pitch_offset}
+  - {addr: 0x80028c50, to: suzuki_smd_add_pitch_offset_coarse}
+  - {addr: 0x80028c54, to: suzuki_smd_add_pitch_offset_fine}
+  - {addr: 0x80028c58, to: suzuki_smd_add_pitch_offset_wide}
+  - {addr: 0x80028c5c, to: suzuki_smd_pitch_slide}
+  - {addr: 0x80028c60, to: suzuki_smd_toggle_pitch_slide_hold}
+  - {addr: 0x80028c64, to: suzuki_smd_portamento}
+  - {addr: 0x80028c68, to: suzuki_smd_pitch_shift_fade_in}
+  - {addr: 0x80028c6c, to: suzuki_smd_pitch_shift}
+  - {addr: 0x80028c70, to: suzuki_smd_pitch_shift_waveform}
+  - {addr: 0x80028c74, to: suzuki_smd_pitch_shift_on}
+  - {addr: 0x80028c78, to: suzuki_smd_pitch_shift_off}
+  - {addr: 0x80028c7c, to: suzuki_smd_pitch_slide_off}
+  - {addr: 0x80028c80, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c84, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c88, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028c8c, to: suzuki_smd_dynamic}
+  - {addr: 0x80028c90, to: suzuki_smd_crescendo}
+  - {addr: 0x80028c94, to: suzuki_smd_fermata_ramp}
+  - {addr: 0x80028c98, to: suzuki_smd_tremolo_fade_in}
+  - {addr: 0x80028c9c, to: suzuki_smd_tremolo}
+  - {addr: 0x80028ca0, to: suzuki_smd_tremolo_waveform}
+  - {addr: 0x80028ca4, to: suzuki_smd_tremolo_on}
+  - {addr: 0x80028ca8, to: suzuki_smd_tremolo_off}
+  - {addr: 0x80028cac, to: suzuki_smd_balance}
+  - {addr: 0x80028cb0, to: suzuki_smd_shift_balance}
+  - {addr: 0x80028cb4, to: suzuki_smd_balance_ramp}
+  - {addr: 0x80028cb8, to: suzuki_smd_pan_lfo_fade_in}
+  - {addr: 0x80028cbc, to: suzuki_smd_pan_lfo}
+  - {addr: 0x80028cc0, to: suzuki_smd_pan_lfo_waveform}
+  - {addr: 0x80028cc4, to: suzuki_smd_pan_lfo_on}
+  - {addr: 0x80028cc8, to: suzuki_smd_pan_lfo_off}
+  - {addr: 0x80028ccc, to: suzuki_smd_modulator_select}
+  - {addr: 0x80028cd0, to: suzuki_smd_modulator_set_depth}
+  - {addr: 0x80028cd4, to: suzuki_smd_modulator_set_fade_in}
+  - {addr: 0x80028cd8, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028cdc, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028ce0, to: suzuki_smd_modulator_enable_mask}
+  - {addr: 0x80028ce4, to: suzuki_smd_modulator_enable}
+  - {addr: 0x80028ce8, to: suzuki_smd_modulator_disable}
+  - {addr: 0x80028cec, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028cf0, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028cf4, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028cf8, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028cfc, to: suzuki_smd_no_instruction}
+  - {addr: 0x80028d00, to: suzuki_smd_scale_tempo}
+  - {addr: 0x80028d04, to: suzuki_smd_select_sound_font}
+  - {addr: 0x80028d08, to: suzuki_smd_end_track}
+  - {addr: 0x80028f54, to: suzuki_smd_modulator_step_square}
+  - {addr: 0x80028f58, to: suzuki_smd_modulator_step_alternating}
+  - {addr: 0x80028f5c, to: suzuki_smd_modulator_step_triangle}
+  - {addr: 0x80028f60, to: suzuki_smd_modulator_step_triangle_centered}
+  - {addr: 0x80028f64, to: suzuki_smd_modulator_step_sawtooth}
+  - {addr: 0x80028f68, to: suzuki_smd_modulator_step_sawtooth}
+  - {addr: 0x80028f6c, to: suzuki_smd_modulator_step_random}
+  - {addr: 0x80028f70, to: suzuki_smd_modulator_step_random_bipolar}
+  - {addr: 0x80028f74, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80028f78, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80028f7c, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80028f80, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80028f84, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80028f88, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80028f8c, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80028f90, to: suzuki_smd_modulator_deactivate}
+  - {addr: 0x80031764, to: g_psyq_etc_intr_rcs_id}
+  - {addr: 0x8003176c, to: setIntr}
+  - {addr: 0x80031770, to: startIntr}
+  - {addr: 0x80031774, to: stopIntr}
+  - {addr: 0x8003177c, to: restartIntr}
+  - {addr: 0x80031780, to: g_psyq_etc_interrupt_state}
+  - {addr: 0x80031784, to: g_psyq_etc_interrupt_dispatch}
+  - {addr: 0x800318a0, to: g_psyq_cd_command_name_sync}
+  - {addr: 0x800318a4, to: g_psyq_cd_command_name_nop}
+  - {addr: 0x800318a8, to: g_psyq_cd_command_name_setloc}
+  - {addr: 0x800318ac, to: g_psyq_cd_command_name_play}
+  - {addr: 0x800318b0, to: g_psyq_cd_command_name_forward}
+  - {addr: 0x800318b4, to: g_psyq_cd_command_name_backward}
+  - {addr: 0x800318b8, to: g_psyq_cd_command_name_readn}
+  - {addr: 0x800318bc, to: g_psyq_cd_command_name_standby}
+  - {addr: 0x800318c0, to: g_psyq_cd_command_name_stop}
+  - {addr: 0x800318c4, to: g_psyq_cd_command_name_pause}
+  - {addr: 0x800318c8, to: g_psyq_cd_command_name_reset}
+  - {addr: 0x800318cc, to: g_psyq_cd_command_name_mute}
+  - {addr: 0x800318d0, to: g_psyq_cd_command_name_demute}
+  - {addr: 0x800318d4, to: g_psyq_cd_command_name_setfilter}
+  - {addr: 0x800318d8, to: g_psyq_cd_command_name_setmode}
+  - {addr: 0x800318dc, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x800318e0, to: g_psyq_cd_command_name_getlocl}
+  - {addr: 0x800318e4, to: g_psyq_cd_command_name_getlocp}
+  - {addr: 0x800318e8, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x800318ec, to: g_psyq_cd_command_name_gettn}
+  - {addr: 0x800318f0, to: g_psyq_cd_command_name_gettd}
+  - {addr: 0x800318f4, to: g_psyq_cd_command_name_seekl}
+  - {addr: 0x800318f8, to: g_psyq_cd_command_name_seekp}
+  - {addr: 0x800318fc, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x80031900, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x80031904, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x80031908, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x8003190c, to: g_psyq_cd_command_name_reads}
+  - {addr: 0x80031910, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x80031914, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x80031918, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x8003191c, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x80031920, to: g_psyq_cd_interrupt_name_nointr}
+  - {addr: 0x80031924, to: g_psyq_cd_interrupt_name_dataready}
+  - {addr: 0x80031928, to: g_psyq_cd_interrupt_name_complete}
+  - {addr: 0x8003192c, to: g_psyq_cd_interrupt_name_acknowledge}
+  - {addr: 0x80031930, to: g_psyq_cd_interrupt_name_dataend}
+  - {addr: 0x80031934, to: g_psyq_cd_interrupt_name_diskerror}
+  - {addr: 0x80031938, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x8003193c, to: g_psyq_cd_unassigned_name}
+  - {addr: 0x80031b5c, to: g_psyq_cd_irq_state}
+  - {addr: 0x80031b60, to: g_psyq_cd_sync_result}
+  - {addr: 0x80031b64, to: CD_com}
+  - {addr: 0x80031b68, to: CD_status}
+  - {addr: 0x80031b6c, to: CD_pos}
+  - {addr: 0x80031b70, to: g_psyq_cd_bios_rcs_id}
+  - {addr: 0x80032848, to: g_psyq_gpu_uppercase_digits}
+  - {addr: 0x8003284c, to: g_psyq_gpu_sys_rcs_id}
+  - {addr: 0x80032850, to: _addque}
+  - {addr: 0x80032854, to: _addque2}
+  - {addr: 0x80032858, to: _clr}
+  - {addr: 0x8003285c, to: _ctl}
+  - {addr: 0x80032860, to: _cwb}
+  - {addr: 0x80032864, to: _cwc}
+  - {addr: 0x80032868, to: _drs}
+  - {addr: 0x8003286c, to: _dws}
+  - {addr: 0x80032870, to: _exeque}
+  - {addr: 0x80032874, to: _getctl}
+  - {addr: 0x80032878, to: _otc}
+  - {addr: 0x8003287c, to: _param}
+  - {addr: 0x80032880, to: _reset}
+  - {addr: 0x80032884, to: _status}
+  - {addr: 0x80032888, to: _sync}
+  - {addr: 0x8003288c, to: g_psyq_gpu_dispatch_table}
+  - {addr: 0x80032890, to: printf}
+  - {addr: 0x800454cc, to: g_main_brave_story_initial_ages}
+  - {addr: 0x80066194, to: g_main_job_data}
+
+values:
+  - {addr: 0x8005ebf0, end: 0x8005fbf0, why: "ability_data_t records: JP cost, learn rate and flag bytes"}
+  - {addr: 0x8005fbf0, end: 0x80061010, why: "ability_secondary_data_t records: range, area, flag, element and formula bytes"}
+  - {addr: 0x80062eb8, end: 0x80063ab8, why: "item_data_t records: palette, sprite, level and type flag bytes (0x80 marks a weapon)"}
