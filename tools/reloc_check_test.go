@@ -84,6 +84,34 @@ func TestRelocNamesDescribeValues(t *testing.T) {
 	}
 }
 
+func TestRelocPendingErrorFailsAModuleWithPendingWords(t *testing.T) {
+	report := relocReport{words: 3, relocations: 2, values: 1,
+		findings: []relocFinding{{kind: "code", addr: 0x80100000, value: 0x80100040, what: "lui"}}}
+	if err := relocPendingError(report); err != nil {
+		t.Fatalf("a fully classified module failed: %v", err)
+	}
+	report.pending, report.orphans = 4, 1
+	report.findings = append(report.findings,
+		relocFinding{kind: "pending", addr: 0x80100010, value: 0x80010080, what: "main data g_main_value"},
+		relocFinding{kind: "orphan", addr: 0x80100014, value: 0x80100004, what: "data g_test_b"},
+		relocFinding{kind: "pending", addr: 0x80100018, value: 0x80070044, what: "battle past g_battle_y+0x4"},
+		relocFinding{kind: "pending", addr: 0x8010001c, value: 0x80150000, what: "nothing"})
+	err := relocPendingError(report)
+	if err == nil {
+		t.Fatal("a module with pending words passed")
+	}
+	for _, want := range []string{"4 words neither relocation nor value (1 orphans)", "0x80100010 = 0x80010080 (main data g_main_value)", "0x80100018"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Errorf("%q lacks %q", err, want)
+		}
+	}
+	for _, unwanted := range []string{"0x8010001c", "lui"} {
+		if strings.Contains(err.Error(), unwanted) {
+			t.Errorf("%q names %q: only the first three pending words belong there", err, unwanted)
+		}
+	}
+}
+
 func TestRelocCompareShiftedExplainsEachChange(t *testing.T) {
 	m := linkTestModule()
 	m.Relocations = []relocationSpec{{Addr: 0x80100024, To: "test_first"}}

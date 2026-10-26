@@ -1,10 +1,10 @@
 // reloc_check.go checks how each module's data words are classified
 // (`make reloc-check`, which needs the BIN). A whole word of the bytes
 // between functions whose value lies in the game's RAM is a relocation, a
-// value or still pending; the pending ones go to build/reloc-check/<module>.tsv
-// with what the value names. The module is then linked twice more with every
-// piece moved, and every word that changed must be a relocation moved by the
-// right amount. A pending word that points into the module's own file is an
+// value or still pending. A pending word fails its module; the pending words
+// go to build/reloc-check/<module>.tsv with what the value names. The module
+// is then linked twice more with every piece moved, and every word that
+// changed must be a relocation moved by the right amount. A pending word that points into the module's own file is an
 // orphan: it would keep the old address once the module moves. In code, an
 // own address the shifted link left in place (a number in the source, a data
 // row bound inside a function, or a linked module's name whose window
@@ -449,6 +449,24 @@ func (p project) relocCheckModule(resolver symbolResolver, names relocNames, m *
 	return report, nil
 }
 
+// relocPendingError fails a module whose data words in scope are not all
+// relocations or values, naming the first few that are neither.
+func relocPendingError(report relocReport) error {
+	if report.pending == 0 {
+		return nil
+	}
+	var first []string
+	for _, finding := range report.findings {
+		if finding.kind == "pending" || finding.kind == "orphan" {
+			first = append(first, fmt.Sprintf("0x%08x = 0x%08x (%s)", finding.addr, finding.value, finding.what))
+			if len(first) == 3 {
+				break
+			}
+		}
+	}
+	return fmt.Errorf("%d words neither relocation nor value (%d orphans): %s", report.pending, report.orphans, strings.Join(first, "; "))
+}
+
 // writeRelocList writes a module's findings as a tab-separated list.
 func writeRelocList(path string, findings []relocFinding) error {
 	var out strings.Builder
@@ -513,6 +531,11 @@ func (p project) relocCheckCommand(args []string) error {
 		for _, finding := range report.findings {
 			moduleKinds[finding.kind]++
 			kinds[finding.kind]++
+		}
+		if err := relocPendingError(report); err != nil {
+			failed++
+			fmt.Fprintf(p.stdout(), "FAIL %s: %s\n", m.ID, err)
+			continue
 		}
 		line := fmt.Sprintf("ok   %s: %d words, %d relocations, %d values, %d pending (%d orphans)", m.ID, report.words, report.relocations, report.values, report.pending, report.orphans)
 		if moduleKinds["code"]+moduleKinds["link"]+moduleKinds["row"] > 0 {

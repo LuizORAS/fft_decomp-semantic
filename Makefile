@@ -132,7 +132,7 @@ link: image ## Link each module whole from its objects and the bytes between the
 	@$(TOOLS) link $(if $(strip $(MODULE)),--module="$(MODULE)")
 
 .PHONY: reloc-check
-reloc-check: extract ## List into build/reloc-check the data words that look like RAM addresses and are neither relocations nor values, and link each module twice shifted to check every changed word (MODULE=x)
+reloc-check: extract ## Fail on data words that look like RAM addresses and are neither relocations nor values, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (MODULE=x)
 	@$(TOOLS) reloc-check $(if $(strip $(MODULE)),--module="$(MODULE)")
 
 .PHONY: unit-check
