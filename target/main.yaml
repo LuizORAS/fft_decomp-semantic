@@ -3,7 +3,6 @@
 # Every overlay resolves names it does not define itself here last.
 module: main
 file: SCUS_942.21
-lba: 24
 size: 356352
 sha256: 287169026029ea8ff80b9d4e2bdfd8a401e828b7cf7544e0a22c19d41b6cc562
 load: 0x8000f800

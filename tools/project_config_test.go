@@ -1,16 +1,29 @@
 package main
 
 import (
+	"fmt"
+	"maps"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"testing"
+
+	"gopkg.in/yaml.v3"
 )
 
-// testProject writes target files and sources into a temporary project.
+// testProject writes target files and sources into a temporary project. A
+// project with module files and no target/disc.yaml gets one from
+// testDiscYAML.
 func testProject(t *testing.T, files map[string]string) project {
 	t.Helper()
 	root := t.TempDir()
+	if _, ok := files[discLayoutPath]; !ok {
+		if disc := testDiscYAML(files); disc != "" {
+			files = maps.Clone(files)
+			files[discLayoutPath] = disc
+		}
+	}
 	for path, content := range files {
 		full := filepath.Join(root, filepath.FromSlash(path))
 		if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
@@ -23,10 +36,52 @@ func testProject(t *testing.T, files map[string]string) project {
 	return project{root: root, filesRoot: filepath.Join(root, "build", "extracted", "files")}
 }
 
+const testDiscHeaderYAML = `license: license_data.dat
+volume: {system: PLAYSTATION, application: PLAYSTATION, volume: TEST, volume_set: TEST, publisher: TEST, data_preparer: TEST, creation_date: "1997101718372100+36", modification_date: "1997101718372100+36"}
+attributes: {gmt_offs: 36, xa_attrib: 56, xa_perm: 1, xa_gid: 10752, xa_uid: 10752, hidden: 1}
+root: {lba: 22, xa_perm: 1365, xa_gid: 0, xa_uid: 0, hidden: 0}
+`
+
+// testDiscYAML lays out the module files the target fixtures name one after
+// another from sector 23 in path order, each directory before its first file.
+func testDiscYAML(files map[string]string) string {
+	type moduleFile struct {
+		File string `yaml:"file"`
+		Size int    `yaml:"size"`
+	}
+	var modules []moduleFile
+	for name, content := range files {
+		if !strings.HasPrefix(name, modulesConfigDir+"/") {
+			continue
+		}
+		for _, document := range splitYAMLDocuments([]byte(content)) {
+			var header moduleFile
+			if yaml.Unmarshal(document, &header) == nil && header.File != "" {
+				modules = append(modules, header)
+			}
+		}
+	}
+	if len(modules) == 0 {
+		return ""
+	}
+	sort.Slice(modules, func(i, j int) bool { return modules[i].File < modules[j].File })
+	var out strings.Builder
+	out.WriteString(testDiscHeaderYAML + "\nentries:\n")
+	lba, dirs := 23, map[string]bool{}
+	for _, m := range modules {
+		if dir := parentDiscPath(m.File); dir != "" && !dirs[dir] {
+			fmt.Fprintf(&out, "  - {lba: %d, dir: %s, date: 19971017183721}\n", lba, dir)
+			lba, dirs[dir] = lba+1, true
+		}
+		fmt.Fprintf(&out, "  - {lba: %d, file: %s, date: 19971017183704}\n", lba, m.File)
+		lba += max(1, (m.Size+discDataSectorBytes-1)/discDataSectorBytes)
+	}
+	return out.String()
+}
+
 const testMainYAML = `# The main executable.
 module: main
 file: SCUS_942.21
-lba: 24
 size: 4096
 sha256: 00000000000000000000000000000000000000000000000000000000000000aa
 load: 0x8000f800
@@ -45,7 +100,6 @@ data:
 
 const testEventYAML = `module: event-attack
 file: EVENT/ATTACK.OUT
-lba: 100
 size: 256
 sha256: 11111111111111111111111111111111111111111111111111111111111111bb
 load: 0x801bf000
@@ -64,7 +118,6 @@ overrides:
 ---
 module: event-card
 file: EVENT/CARD.OUT
-lba: 200
 size: 256
 sha256: 22222222222222222222222222222222222222222222222222222222222222cc
 load: 0x801bf000
@@ -77,7 +130,6 @@ functions:
 
 const testBattleYAML = `module: battle
 file: BATTLE.BIN
-lba: 300
 size: 4096
 sha256: 33333333333333333333333333333333333333333333333333333333333333dd
 load: 0x80067000
@@ -185,7 +237,7 @@ func TestProjectConfigRejectsNonCanonicalAndInvalidFiles(t *testing.T) {
 func TestProjectConfigRejectsUnknownKeysAndMisplacedModules(t *testing.T) {
 	p := validTestProject(t)
 	path := filepath.Join(p.root, "target", "main.yaml")
-	if err := os.WriteFile(path, []byte(strings.Replace(testMainYAML, "lba: 24", "lba: 24\nbytes: 4", 1)), 0o644); err != nil {
+	if err := os.WriteFile(path, []byte(strings.Replace(testMainYAML, "size: 4096", "size: 4096\nbytes: 4", 1)), 0o644); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := p.loadProjectConfig(); err == nil || !strings.Contains(err.Error(), "bytes") {

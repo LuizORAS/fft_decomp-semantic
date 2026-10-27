@@ -272,7 +272,6 @@ func TestLinkObjectRenamesBindOverridesSymbolically(t *testing.T) {
 
 const testLinkMainYAML = `module: main
 file: SCUS_942.21
-lba: 24
 size: 4096
 sha256: 00000000000000000000000000000000000000000000000000000000000000aa
 load: 0x8000f800

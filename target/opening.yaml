@@ -2,7 +2,6 @@
 # menu routines.
 module: opening
 file: OPEN/OPEN.BIN
-lba: 86000
 size: 222832
 sha256: 0b4c6568edfc40dfd42e73b2bfd327318f8e4ac1409f72196c5e17d4857c389d
 load: 0x80067000

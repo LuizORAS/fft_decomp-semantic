@@ -1,6 +1,7 @@
 // project_config.go loads, validates and canonically writes target/*.yaml, one
-// YAML document per disc module; tools read and write only through it, so hand
-// edits and tool output share one spelling (`make config-fmt`).
+// YAML document per disc module, plus the disc layout (disc_layout.go); tools
+// read and write only through it, so hand edits and tool output share one
+// spelling (`make config-fmt`).
 package main
 
 import (
@@ -26,6 +27,7 @@ const (
 
 type projectConfig struct {
 	Modules []*moduleSpec
+	Disc    *discLayout // target/disc.yaml; nil when the checkout has none
 	byID    map[string]*moduleSpec
 	files   map[string][]byte // module files as loaded, for the canonical-form check
 }
@@ -36,7 +38,7 @@ type moduleSpec struct {
 	Comment   string // leading comment block, kept verbatim
 	ID        string
 	File      string // path on the disc
-	LBA       int
+	LBA       int    // the file's first sector, from target/disc.yaml
 	Size      int
 	SHA256    string
 	Load      uint32
@@ -323,8 +325,9 @@ func moduleConfigPath(id string) string {
 	return modulesConfigDir + "/" + id + ".yaml"
 }
 
-// loadProjectConfig reads every module file. It checks syntax and the facts
-// every consumer relies on; validateProjectConfig checks the rest.
+// loadProjectConfig reads every module file and the disc layout, which gives
+// each module's file its sector. It checks syntax and the facts every
+// consumer relies on; validateProjectConfig checks the rest.
 func (p project) loadProjectConfig() (*projectConfig, error) {
 	config := &projectConfig{byID: make(map[string]*moduleSpec), files: make(map[string][]byte)}
 	paths, err := filepath.Glob(filepath.Join(p.root, filepath.FromSlash(modulesConfigDir), "*.yaml"))
@@ -343,6 +346,12 @@ func (p project) loadProjectConfig() (*projectConfig, error) {
 		}
 		relative = filepath.ToSlash(relative)
 		config.files[relative] = data
+		if relative == discLayoutPath {
+			if config.Disc, err = parseDiscLayout(data); err != nil {
+				return nil, fmt.Errorf("%s: %w", relative, err)
+			}
+			continue
+		}
 		for index, document := range splitYAMLDocuments(data) {
 			module, err := parseModuleConfig(document)
 			if err != nil {
@@ -361,6 +370,14 @@ func (p project) loadProjectConfig() (*projectConfig, error) {
 	}
 	if _, ok := config.byID[mainModuleID]; !ok {
 		return nil, fmt.Errorf("%s has no main module", modulesConfigDir)
+	}
+	if config.Disc != nil {
+		modules := discModuleFiles(config)
+		for _, entry := range config.Disc.Entries {
+			if m := modules[entry.File]; m != nil && entry.File != "" {
+				m.LBA = entry.LBA
+			}
+		}
 	}
 	return config, nil
 }
@@ -387,7 +404,6 @@ func splitYAMLDocuments(data []byte) [][]byte {
 type moduleFileYAML struct {
 	Module    string         `yaml:"module"`
 	File      string         `yaml:"file"`
-	LBA       int            `yaml:"lba"`
 	Size      int            `yaml:"size"`
 	SHA256    string         `yaml:"sha256"`
 	Load      uint32         `yaml:"load"`
@@ -477,7 +493,7 @@ func parseModuleConfig(data []byte) (*moduleSpec, error) {
 		return nil, err
 	}
 	module := &moduleSpec{
-		Comment: leadingComment(data), ID: file.Module, File: file.File, LBA: file.LBA,
+		Comment: leadingComment(data), ID: file.Module, File: file.File,
 		Size: file.Size, SHA256: file.SHA256, Load: file.Load, SourceDir: file.SourceDir,
 		Profile: file.Profile, Links: file.Links,
 	}
@@ -593,8 +609,8 @@ func renderModuleConfig(m *moduleSpec) []byte {
 	if m.Comment != "" {
 		out.WriteString(m.Comment + "\n")
 	}
-	fmt.Fprintf(&out, "module: %s\nfile: %s\nlba: %d\nsize: %d\nsha256: %s\nload: 0x%08x\nsource_dir: %s\nprofile: %s\n",
-		yamlText(m.ID), yamlText(m.File), m.LBA, m.Size, yamlText(m.SHA256), m.Load, yamlText(m.SourceDir), yamlText(m.Profile))
+	fmt.Fprintf(&out, "module: %s\nfile: %s\nsize: %d\nsha256: %s\nload: 0x%08x\nsource_dir: %s\nprofile: %s\n",
+		yamlText(m.ID), yamlText(m.File), m.Size, yamlText(m.SHA256), m.Load, yamlText(m.SourceDir), yamlText(m.Profile))
 	if len(m.Links) > 0 {
 		links := make([]string, len(m.Links))
 		for index, link := range m.Links {
@@ -708,14 +724,17 @@ func yamlText(value string) string {
 	return strings.TrimSuffix(quoted.String(), "\n")
 }
 
-// renderConfigFiles renders every module file canonically: modules ordered by
-// id, one YAML document each.
+// renderConfigFiles renders every module file canonically (modules ordered by
+// id, one YAML document each) and the disc layout.
 func renderConfigFiles(config *projectConfig) map[string][]byte {
 	grouped := make(map[string][]*moduleSpec)
 	for _, m := range config.Modules {
 		grouped[moduleConfigPath(m.ID)] = append(grouped[moduleConfigPath(m.ID)], m)
 	}
-	files := make(map[string][]byte, len(grouped))
+	files := make(map[string][]byte, len(grouped)+1)
+	if config.Disc != nil {
+		files[discLayoutPath] = renderDiscLayout(config.Disc)
+	}
 	for path, modules := range grouped {
 		sort.Slice(modules, func(i, j int) bool { return modules[i].ID < modules[j].ID })
 		var out bytes.Buffer
@@ -789,7 +808,6 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 	var problems []string
 	fail := func(format string, args ...any) { problems = append(problems, fmt.Sprintf(format, args...)) }
 	seenFiles := make(map[string]string)
-	seenLBAs := make(map[int]string)
 	sources := make(map[string]bool)
 	sourceSymbols := make(map[string]string)
 	checkedDefinitions := make(map[string]bool)
@@ -809,16 +827,17 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			fail("%s is not in canonical form; run `make config-fmt`", path)
 		}
 	}
+	if config.Disc == nil {
+		fail("%s is missing", discLayoutPath)
+	} else {
+		validateDiscLayout(config.Disc, config, fail)
+	}
 	for _, m := range config.Modules {
 		label := m.path + " " + m.ID
 		if m.File == "" || seenFiles[m.File] != "" {
 			fail("%s: missing or duplicate file %q", label, m.File)
 		}
 		seenFiles[m.File] = m.ID
-		if m.LBA <= 0 || seenLBAs[m.LBA] != "" {
-			fail("%s: missing or duplicate lba %d", label, m.LBA)
-		}
-		seenLBAs[m.LBA] = m.ID
 		if m.Size <= 0 || !validSHA256(m.SHA256) || m.Load%4 != 0 || m.end() > 0x100000000 {
 			fail("%s: invalid size, sha256 or load", label)
 		}

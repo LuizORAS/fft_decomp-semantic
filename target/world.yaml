@@ -1,6 +1,5 @@
 module: world
 file: WORLD/WORLD.BIN
-lba: 84261
 size: 973144
 sha256: 795509be5082a87267c12af94c8bdf0b538cb607db09da55d3232b7b884fdcb4
 load: 0x800e0000

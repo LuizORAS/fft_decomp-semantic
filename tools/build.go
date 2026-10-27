@@ -471,36 +471,23 @@ func (p project) buildDisc() error {
 	return p.writeDisc(config, built, filepath.Join(p.root, "build", "disc"))
 }
 
-// writeDisc runs mkpsxiso on the extracted disc project with each module in
-// built (id to rebuilt file) in place of its original file, writes the disc
-// under buildDir and checks every rebuilt module at its LBA and the disc's
-// SHA-256.
+// writeDisc runs mkpsxiso on the project target/disc.yaml describes, with
+// each module in built (id to rebuilt file) in place of its extracted file,
+// writes the disc under buildDir and checks every rebuilt module at its LBA
+// and the disc's SHA-256.
 func (p project) writeDisc(config *projectConfig, built map[string]string, buildDir string) error {
+	if !p.validExtraction() {
+		return errNotExtracted
+	}
 	if err := os.MkdirAll(buildDir, 0o755); err != nil {
 		return err
 	}
-	projectXML, err := os.ReadFile(p.xmlPath)
-	if err != nil {
-		return errNotExtracted
+	outputs := make(map[string]string, len(built))
+	for id, output := range built {
+		outputs[id] = filepath.ToSlash(output)
 	}
-	filesRoot := xmlAttribute(filepath.ToSlash(p.filesRoot))
-	projectText := strings.ReplaceAll(string(projectXML), `source="files/`, `source="`+filesRoot+`/`)
-	for _, m := range config.Modules {
-		output, ok := built[m.ID]
-		if !ok {
-			continue
-		}
-		from := `source="` + filesRoot + `/` + m.File + `"`
-		to := `source="` + xmlAttribute(filepath.ToSlash(output)) + `"`
-		updated := strings.Replace(projectText, from, to, 1)
-		if updated == projectText {
-			return fmt.Errorf("could not redirect %s in disc project", m.File)
-		}
-		projectText = updated
-	}
-	projectText = strings.Replace(projectText, `file="files/license_data.dat"`, `file="`+filesRoot+`/license_data.dat"`, 1)
 	buildXML := filepath.Join(buildDir, "disc.xml")
-	if err := os.WriteFile(buildXML, []byte(projectText), 0o644); err != nil {
+	if err := os.WriteFile(buildXML, config.Disc.mkpsxisoProject(config, filepath.ToSlash(p.filesRoot), outputs), 0o644); err != nil {
 		return err
 	}
 	output := filepath.Join(buildDir, targetOutput+".bin")

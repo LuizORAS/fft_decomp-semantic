@@ -1,6 +1,5 @@
 module: battle
 file: BATTLE.BIN
-lba: 1000
 size: 1397096
 sha256: 7af579c7bcfd46f21f8d6886acb6aae156474dace667553e76079be7c7d6db94
 load: 0x80067000

@@ -64,6 +64,7 @@ remain excluded. Never modify `meta/`.
 | `include/fft/` | Module headers (`main.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), BATTLE's subsystem headers (`battle_<subsystem>.h`, all included by `battle.h`) and shared type headers (`data.h`, `gfx.h`, `map.h`, `memory.h`, `menu.h`, `menu_script.h`, `script.h`, `sound.h`, `thread.h`, `unit.h`) |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
+| `target/disc.yaml` | The disc's file system: every directory, file and dummy at its sector, with sizes and dates, never bytes |
 | `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
 | `QUIRKS.md` | Index of retail bugs and code that looks wrong on purpose |
 | `CODEBASE.md` | Architecture guide: disc modules, boot and game loop, engine services, how to find things |
@@ -143,13 +144,14 @@ the shards' module lists cover every module once. Optional overrides: `JOBS`,
 
 ## target/*.yaml
 
-One YAML document per module; `event.yaml` and `effect.yaml` hold many,
-separated by `---`. `make config-fmt` defines the canonical form (unquoted hex
+One YAML document per module, plus `disc.yaml` (below); `event.yaml` and
+`effect.yaml` hold many, separated by `---`. `make config-fmt` defines the canonical form (unquoted hex
 addresses, decimal sizes, one flow mapping per line, sorted rows) and
 `make check-config` rejects anything else.
 
-- Header: `module`, `file`, `lba`, `size`, `sha256`, `load`, `source_dir`,
-  `profile` (module default), `links` (modules resident alongside).
+- Header: `module`, `file` (its sector is in `disc.yaml`), `size`, `sha256`,
+  `load`, `source_dir`, `profile` (module default), `links` (modules
+  resident alongside).
 - `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`
   (why the routine is assembly; its source is then
   `src/<module>/<name>.s`), `source` (a path other than the default) or
@@ -176,6 +178,15 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
   `make unit-check` rebuilds the unit from them.
 - Linking one function binds each name it uses from its own module, then
   each `links` module in order, then main.
+
+`disc.yaml` is the disc: the volume, then every directory record, file and
+dummy (sectors the original mastering left empty) at its first sector
+(`lba`), in sector order. A file row gives its byte `size` (a `mixed` file,
+an STR movie or XA audio, has 2336-byte sectors), except a module's file,
+which takes its size from its module; each file or dummy ends where the next
+row starts. `make build` and `make link` write the mkpsxiso project from it.
+A `fixed` directory holds files whose sectors other disc data stores (MAP:
+the GNS rows), so they stay where they are.
 
 To add a function: write `src/<module>/<name>.c`, add its `functions` row and
 any new `data` rows, then `make config-fmt`, `make checksums`,

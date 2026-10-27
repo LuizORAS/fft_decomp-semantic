@@ -1,6 +1,5 @@
 module: event-attack
 file: EVENT/ATTACK.OUT
-lba: 2448
 size: 125956
 sha256: c5ee1f3b67a82fdf0e93566460134d11338914ca8d38ddc12a4225464c8d0121
 load: 0x801bf000
@@ -393,7 +392,6 @@ values:
 ---
 module: event-bunit
 file: EVENT/BUNIT.OUT
-lba: 2832
 size: 187316
 sha256: d07efb36a128913ebe9c40355250c34117deef634f9c4371b527381d8f9237da
 load: 0x801bf000
@@ -1090,7 +1088,6 @@ values:
 ---
 module: event-card
 file: EVENT/CARD.OUT
-lba: 2768
 size: 107260
 sha256: c1d269962e0753398c392eef9c9953b17a2c178651cee9b9c3ec5de0eef32173
 load: 0x801bf000
@@ -1453,7 +1450,6 @@ values:
 ---
 module: event-debugchr
 file: EVENT/DEBUGCHR.OUT
-lba: 2512
 size: 64756
 sha256: cd25a1a9790eba822df3846240772db11aa5af75e41d5857583fa62472cc09a0
 load: 0x801bf000
@@ -1710,7 +1706,6 @@ relocations:
 ---
 module: event-equip
 file: EVENT/EQUIP.OUT
-lba: 2640
 size: 172884
 sha256: 4e4f15b739c078c300bb6a65725c334651a175e4c8872f46b14b0bd6d993cd62
 load: 0x801bf000
@@ -2421,7 +2416,6 @@ values:
 ---
 module: event-etc
 file: EVENT/ETC.OUT
-lba: 2576
 size: 7548
 sha256: a4270c901d47ec76b3a0fdab8dbf0a106693ce0ccaab0cade7ef3edd5aa4e20e
 load: 0x801bf000
@@ -2515,7 +2509,6 @@ relocations:
 ---
 module: event-helpmenu
 file: EVENT/HELPMENU.OUT
-lba: 2256
 size: 99716
 sha256: f0cae89e84229dfe6b43be319f66f49bf8c80e861ffa3a1d91feb651b5c5d2f7
 load: 0x801df000
@@ -2595,7 +2588,6 @@ values:
 ---
 module: event-jobstts
 file: EVENT/JOBSTTS.OUT
-lba: 2384
 size: 112732
 sha256: f931c997144a2d6d8e3e54d6d465929ea3858148412a2bd6184b2ce9254ce694
 load: 0x801df000
@@ -2934,7 +2926,6 @@ values:
 ---
 module: event-option
 file: EVENT/OPTION.OUT
-lba: 2128
 size: 54508
 sha256: 0fcd32324e54e67549cb1ad9666a1e3fca953b1ef33592377eebe11b952e71e8
 load: 0x801bf000
@@ -3080,7 +3071,6 @@ relocations:
 ---
 module: event-require
 file: EVENT/REQUIRE.OUT
-lba: 2192
 size: 127684
 sha256: 97112c50c0b037b2cb5c9d93ae9e2a7506b582c5edbd86a1debfb7ab8e777630
 load: 0x801bf000
@@ -3497,7 +3487,6 @@ relocations:
 ---
 module: event-small
 file: EVENT/SMALL.OUT
-lba: 2000
 size: 7891
 sha256: 09e0892d94aacee21dcb3f0d3c154745dbc3b9de21c6de2df602d0560fbe260f
 load: 0x801d7000
