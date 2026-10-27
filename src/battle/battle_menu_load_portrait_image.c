@@ -2,7 +2,7 @@
 #include "fft/thread.h"
 #include "psx/types.h"
 
-/* Load portrait sector 0x164b + 4 * portrait_id straight into VRAM. */
+/* Load portrait portrait_id (four sectors each in EVTFACE.BIN) straight into VRAM. */
 void battle_menu_load_portrait_image(s32 portrait_id) {
     menu_portrait_image_file_t* buffer;
 

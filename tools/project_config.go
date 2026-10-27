@@ -790,6 +790,11 @@ func (p project) configFormat() error {
 			return err
 		}
 		fmt.Printf("config-fmt: %d of %d files rewritten\n", changed, len(config.files))
+		if wrote, err := p.writeDiscHeader(config); err != nil {
+			return err
+		} else if wrote {
+			fmt.Printf("config-fmt: wrote %s\n", discHeaderPath)
+		}
 		return nil
 	})
 }
@@ -831,6 +836,9 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 		fail("%s is missing", discLayoutPath)
 	} else {
 		validateDiscLayout(config.Disc, config, fail)
+		if err := p.validateDiscHeader(config, fail); err != nil {
+			return err
+		}
 	}
 	for _, m := range config.Modules {
 		label := m.path + " " + m.ID

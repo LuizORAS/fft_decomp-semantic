@@ -6,7 +6,7 @@
 /*
  * Open WLDFACE.BIN and move it to the frame buffer.
  *
- * The file at disc sector 0x18ba is fetched on the main thread and moved to
+ * The file is fetched on the main thread and moved to
  * VRAM as its four sheets, each with its portraits' CLUTs below them.
  */
 void world_gfx_load_wldface_to_frame_buffer(void) {

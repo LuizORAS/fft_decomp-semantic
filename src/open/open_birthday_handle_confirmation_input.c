@@ -26,7 +26,7 @@ void open_birthday_handle_confirmation_input(open_controller_record_t* record) {
         g_open_gfx_next_render_record_36 -= 3;
         g_open_gfx_render_record_pointer_count -= 6;
         g_open_current_controller_index -= 2;
-        open_movie_push_fftop_controller(DISC_SECTOR_OPEN_FFTOP_STR, 0x64D8, 0x9E4);
+        open_movie_push_fftop_controller(DISC_SECTOR_OPEN_FFTOP_STR, DISC_SECTOR_COUNT_OPEN_FFTOP_STR, 0x9E4);
         return;
     }
 

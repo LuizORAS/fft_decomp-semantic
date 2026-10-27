@@ -27,10 +27,8 @@ const (
 )
 
 var (
-	hexLiteral         = regexp.MustCompile(`\b0[xX]([0-9a-fA-F]+)[uUlL]*\b`)
-	directiveComment   = regexp.MustCompile(`(?s)/\*.*?\*/|//.*`)
-	directiveIsDefine  = regexp.MustCompile(`^[ \t]*#[ \t]*define\b`)
-	directiveLineStart = regexp.MustCompile(`(?m)^[ \t]*#`)
+	hexLiteral        = regexp.MustCompile(`\b0[xX]([0-9a-fA-F]+)[uUlL]*\b`)
+	directiveIsDefine = regexp.MustCompile(`^[ \t]*#[ \t]*define\b`)
 )
 
 type addressLiteral struct {
@@ -82,21 +80,13 @@ func findAddressLiterals(root string, dirs []string) ([]addressLiteral, error) {
 			}
 			// tokenizeC skips preprocessor lines: a header names a fixed area
 			// with a #define, and any other directive line is code like the rest.
-			for _, start := range directiveLineStart.FindAllStringIndex(source, -1) {
-				end := start[0]
-				for end < len(source) && source[end] != '\n' {
-					if source[end] == '\\' && end+1 < len(source) && source[end+1] == '\n' {
-						end++
-					}
-					end++
-				}
-				directive := source[start[0]:end]
-				if extension == ".h" && directiveIsDefine.MatchString(directive) {
+			for _, directive := range cDirectives(source) {
+				if extension == ".h" && directiveIsDefine.MatchString(directive.text) {
 					continue
 				}
-				for _, text := range hexLiteral.FindAllString(directiveComment.ReplaceAllString(directive, " "), -1) {
+				for _, text := range hexLiteral.FindAllString(directive.text, -1) {
 					if value, ok := isAddressLiteral(text); ok {
-						found = append(found, addressLiteral{relative, lineOf(source, start[0]), value})
+						found = append(found, addressLiteral{relative, lineOf(source, directive.start), value})
 					}
 				}
 			}

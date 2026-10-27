@@ -1,13 +1,18 @@
 // disc_layout.go loads, checks and canonically writes target/disc.yaml, the
-// disc's ISO 9660 file system without its bytes, and writes the mkpsxiso
-// project that builds the disc from it with every entry forced to the sector
-// the layout gives it.
+// disc's ISO 9660 file system without its bytes, writes the mkpsxiso project
+// that builds the disc from it with every entry forced to the sector the
+// layout gives it, and generates include/fft/disc.h, the sectors and lengths
+// the code compiles in.
 package main
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
+	"io/fs"
+	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
@@ -257,6 +262,166 @@ func validateDiscLayout(layout *discLayout, config *projectConfig, fail func(str
 			fail("%s: module %s's file %s has no entry", label, m.ID, m.File)
 		}
 	}
+}
+
+// discHeaderPath is the header of the layout's facts the code compiles in.
+const discHeaderPath = "include/fft/disc.h"
+
+const (
+	discSectorPrefix = "DISC_SECTOR_"
+	discCountPrefix  = "DISC_SECTOR_COUNT_"
+	discSectorBytes  = "DISC_SECTOR_BYTES"
+)
+
+// discName spells a disc path the way the header's names spell it:
+// EVENT/TEST.EVT is EVENT_TEST_EVT.
+func discName(file string) string {
+	return strings.ToUpper(strings.NewReplacer("/", "_", ".", "_").Replace(file))
+}
+
+// discCodeNames lists the DISC_SECTOR_ names the C sources and headers use in
+// code or directives, apart from the generated header itself.
+func discCodeNames(root string) (map[string]bool, error) {
+	names := make(map[string]bool)
+	for _, dir := range declarationScanDirs {
+		err := filepath.WalkDir(filepath.Join(root, dir), func(file string, entry fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			extension := filepath.Ext(file)
+			if entry.IsDir() || extension != ".c" && extension != ".h" {
+				return nil
+			}
+			relative, err := filepath.Rel(root, file)
+			if err != nil || filepath.ToSlash(relative) == discHeaderPath {
+				return err
+			}
+			data, err := os.ReadFile(file)
+			if err != nil {
+				return err
+			}
+			tokens, err := tokenizeC(string(data))
+			if err != nil {
+				return fmt.Errorf("%s: %w", filepath.ToSlash(relative), err)
+			}
+			for _, directive := range cDirectives(string(data)) {
+				more, err := tokenizeC(strings.TrimPrefix(strings.TrimSpace(directive.text), "#"))
+				if err != nil {
+					return fmt.Errorf("%s: %w", filepath.ToSlash(relative), err)
+				}
+				tokens = append(tokens, more...)
+			}
+			for _, token := range tokens {
+				if token.kind == cIdent && strings.HasPrefix(token.text, discSectorPrefix) && token.text != discSectorBytes {
+					names[token.text] = true
+				}
+			}
+			return nil
+		})
+		if err != nil && !errors.Is(err, fs.ErrNotExist) {
+			return nil, err
+		}
+	}
+	return names, nil
+}
+
+// discHeader writes the header for the names the code uses: DISC_SECTOR_<FILE>
+// is the file's first sector and DISC_SECTOR_COUNT_<FILE> its length in
+// sectors, each list in sector order. It returns nil when the code uses no
+// name, and the names that spell no file.
+func discHeader(layout *discLayout, config *projectConfig, names map[string]bool) ([]byte, []string) {
+	if len(names) == 0 {
+		return nil, nil
+	}
+	modules := discModuleFiles(config)
+	var sectors, counts []string
+	known := make(map[string]bool)
+	for index := range layout.Entries {
+		entry := &layout.Entries[index]
+		if entry.File == "" {
+			continue
+		}
+		name := discName(entry.File)
+		if names[discSectorPrefix+name] {
+			sectors = append(sectors, fmt.Sprintf("    %s%s = %d,\n", discSectorPrefix, name, entry.LBA))
+			known[discSectorPrefix+name] = true
+		}
+		if names[discCountPrefix+name] {
+			counts = append(counts, fmt.Sprintf("    %s%s = %d,\n", discCountPrefix, name, entry.sectors(modules)))
+			known[discCountPrefix+name] = true
+		}
+	}
+	var unknown []string
+	for name := range names {
+		if !known[name] {
+			unknown = append(unknown, name)
+		}
+	}
+	sort.Strings(unknown)
+	var out bytes.Buffer
+	out.WriteString(`#ifndef DISC_H
+#define DISC_H
+
+/* Where the code finds disc files, generated from target/disc.yaml by ` + "`make config-fmt`" + `: edit the layout,
+ * not this file. */
+
+/* disc */
+/* The first sector of each file the code reads at a fixed sector and the length in sectors of each file
+ * it reads or streams whole, named as the disc directory names the file. The other files are found
+ * through sector tables in the data. */
+
+/* Bytes of data in a Mode 2 Form 1 sector. */
+#define DISC_SECTOR_BYTES 2048
+`)
+	if len(sectors) > 0 {
+		out.WriteString("\ntypedef enum disc_sector {\n" + strings.Join(sectors, "") + "} disc_sector_e;\n")
+	}
+	if len(counts) > 0 {
+		out.WriteString("\ntypedef enum disc_sector_count {\n" + strings.Join(counts, "") + "} disc_sector_count_e;\n")
+	}
+	out.WriteString("\n#endif\n")
+	return out.Bytes(), unknown
+}
+
+// validateDiscHeader fails when the header differs from what the layout gives
+// for the names the code uses, or when a name spells no file.
+func (p project) validateDiscHeader(config *projectConfig, fail func(string, ...any)) error {
+	names, err := discCodeNames(p.root)
+	if err != nil {
+		return err
+	}
+	want, unknown := discHeader(config.Disc, config, names)
+	for _, name := range unknown {
+		fail("%s: %s names no file in %s", discHeaderPath, name, discLayoutPath)
+	}
+	if want == nil {
+		return nil
+	}
+	if got, err := os.ReadFile(filepath.Join(p.root, filepath.FromSlash(discHeaderPath))); err != nil || !bytes.Equal(got, want) {
+		fail("%s is not what %s gives; run `make config-fmt`", discHeaderPath, discLayoutPath)
+	}
+	return nil
+}
+
+// writeDiscHeader writes the header when it differs, and reports whether it
+// did.
+func (p project) writeDiscHeader(config *projectConfig) (bool, error) {
+	if config.Disc == nil {
+		return false, nil
+	}
+	names, err := discCodeNames(p.root)
+	if err != nil {
+		return false, err
+	}
+	want, _ := discHeader(config.Disc, config, names)
+	full := filepath.Join(p.root, filepath.FromSlash(discHeaderPath))
+	if got, err := os.ReadFile(full); want == nil || err == nil && bytes.Equal(got, want) {
+		return false, nil
+	}
+	if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+		return false, err
+	}
+	return true, atomicWrite(full, want)
 }
 
 func parentDiscPath(name string) string {

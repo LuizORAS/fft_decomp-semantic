@@ -4,7 +4,7 @@
 /* Load BATTLE/ZODIAC.BIN into VRAM at (640, 0), then EVENT/FRAME.BIN
  * (main_gfx_load_frame_bin_into_vram).
  *
- * ZODIAC.BIN is a headerless image, not an executable overlay: sector 0xec61 supplies 0x10000 bytes, 128 x
+ * ZODIAC.BIN is a headerless image, not an executable overlay: its 0x10000 bytes are 128 x
  * 256 16-bit VRAM transfer values, later drawn as 8-bit indexed texture data. */
 void main_gfx_load_zodiac_frame(void) {
     RECT destination = { 640, 0, 128, 256 };

@@ -4,8 +4,8 @@
 #include "psx/types.h"
 
 /*
- * Load bonus image `image_id` (a 0x6800-byte file, 13 sectors apart from
- * sector 0x16c0) and upload it to VRAM.
+ * Load bonus image `image_id` (0x6800 bytes, 13 sectors apart in
+ * BONUS.BIN) and upload it to VRAM.
  *
  * Waits until 0x8000 bytes can be reserved at the high overlay address, reads
  * the file there on the main stack, uploads the pixels and the palette that

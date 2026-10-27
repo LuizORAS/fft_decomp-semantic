@@ -3,7 +3,7 @@
 #include "psx/types.h"
 
 /* The last sector of OPEN/ENDING.XA (DISC_SECTOR_OPEN_ENDING_XA is its first). */
-#define ENDING_XA_LAST_SECTOR 0x3586c
+#define ENDING_XA_LAST_SECTOR (DISC_SECTOR_OPEN_ENDING_XA + DISC_SECTOR_COUNT_OPEN_ENDING_XA - 1)
 
 /* Runs the XA audio state machine once per frame.
  *

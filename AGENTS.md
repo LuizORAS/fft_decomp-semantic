@@ -61,7 +61,7 @@ remain excluded. Never modify `meta/`.
 | `src/<module>/` | One C file per function, named after it (a `.s` file for an original hand-written routine) |
 | `src/shared/<subsystem>/` | Proven shared implementations: one source compiled at every original entry that runs it, bound per module with `source:` and `source_symbol` in `target/` |
 | `src/lib/psyq/<library>/`, `src/lib/suzuki/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
-| `include/fft/` | Module headers (`main.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), BATTLE's subsystem headers (`battle_<subsystem>.h`, all included by `battle.h`) and shared type headers (`data.h`, `gfx.h`, `map.h`, `memory.h`, `menu.h`, `menu_script.h`, `script.h`, `sound.h`, `thread.h`, `unit.h`) |
+| `include/fft/` | Module headers (`main.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), BATTLE's subsystem headers (`battle_<subsystem>.h`, all included by `battle.h`) and shared type headers (`data.h`, `gfx.h`, `map.h`, `memory.h`, `menu.h`, `menu_script.h`, `script.h`, `sound.h`, `thread.h`, `unit.h`), plus `disc.h`, generated from `target/disc.yaml` |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `target/disc.yaml` | The disc's file system: every directory, file and dummy at its sector, with sizes and dates, never bytes |
@@ -186,7 +186,11 @@ an STR movie or XA audio, has 2336-byte sectors), except a module's file,
 which takes its size from its module; each file or dummy ends where the next
 row starts. `make build` and `make link` write the mkpsxiso project from it.
 A `fixed` directory holds files whose sectors other disc data stores (MAP:
-the GNS rows), so they stay where they are.
+the GNS rows), so they stay where they are. A file's sector or length in
+code is a name `make config-fmt` writes to `include/fft/disc.h` for each one
+the code uses: `DISC_SECTOR_<FILE>` is its first sector and
+`DISC_SECTOR_COUNT_<FILE>` its length in sectors, `<FILE>` being its path
+with `/` and `.` as `_`; `make check-config` fails when the header differs.
 
 To add a function: write `src/<module>/<name>.c`, add its `functions` row and
 any new `data` rows, then `make config-fmt`, `make checksums`,

@@ -4,6 +4,7 @@
 /* SCUS_942.21: resident game services and data tables. */
 
 #include "fft/data.h"
+#include "fft/disc.h"
 #include "fft/gfx.h"
 #include "fft/map.h"
 #include "fft/menu.h"
@@ -376,57 +377,6 @@ typedef char
     card_save_buffer_options_offset_must_be_0x1c84[((unsigned long)&((card_save_buffer_t*)0)->options == 0x1c84) ? 1
                                                                                                                  : -1];
 typedef char card_save_buffer_size_must_be_7680[(sizeof(card_save_buffer_t) == 7680) ? 1 : -1];
-
-/* First sector of each disc file the code reads at a fixed sector, named as
- * the disc directory names the file. The other files are found through
- * sector tables in the data. */
-typedef enum disc_sector {
-    DISC_SECTOR_SCEAP_DAT = 0xc6,
-    DISC_SECTOR_BATTLE_BIN = 0x3e8,
-    DISC_SECTOR_EVENT_ATTACK_OUT = 0x990,
-    DISC_SECTOR_EVENT_MAPTITLE_BIN = 0xdac, /* five sectors for each four maps */
-    DISC_SECTOR_EVENT_FRAME_BIN = 0xe68,
-    DISC_SECTOR_EVENT_TEST_EVT = 0xe7b,     /* EVENT_BLOCK_SECTORS per event_id_e */
-    DISC_SECTOR_EVENT_EVTFACE_BIN = 0x164b, /* four sectors per portrait */
-    DISC_SECTOR_EVENT_UNIT_BIN = 0x166b,
-    DISC_SECTOR_EVENT_BONUS_BIN = 0x16c0, /* thirteen sectors per image */
-    DISC_SECTOR_EVENT_ITEM_BIN = 0x1899,
-    DISC_SECTOR_EVENT_WLDFACE_BIN = 0x18ba,
-    DISC_SECTOR_EVENT_ATCHELP_LZW = 0x1a3a,
-    DISC_SECTOR_EVENT_WORLD_LZW = 0x1bd8,
-    DISC_SECTOR_EVENT_OPEN_LZW = 0x1c18,
-    DISC_SECTOR_EVENT_EVTCHR_BIN = 0x1d4c, /* fifteen sectors per block */
-    DISC_SECTOR_BATTLE_EFC_FNT_TIM = 0xdea8,
-    DISC_SECTOR_BATTLE_WEP_SPR = 0xdefa,
-    DISC_SECTOR_BATTLE_OTHER_SPR = 0xdf24,
-    DISC_SECTOR_BATTLE_ENTD1_ENT = 0xebc1,
-    DISC_SECTOR_BATTLE_ENTD2_ENT = 0xebe9,
-    DISC_SECTOR_BATTLE_ENTD3_ENT = 0xec11,
-    DISC_SECTOR_BATTLE_ENTD4_ENT = 0xec39,
-    DISC_SECTOR_BATTLE_ZODIAC_BIN = 0xec61,
-    DISC_SECTOR_MENU_FFTSAVE_DAT = 0x11a7f,
-    DISC_SECTOR_WORLD_WLDTEX_TM2 = 0x11d28,
-    DISC_SECTOR_WORLD_WLDPIC_BIN = 0x11dae,  /* by g_wldcore_picture_sector_offsets */
-    DISC_SECTOR_WORLD_WLDMES_BIN = 0x11f59,  /* by g_wldcore_message_block_sector_offsets */
-    DISC_SECTOR_WORLD_SNPLBIN_BIN = 0x128f9, /* by g_wldcore_sound_novel_script_sector_offsets */
-    DISC_SECTOR_WORLD_SNPLMES_BIN = 0x1291d, /* by g_wldcore_sound_novel_text_sector_offsets */
-    DISC_SECTOR_WORLD_WLDBK_BIN = 0x12995,   /* by g_wldcore_background_sector_offsets */
-    DISC_SECTOR_WORLD_WLDCORE_BIN = 0x14849,
-    DISC_SECTOR_WORLD_WORLD_BIN = 0x14925,
-    DISC_SECTOR_SOUND_ENV_SED = 0x14c08,
-    DISC_SECTOR_SOUND_SYSTEM_SED = 0x14c0a,
-    DISC_SECTOR_SOUND_WAVESET_WD = 0x14c0f,
-    DISC_SECTOR_OPEN_OPEN_BIN = 0x14ff0,
-    DISC_SECTOR_OPEN_OPNTEX_BIN = 0x1505d,
-    DISC_SECTOR_OPEN_OPNBK_BIN = 0x15243, /* the title backgrounds, by sector offset */
-    DISC_SECTOR_OPEN_FFTST_STR = 0x153d6,
-    DISC_SECTOR_OPEN_FFTOP_STR = 0x17b60,
-    DISC_SECTOR_OPEN_FFTPRE_STR = 0x1e038,
-    DISC_SECTOR_OPEN_FFTEND_STR = 0x21908,
-    DISC_SECTOR_OPEN_FFTPR_STR = 0x25160,
-    DISC_SECTOR_OPEN_FFTUNIT_STR = 0x26ec0,
-    DISC_SECTOR_OPEN_ENDING_XA = 0x2f551,
-} disc_sector_e;
 
 /* Hours, minutes and seconds shown for one memory-card save slot. */
 typedef struct card_save_play_time {

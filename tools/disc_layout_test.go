@@ -89,6 +89,59 @@ func TestDiscLayoutRejectsInvalidEntries(t *testing.T) {
 	}
 }
 
+func TestDiscHeaderGivesTheNamesTheCodeUses(t *testing.T) {
+	p := discTestProject(t, testDiscLayoutYAML)
+	write := func(name, text string) {
+		if err := os.WriteFile(filepath.Join(p.root, filepath.FromSlash(name)), []byte(text), 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	// Code and a #define name sectors and a length; a comment, a string and
+	// the sector size name no file.
+	write("src/main/main_first.c", "/* DISC_SECTOR_SYSTEM_CNF */\n#define LAST (DISC_SECTOR_OPEN_FFTST_STR + DISC_SECTOR_COUNT_OPEN_FFTST_STR - 1)\n"+
+		"void main_first(void) { load(DISC_SECTOR_SCUS_942_21, 4 * DISC_SECTOR_BYTES, \"DISC_SECTOR_NOPE\"); }\n")
+	if err := p.configFormat(); err != nil {
+		t.Fatal(err)
+	}
+	got, err := os.ReadFile(filepath.Join(p.root, filepath.FromSlash(discHeaderPath)))
+	if err != nil {
+		t.Fatal(err)
+	}
+	enums := `
+typedef enum disc_sector {
+    DISC_SECTOR_SCUS_942_21 = 24,
+    DISC_SECTOR_OPEN_FFTST_STR = 36,
+} disc_sector_e;
+
+typedef enum disc_sector_count {
+    DISC_SECTOR_COUNT_OPEN_FFTST_STR = 2,
+} disc_sector_count_e;
+
+#endif
+`
+	if !strings.HasPrefix(string(got), "#ifndef DISC_H\n") || !strings.HasSuffix(string(got), "#define DISC_SECTOR_BYTES 2048\n"+enums) {
+		t.Fatalf("header:\n%s", got)
+	}
+	validate := func() error {
+		config, err := p.loadProjectConfig()
+		if err != nil {
+			t.Fatal(err)
+		}
+		return p.validateProjectConfig(config)
+	}
+	if err := validate(); err != nil {
+		t.Fatal(err)
+	}
+	write(discHeaderPath, strings.Replace(string(got), "= 36,", "= 37,", 1))
+	if err := validate(); err == nil || !strings.Contains(err.Error(), "run `make config-fmt`") {
+		t.Fatalf("edited header: %v", err)
+	}
+	write("src/main/main_second.c", "void main_second(void) { load(DISC_SECTOR_NOPE_BIN); }\n")
+	if err := validate(); err == nil || !strings.Contains(err.Error(), "DISC_SECTOR_NOPE_BIN names no file") {
+		t.Fatalf("unknown name: %v", err)
+	}
+}
+
 func TestDiscLayoutWritesTheMkpsxisoProject(t *testing.T) {
 	p := discTestProject(t, testDiscLayoutYAML)
 	config, err := p.loadProjectConfig()

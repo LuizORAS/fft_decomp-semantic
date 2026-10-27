@@ -3,6 +3,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -99,6 +100,34 @@ func tokenizeC(source string) ([]cToken, error) {
 		}
 	}
 	return tokens, nil
+}
+
+// cDirective is one preprocessor line, continuations included and comments
+// removed, with the offset of its '#'.
+type cDirective struct {
+	start int
+	text  string
+}
+
+var (
+	cDirectiveStart   = regexp.MustCompile(`(?m)^[ \t]*#`)
+	cDirectiveComment = regexp.MustCompile(`(?s)/\*.*?\*/|//.*`)
+)
+
+// cDirectives returns the preprocessor lines tokenizeC skips.
+func cDirectives(source string) []cDirective {
+	var directives []cDirective
+	for _, start := range cDirectiveStart.FindAllStringIndex(source, -1) {
+		end := start[0]
+		for end < len(source) && source[end] != '\n' {
+			if source[end] == '\\' && end+1 < len(source) && source[end+1] == '\n' {
+				end++
+			}
+			end++
+		}
+		directives = append(directives, cDirective{start[0], cDirectiveComment.ReplaceAllString(source[start[0]:end], " ")})
+	}
+	return directives
 }
 
 func isIdentStart(character byte) bool {

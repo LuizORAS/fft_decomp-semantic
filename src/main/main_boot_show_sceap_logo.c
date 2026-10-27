@@ -1,6 +1,6 @@
 #include "fft/main.h"
 
-/* Show the SCEA logo: load SCEAP.DAT (sector 198, a 320x32 image) to the high overlay address on
+/* Show the SCEA logo: load SCEAP.DAT (a 320x32 image) to the high overlay address on
  * a 320x240 display, fade it in through a subtractive black quad over 32 frames, hold it 180
  * frames, fade it out over 32 and clear the 320x480 VRAM area (before and after). */
 void main_boot_show_sceap_logo(void) {
