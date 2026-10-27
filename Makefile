@@ -127,9 +127,9 @@ trial: image ## Compile a candidate source at an entry and report the match or f
 	@$(TOOLS) trial $(if $(strip $(BATCH)),--batch="$(BATCH)") $(if $(strip $(TWINS)),--twins="$(TWINS)") $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(ENTRY)),--entry="$(ENTRY)") $(if $(strip $(SOURCE)),--source="$(SOURCE)") $(ARGS)
 
 .PHONY: link
-link: image ## Link each module whole from its objects and the bytes between them, taking each name another module places from that module's link, compare with the original, fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc (MODULE=x)
+link: image ## Link each module whole from its objects and the bytes between them, taking each name another module places from that module's link, compare with the original, fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc (MODULE=x); SHIFT=N links a test disc with every module N bytes up in build/shift and checks every word against the original (needs the BIN)
 	@if [ -f scus-94221.bin ]; then $(MAKE) --no-print-directory extract; fi
-	@$(TOOLS) link $(if $(strip $(MODULE)),--module="$(MODULE)")
+	@$(TOOLS) link $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(SHIFT)),--shift="$(SHIFT)")
 
 .PHONY: reloc-check
 reloc-check: extract ## Fail on data words that look like RAM addresses or disc sectors and are neither relocations, disc or ram words nor values, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (MODULE=x)

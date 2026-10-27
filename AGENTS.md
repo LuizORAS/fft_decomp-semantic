@@ -108,6 +108,7 @@ make twins [MODULE=x]      # group functions identical under renames across modu
 make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
 make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
 make link [MODULE=x]       # link each module whole from its objects and the bytes between them, taking each name another module places from that module's link (a second pass); compare with the original file (function hashes without the BIN); fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc in build/link/disc
+make link SHIFT=16         # a test disc in build/shift: every module's image opens 16 bytes (break instructions) at its start, MAIN pads to whole sectors and a file that outgrows its sectors moves; fail on a word that changed unexplained (needs the BIN)
 make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address or a disc sector and is neither relocation, disc or ram word nor value, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it

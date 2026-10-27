@@ -46,6 +46,9 @@ type project struct {
 	inputRoot string
 	// progress, when set, counts compiled functions across modules.
 	progress *compileProgress
+	// linkInsert, when set, is make link SHIFT=N's insertion: every module's
+	// image opens that many bytes at its start, in build/shift.
+	linkInsert uint32
 }
 
 // preprocessInput maps a source under the project root to its mirrored copy

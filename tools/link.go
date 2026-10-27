@@ -48,12 +48,16 @@ type linkWord struct {
 // each object carries); and the data rows the link binds to their absolute
 // addresses: those past the file, and those inside a function that name
 // another module's object (see linkRowIsForeign); and the end of the module's
-// RAM window, which the image must not pass (0 for none).
+// RAM window, which the image must not pass (0 for none). On the shifted test
+// disc (make link SHIFT=N), insert bytes open at the image's start (after
+// MAIN's header) and MAIN ends in padding up to a whole sector.
 type linkLayout struct {
 	pieces   []linkPiece
 	shadows  []linkPiece
 	absolute []symbolSpec
 	ramEnd   uint32
+	insert   uint32
+	padding  uint32
 }
 
 // The resident executable starts with its PS-X EXE header (psxEXEHeaderSize
@@ -329,6 +333,12 @@ func linkObjectRenames(resolver symbolResolver, m *moduleSpec, layout *linkLayou
 func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 	var out strings.Builder
 	fmt.Fprintf(&out, "# %s: the bytes between functions, in address order.\n", m.ID)
+	if layout.insert > 0 {
+		fmt.Fprintf(&out, "\t.section .insert, \"a\", @progbits\n\t.rept %d\n\t.word 0x%08x\n\t.endr\n", layout.insert/4, shiftFillerWord)
+	}
+	if layout.padding > 0 {
+		fmt.Fprintf(&out, "\t.section .padding, \"a\", @progbits\n\t.space %d\n", layout.padding)
+	}
 	for _, piece := range layout.pieces {
 		if piece.kind != "bytes" && piece.kind != "header" {
 			continue
@@ -403,8 +413,11 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 // piece, and asserts every function, label and such row, and that the image
 // ends inside its RAM window.
 // A module with `$gp`-relative code sets `_gp` to the label gp names. A
-// nonzero shift moves every piece and label by that many bytes (reloc-check's
-// shifted links); the bound names stay where they are.
+// nonzero shift moves every piece and label by that many bytes, and the RAM
+// window with them (reloc-check's shifted links); the bound names stay where
+// they are. The layout's insert moves every piece but MAIN's header inside a
+// window that stays put, after the filler section (.insert), and MAIN's
+// padding section follows its last piece.
 func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32, gp string, shift uint32) string {
 	var script strings.Builder
 	script.WriteString("OUTPUT_ARCH(mips)\n")
@@ -419,20 +432,38 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 	for _, name := range names {
 		fmt.Fprintf(&script, "PROVIDE(%s = 0x%08x);\n", name, bindings[name])
 	}
+	at := func(piece linkPiece, addr uint32) uint32 {
+		if piece.kind == "header" {
+			return addr + shift
+		}
+		return addr + shift + layout.insert
+	}
 	// The assembler aligns .text to 16 bytes; SUBALIGN keeps each input at its
 	// piece's address, as the per-function link does.
 	script.WriteString("SECTIONS {\n")
+	first, last := layout.pieces[0], layout.pieces[len(layout.pieces)-1]
+	if first.kind == "header" && len(layout.pieces) > 1 {
+		first = layout.pieces[1]
+	}
+	if layout.insert > 0 {
+		fmt.Fprintf(&script, "  .insert 0x%08x : SUBALIGN(4) { *(.insert) }\n", first.addr+shift)
+	}
 	for _, piece := range layout.pieces {
 		align := 4
 		if piece.kind != "text" && piece.kind != "rodata" {
 			align = 1
 		}
-		fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(%d) { *(%s) }\n", linkSectionName(piece), piece.addr+shift, align, linkSectionName(piece))
+		fmt.Fprintf(&script, "  %s 0x%08x : SUBALIGN(%d) { *(%s) }\n", linkSectionName(piece), at(piece, piece.addr), align, linkSectionName(piece))
+	}
+	end := linkSectionName(last)
+	if layout.padding > 0 {
+		end = ".padding"
+		fmt.Fprintf(&script, "  .padding 0x%08x : SUBALIGN(1) { *(.padding) }\n", at(last, last.addr+uint32(last.size)))
 	}
 	// Another copy of a shared literal keeps its address for its object's
 	// references and loads nothing: the loaded copy holds the same bytes.
 	for _, piece := range layout.shadows {
-		fmt.Fprintf(&script, "  %s 0x%08x (NOLOAD) : SUBALIGN(4) { *(%s) }\n", linkShadowName(piece), piece.addr+shift, linkShadowName(piece))
+		fmt.Fprintf(&script, "  %s 0x%08x (NOLOAD) : SUBALIGN(4) { *(%s) }\n", linkShadowName(piece), at(piece, piece.addr), linkShadowName(piece))
 	}
 	// Every object's .data, .bss and small-data sections are empty
 	// (objectHoldsOnlyCode), as is the data object's .text; the debug
@@ -444,16 +475,19 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 		}
 	}
 	if header := layout.pieces[0]; header.kind == "header" && len(layout.pieces) > 1 {
-		last := layout.pieces[len(layout.pieces)-1]
-		fmt.Fprintf(&script, "__exe_text_start = ADDR(%s);\n", linkSectionName(layout.pieces[1]))
-		fmt.Fprintf(&script, "__exe_text_size = ADDR(%s) + SIZEOF(%s) - __exe_text_start;\n", linkSectionName(last), linkSectionName(last))
+		start := linkSectionName(first)
+		if layout.insert > 0 {
+			start = ".insert"
+		}
+		fmt.Fprintf(&script, "__exe_text_start = ADDR(%s);\n", start)
+		fmt.Fprintf(&script, "__exe_text_size = ADDR(%s) + SIZEOF(%s) - __exe_text_start;\n", end, end)
 	}
 	for _, piece := range layout.pieces {
 		if piece.kind == "text" {
-			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must begin at 0x%08x\");\n", piece.function.Name, piece.addr+shift, piece.function.Name, piece.addr+shift)
+			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must begin at 0x%08x\");\n", piece.function.Name, at(piece, piece.addr), piece.function.Name, at(piece, piece.addr))
 		}
 		for _, label := range append(append([]symbolSpec(nil), piece.labels...), piece.aliases...) {
-			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must be at 0x%08x\");\n", label.Name, label.Addr+shift, label.Name, label.Addr+shift)
+			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must be at 0x%08x\");\n", label.Name, at(piece, label.Addr), label.Name, at(piece, label.Addr))
 			// Code loads the row's page as a number, so the row must stay in
 			// it. The shifted links move every row on purpose; reloc-check
 			// lists the code that loads the page instead.
@@ -464,9 +498,8 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 		}
 	}
 	if layout.ramEnd != 0 {
-		last := linkSectionName(layout.pieces[len(layout.pieces)-1])
 		fmt.Fprintf(&script, "ASSERT(ADDR(%s) + SIZEOF(%s) <= 0x%08x, \"the image must end by its RAM window's end 0x%08x\");\n",
-			last, last, layout.ramEnd+shift, layout.ramEnd+shift)
+			end, end, layout.ramEnd+shift, layout.ramEnd+shift)
 	}
 	return script.String()
 }
@@ -589,6 +622,10 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec, values map[s
 	}
 
 	outDir := filepath.Join(p.root, "build", "link", m.ID)
+	if p.linkInsert > 0 {
+		outDir = filepath.Join(p.root, "build", "shift", m.ID)
+		layout.insert, layout.padding = p.linkInsert, shiftPadding(m, p.linkInsert)
+	}
 	if err := os.MkdirAll(filepath.Join(outDir, "objects"), 0o755); err != nil {
 		return result, err
 	}
@@ -697,8 +734,12 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec, values map[s
 	if err != nil {
 		return result, err
 	}
-	if len(got) != m.Size {
-		return result, fmt.Errorf("%s: linked image has %d bytes, the file %d", m.ID, len(got), m.Size)
+	if size := m.Size + int(layout.insert+layout.padding); len(got) != size {
+		return result, fmt.Errorf("%s: linked image has %d bytes, not %d", m.ID, len(got), size)
+	}
+	if layout.insert > 0 {
+		result.checked = fmt.Sprintf("%d bytes up; checked after the second pass", layout.insert)
+		return result, nil
 	}
 	if want != nil {
 		if offset, differs := mismatch(want, got); differs {
@@ -872,11 +913,12 @@ func crossModuleValues(resolver symbolResolver, m *moduleSpec, bindings map[stri
 func (p project) linkCommand(args []string) error {
 	flags := flag.NewFlagSet("link", flag.ContinueOnError)
 	selection := flags.String("module", "", "modules to link (default: all)")
+	shift := flags.Uint("shift", 0, "bytes every module's image opens at its start, a multiple of 16: a test disc in build/shift (needs the BIN)")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
 	if flags.NArg() != 0 {
-		return errors.New("usage: tools link [--module=M]")
+		return errors.New("usage: tools link [--module=M] [--shift=N]")
 	}
 	config, err := p.loadProjectConfig()
 	if err != nil {
@@ -890,6 +932,21 @@ func (p project) linkCommand(args []string) error {
 	}
 	if p, err = p.withInputMirror(); err != nil {
 		return err
+	}
+	var shifted *projectConfig
+	if *shift != 0 {
+		if *shift%16 != 0 || *shift >= 1<<16 || *selection != "" {
+			return errors.New("make link SHIFT=N takes a multiple of 16 below 0x10000 and links every module")
+		}
+		if !p.validExtraction() {
+			return errNotExtracted
+		}
+		var moved []string
+		if shifted, moved, err = p.shiftedConfig(config, uint32(*shift)); err != nil {
+			return err
+		}
+		p.linkInsert = uint32(*shift)
+		fmt.Fprintf(p.stdout(), "shift: every module's image opens %d bytes at its start; files that move on the disc: %s\n", *shift, strings.Join(moved, " "))
 	}
 	resolver := newSymbolResolver(config)
 	failed := 0
@@ -910,13 +967,20 @@ func (p project) linkCommand(args []string) error {
 	if err != nil {
 		return err
 	}
+	listed := ""
+	if len(again) <= 8 {
+		listed = strings.Join(append([]string{""}, again...), " ")
+	}
 	fmt.Fprintf(p.stdout(), "cross-module: %d names at the address another module's link gives, %d where target/ puts them (fixed areas, modules never resident); %d modules linked again%s\n",
-		followed, kept, len(again), strings.Join(append([]string{""}, again...), " "))
+		followed, kept, len(again), listed)
 	built := make(map[string]string, len(results))
 	original := true
 	for id, result := range results {
 		built[id] = result.output
 		original = original && result.identical
+	}
+	if shifted != nil {
+		return p.finishShiftedLink(resolver, config, shifted, results, built, failed)
 	}
 	fmt.Fprintf(p.stdout(), "link: %d of %d modules linked whole and identical\n", len(results), len(results)+failed)
 	if config.RAM != nil && len(linkedModules) > 0 {
@@ -936,5 +1000,5 @@ func (p project) linkCommand(args []string) error {
 		return nil
 	}
 	// Every module, each equal to its original file: the disc from them.
-	return p.writeDisc(config, built, filepath.Join(p.root, "build", "link", "disc"))
+	return p.writeDisc(config, built, filepath.Join(p.root, "build", "link", "disc"), true)
 }

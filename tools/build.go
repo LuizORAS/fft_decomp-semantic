@@ -468,14 +468,14 @@ func (p project) buildDisc() error {
 		}
 		built[config.Modules[index].ID] = result.output
 	}
-	return p.writeDisc(config, built, filepath.Join(p.root, "build", "disc"))
+	return p.writeDisc(config, built, filepath.Join(p.root, "build", "disc"), true)
 }
 
 // writeDisc runs mkpsxiso on the project target/disc.yaml describes, with
 // each module in built (id to rebuilt file) in place of its extracted file,
 // writes the disc under buildDir and checks every rebuilt module at its LBA
-// and the disc's SHA-256.
-func (p project) writeDisc(config *projectConfig, built map[string]string, buildDir string) error {
+// and, for the identical disc (exact), the disc's SHA-256.
+func (p project) writeDisc(config *projectConfig, built map[string]string, buildDir string, exact bool) error {
 	if !p.validExtraction() {
 		return errNotExtracted
 	}
@@ -523,10 +523,14 @@ func (p project) writeDisc(config *projectConfig, built map[string]string, build
 	if err != nil {
 		return err
 	}
-	if discSHA256 != targetInputSHA256 {
+	switch {
+	case !exact:
+		fmt.Printf("disc image: sha256 %s (a test disc, not the original)\n", discSHA256)
+	case discSHA256 != targetInputSHA256:
 		return fmt.Errorf("rebuilt disc SHA-256 mismatch: got %s, expected %s", discSHA256, targetInputSHA256)
+	default:
+		fmt.Printf("disc image exact: sha256 %s\n", discSHA256)
 	}
-	fmt.Printf("disc image exact: sha256 %s\n", discSHA256)
 	relative, err := filepath.Rel(p.root, cue)
 	if err != nil {
 		return err
