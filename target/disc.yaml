@@ -2515,6 +2515,6 @@ entries:
   - {lba: 151904, file: OPEN/FFTPR.STR, size: 17566720, type: mixed, date: 19971004160134}
   - {lba: 159424, file: OPEN/FFTUNIT.STR, size: 80472864, type: mixed, date: 19971013183356}
   - {lba: 193873, file: OPEN/ENDING.XA, size: 59268992, type: mixed, date: 19970429180702}
-  - {lba: 219245, dummy: 10755, form: 2}
+  - {lba: 219245, dummy: 10755, form: 2, free: true}
   - {lba: 230000, dir: DUMMY, date: 19971017183721}
   - {lba: 230001, dummy: 150, form: 1}

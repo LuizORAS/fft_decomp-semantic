@@ -83,6 +83,7 @@ type discEntry struct {
 	Fixed string `yaml:"fixed"` // why a directory's files stay at their sectors
 	Dummy int    `yaml:"dummy"`
 	Form  int    `yaml:"form"`
+	Free  bool   `yaml:"free"` // the run a file that outgrows its place moves to
 }
 
 type discLayoutYAML struct {
@@ -153,6 +154,9 @@ func renderDiscLayout(layout *discLayout) []byte {
 			fields = append(fields, "date: "+date(entry.Date))
 		default:
 			fields = append(fields, fmt.Sprintf("dummy: %d, form: %d", entry.Dummy, entry.Form))
+			if entry.Free {
+				fields = append(fields, "free: true")
+			}
 		}
 		fmt.Fprintf(&out, "  - {%s}\n", strings.Join(fields, ", "))
 	}
@@ -237,7 +241,8 @@ func discModuleFiles(config *projectConfig) map[string]*moduleSpec {
 // validateDiscLayout checks the layout without the disc: each row's shape,
 // that every file sits in a declared directory, that a file or dummy ends
 // where the next row starts (only a directory record's length is mkpsxiso's
-// to compute), and that each module's file has exactly one row.
+// to compute), that each module's file has exactly one row, that one dummy
+// at most is free and that every file fits.
 func validateDiscLayout(layout *discLayout, config *projectConfig, fail func(string, ...any)) {
 	label := discLayoutPath
 	if layout.License == "" || strings.Contains(layout.License, "/") {
@@ -249,6 +254,7 @@ func validateDiscLayout(layout *discLayout, config *projectConfig, fail func(str
 	modules := discModuleFiles(config)
 	dirs := map[string]bool{"": true}
 	files := make(map[string]bool)
+	free := 0
 	for index, entry := range layout.Entries {
 		row := fmt.Sprintf("%s: entry at lba %d", label, entry.LBA)
 		kinds := 0
@@ -266,7 +272,7 @@ func validateDiscLayout(layout *discLayout, config *projectConfig, fail func(str
 		}
 		switch {
 		case entry.Dir != "":
-			if !discDatePattern.MatchString(entry.Date) || entry.Size != nil || entry.Type != "" || entry.Form != 0 {
+			if !discDatePattern.MatchString(entry.Date) || entry.Size != nil || entry.Type != "" || entry.Form != 0 || entry.Free {
 				fail("%s: a directory takes only a date (YYYYMMDDHHMMSS) and fixed", row)
 			}
 			if path.Clean(entry.Dir) != entry.Dir || !dirs[parentDiscPath(entry.Dir)] || dirs[entry.Dir] {
@@ -274,7 +280,7 @@ func validateDiscLayout(layout *discLayout, config *projectConfig, fail func(str
 			}
 			dirs[entry.Dir] = true
 		case entry.File != "":
-			if !discDatePattern.MatchString(entry.Date) || entry.Fixed != "" || entry.Form != 0 {
+			if !discDatePattern.MatchString(entry.Date) || entry.Fixed != "" || entry.Form != 0 || entry.Free {
 				fail("%s: a file takes a size, type and date (YYYYMMDDHHMMSS)", row)
 			}
 			if path.Clean(entry.File) != entry.File || !dirs[parentDiscPath(entry.File)] || files[entry.File] {
@@ -297,6 +303,9 @@ func validateDiscLayout(layout *discLayout, config *projectConfig, fail func(str
 			if entry.Dummy < 0 || entry.Form != 1 && entry.Form != 2 || entry.Date != "" || entry.Size != nil || entry.Type != "" || entry.Fixed != "" {
 				fail("%s: a dummy takes a sector count and form 1 or 2", row)
 			}
+			if entry.Free {
+				free++
+			}
 		}
 		if entry.Dir == "" && index+1 < len(layout.Entries) {
 			if end, next := entry.LBA+entry.sectors(modules), layout.Entries[index+1].LBA; end != next {
@@ -304,11 +313,130 @@ func validateDiscLayout(layout *discLayout, config *projectConfig, fail func(str
 			}
 		}
 	}
+	if free > 1 {
+		fail("%s: %d dummies are free; one run takes the files that move", label, free)
+	}
 	for _, m := range config.Modules {
 		if !files[m.File] {
 			fail("%s: module %s's file %s has no entry", label, m.ID, m.File)
 		}
 	}
+	_, problems := layout.fitted(config)
+	for _, problem := range problems {
+		fail("%s: %s", label, problem)
+	}
+}
+
+// fitted returns the layout `make config-fmt` writes, and why a file cannot
+// fit. A file that outgrows the sectors up to the next directory or file
+// moves to the start of the free run, unless its directory is fixed. Every
+// dummy is then the gap between two rows, in the form of the dummy that held
+// the gap's first sector (form 2 where a file was), and the gap that ends the
+// free run stays free. A directory record keeps the sectors up to the row
+// after it, as mkpsxiso wrote it.
+func (layout *discLayout) fitted(config *projectConfig) (*discLayout, []string) {
+	modules := discModuleFiles(config)
+	type span struct {
+		entry discEntry
+		end   int // the sector after it
+	}
+	var rows []span
+	var dummies []discEntry
+	fixed := make(map[string]bool)
+	entries := append([]discEntry(nil), layout.Entries...)
+	sort.SliceStable(entries, func(i, j int) bool { return entries[i].LBA < entries[j].LBA })
+	start, discEnd, free := layout.Root.LBA+1, layout.Root.LBA+1, -1
+	for index, entry := range entries {
+		if index == 0 {
+			start = entry.LBA
+		}
+		end := entry.LBA + entry.sectors(modules)
+		switch {
+		case entry.Dummy != 0:
+			dummies = append(dummies, entry)
+			if entry.Free {
+				free = end
+			}
+		case entry.Dir != "":
+			end = entry.LBA + 1
+			if index+1 < len(entries) {
+				end = entries[index+1].LBA
+			}
+			if entry.Fixed != "" {
+				fixed[entry.Dir] = true
+			}
+		}
+		discEnd = max(discEnd, end)
+		if entry.Dummy == 0 {
+			rows = append(rows, span{entry, end})
+		}
+	}
+	name := func(entry discEntry) string {
+		if entry.File != "" {
+			return entry.File
+		}
+		return entry.Dir + "/"
+	}
+	var problems []string
+	var placed, moving []span
+	for index, row := range rows {
+		if row.entry.File != "" && index+1 < len(rows) && row.end > rows[index+1].entry.LBA {
+			next := rows[index+1].entry
+			if !fixed[parentDiscPath(row.entry.File)] {
+				moving = append(moving, row)
+				continue
+			}
+			problems = append(problems, fmt.Sprintf("%s needs the sectors up to %d, but %s starts at %d and its directory is fixed",
+				row.entry.File, row.end, name(next), next.LBA))
+		}
+		placed = append(placed, row)
+	}
+	if len(moving) > 0 && free < 0 {
+		problems = append(problems, fmt.Sprintf("%s outgrows its place, and no dummy is free", moving[0].entry.File))
+	} else if len(moving) > 0 {
+		cursor := 0
+		for _, row := range placed {
+			if row.entry.LBA < free {
+				cursor = max(cursor, row.end)
+			}
+		}
+		for _, row := range moving {
+			row.end, row.entry.LBA = cursor+row.end-row.entry.LBA, cursor
+			if cursor = row.end; cursor > free {
+				problems = append(problems, fmt.Sprintf("%s needs the sectors up to %d, past the free run's end at %d", row.entry.File, cursor, free))
+			}
+			placed = append(placed, row)
+		}
+		sort.SliceStable(placed, func(i, j int) bool { return placed[i].entry.LBA < placed[j].entry.LBA })
+	}
+	formAt := func(from, to int) int {
+		for _, dummy := range dummies {
+			if dummy.LBA <= from && from < dummy.LBA+dummy.Dummy {
+				return dummy.Form
+			}
+		}
+		for _, dummy := range dummies {
+			if dummy.LBA < to && from < dummy.LBA+dummy.Dummy {
+				return dummy.Form
+			}
+		}
+		return 2
+	}
+	result := *layout
+	result.Entries = nil
+	gap := func(from, to int) {
+		if from < to {
+			result.Entries = append(result.Entries, discEntry{LBA: from, Dummy: to - from, Form: formAt(from, to), Free: from < free && free <= to})
+		}
+	}
+	at := start
+	for _, row := range placed {
+		gap(at, row.entry.LBA)
+		result.Entries = append(result.Entries, row.entry)
+		at = max(at, row.end)
+	}
+	gap(at, discEnd)
+	return &result, problems
 }
 
 // discHeaderPath is the header of the layout's facts the code compiles in.

@@ -194,7 +194,11 @@ an STR movie or XA audio, has 2336-byte sectors), except a module's file,
 which takes its size from its module; each file or dummy ends where the next
 row starts. `make build` and `make link` write the mkpsxiso project from it.
 A `fixed` directory holds files whose sectors other disc data stores (MAP:
-the GNS rows), so they stay where they are. A file's sector or length in
+the GNS rows), so they stay where they are. Every dummy is the gap between
+two rows, and `make config-fmt` writes them: a file that outgrows the
+sectors up to the next directory or file moves to the start of the `free`
+dummy (outside a `fixed` directory), and its sectors and sizes in code and
+data follow it. A file's sector or length in
 code is a name `make config-fmt` writes to `include/fft/disc.h` for each one
 the code uses: `DISC_SECTOR_<FILE>` is its first sector and
 `DISC_SECTOR_COUNT_<FILE>` its length in sectors, `<FILE>` being its path

@@ -781,7 +781,7 @@ func yamlText(value string) string {
 }
 
 // renderConfigFiles renders every module file canonically (modules ordered by
-// id, one YAML document each) and the disc layout.
+// id, one YAML document each) and the disc layout, fitted to its files.
 func renderConfigFiles(config *projectConfig) map[string][]byte {
 	grouped := make(map[string][]*moduleSpec)
 	for _, m := range config.Modules {
@@ -789,7 +789,8 @@ func renderConfigFiles(config *projectConfig) map[string][]byte {
 	}
 	files := make(map[string][]byte, len(grouped)+1)
 	if config.Disc != nil {
-		files[discLayoutPath] = renderDiscLayout(config.Disc)
+		fitted, _ := config.Disc.fitted(config)
+		files[discLayoutPath] = renderDiscLayout(fitted)
 	}
 	for path, modules := range grouped {
 		sort.Slice(modules, func(i, j int) bool { return modules[i].ID < modules[j].ID })
@@ -834,12 +835,20 @@ func (p project) writeProjectConfig(config *projectConfig) (int, error) {
 	return changed, nil
 }
 
-// configFormat rewrites every module file in canonical form.
+// configFormat rewrites every module file in canonical form, moves a disc
+// file that outgrows its place and writes the disc header from the result.
 func (p project) configFormat() error {
 	return p.withTargetLock(func() error {
 		config, err := p.loadProjectConfig()
 		if err != nil {
 			return err
+		}
+		if config.Disc != nil {
+			fitted, problems := config.Disc.fitted(config)
+			if len(problems) > 0 {
+				return fmt.Errorf("%s: %s", discLayoutPath, strings.Join(problems, "; "))
+			}
+			config.Disc = fitted
 		}
 		changed, err := p.writeProjectConfig(config)
 		if err != nil {

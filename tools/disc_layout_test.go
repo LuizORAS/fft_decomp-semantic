@@ -20,12 +20,16 @@ entries:
   - {lba: 33, dir: OPEN, date: 19971017183721}
   - {lba: 34, dummy: 2, form: 2}
   - {lba: 36, file: OPEN/FFTST.STR, size: 4672, type: mixed, date: 19971014194710}
-  - {lba: 38, dummy: 10, form: 1}
+  - {lba: 38, dummy: 10, form: 1, free: true}
 `
 
 func discTestProject(t *testing.T, disc string) project {
+	return discTestProjectWith(t, testMainYAML, disc)
+}
+
+func discTestProjectWith(t *testing.T, main, disc string) project {
 	return testProject(t, map[string]string{
-		"target/main.yaml":       testMainYAML,
+		"target/main.yaml":       main,
 		discLayoutPath:           disc,
 		"src/main/main_first.c":  "void main_first(void) {}\n",
 		"src/main/main_second.c": "void main_second(void) {}\n",
@@ -57,7 +61,9 @@ func TestDiscLayoutRejectsInvalidEntries(t *testing.T) {
 		"data file needs size":  {"file: SYSTEM.CNF, size: 68,", "file: SYSTEM.CNF,"},
 		"undeclared directory":  {"file: OPEN/FFTST.STR", "file: MOVIE/FFTST.STR"},
 		"mixed sector size":     {"size: 4672,", "size: 4673,"},
-		"dummy form":            {"form: 1}", "form: 3}"},
+		"dummy form":            {"form: 1,", "form: 3,"},
+		"two free dummies":      {"dummy: 3, form: 2}", "dummy: 3, form: 2, free: true}"},
+		"free file":             {"date: 19970912162300}", "date: 19970912162300, free: true}"},
 		"before the root":       {"{lba: 23,", "{lba: 21,"},
 		"two kinds in one row":  {"dummy: 3, form: 2}", "dummy: 3, form: 2, file: X.BIN}"},
 		"fixed file":            {"size: 0,", "size: 0, fixed: no,"},
@@ -87,6 +93,105 @@ func TestDiscLayoutRejectsInvalidEntries(t *testing.T) {
 	}
 	if err := p.validateProjectConfig(config); err == nil || !strings.Contains(err.Error(), "disc.yaml is missing") {
 		t.Fatalf("missing layout: %v", err)
+	}
+}
+
+func TestDiscLayoutFitMovesWhatOutgrowsItsPlace(t *testing.T) {
+	free := testDiscLayoutYAML
+	// fit applies each edit to the layout or to main's YAML and runs
+	// config-fmt; it returns the layout written, or config-fmt's error,
+	// which check-config reports too.
+	fit := func(t *testing.T, disc string, edits ...[2]string) (string, *projectConfig, error) {
+		t.Helper()
+		main := testMainYAML
+		for _, edit := range edits {
+			switch {
+			case strings.Contains(disc, edit[0]):
+				disc = strings.Replace(disc, edit[0], edit[1], 1)
+			case strings.Contains(main, edit[0]):
+				main = strings.Replace(main, edit[0], edit[1], 1)
+			default:
+				t.Fatalf("edit %q does not apply", edit[0])
+			}
+		}
+		p := discTestProjectWith(t, main, disc)
+		if err := p.configFormat(); err != nil {
+			config, loadErr := p.loadProjectConfig()
+			if loadErr != nil {
+				t.Fatal(loadErr)
+			}
+			if invalid := p.validateProjectConfig(config); invalid == nil || !strings.Contains(invalid.Error(), err.Error()) {
+				t.Fatalf("check-config does not report %q: %v", err, invalid)
+			}
+			return "", nil, err
+		}
+		got, err := os.ReadFile(filepath.Join(p.root, filepath.FromSlash(discLayoutPath)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		config, err := p.loadProjectConfig()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := p.validateProjectConfig(config); err != nil {
+			t.Fatalf("fitted layout: %v", err)
+		}
+		return string(got), config, nil
+	}
+	replace := func(text string, pairs ...string) string {
+		for index := 0; index < len(pairs); index += 2 {
+			if !strings.Contains(text, pairs[index]) {
+				t.Fatalf("%q is not in the layout", pairs[index])
+			}
+			text = strings.Replace(text, pairs[index], pairs[index+1], 1)
+		}
+		return text
+	}
+	for _, test := range []struct {
+		name  string
+		edits [][2]string
+		want  string
+		main  int // main's sector after the fit
+	}{
+		{"a module that outgrows its place moves to the free run", [][2]string{{"size: 4096\n", "size: 6000\n"}}, replace(free,
+			"  - {lba: 24, file: SCUS_942.21, date: 19971017183704}\n", "  - {lba: 24, dummy: 2, form: 2}\n",
+			"  - {lba: 38, dummy: 10, form: 1, free: true}\n", "  - {lba: 38, file: SCUS_942.21, date: 19971017183704}\n  - {lba: 41, dummy: 7, form: 1, free: true}\n"), 38},
+		{"a file grows into the dummy after it", [][2]string{{"size: 0,", "size: 4096,"}}, replace(free,
+			"size: 0,", "size: 4096,", "{lba: 27, dummy: 3,", "{lba: 28, dummy: 2,"), 24},
+		{"a fixed file shrinks in place", [][2]string{{"size: 2049,", "size: 100,"}}, replace(free,
+			"size: 2049,", "size: 100,", "  - {lba: 33, dir: OPEN", "  - {lba: 32, dummy: 1, form: 2}\n  - {lba: 33, dir: OPEN"), 24},
+		{"a file placed by hand in the free run", [][2]string{{"{lba: 26, file: EMPTY.BIN", "{lba: 44, file: EMPTY.BIN"}}, replace(free,
+			"  - {lba: 26, file: EMPTY.BIN, size: 0, date: 19971017183704}\n", "",
+			"{lba: 27, dummy: 3,", "{lba: 26, dummy: 4,",
+			"  - {lba: 38, dummy: 10, form: 1, free: true}\n", "  - {lba: 38, dummy: 6, form: 1}\n  - {lba: 44, file: EMPTY.BIN, size: 0, date: 19971017183704}\n  - {lba: 45, dummy: 3, form: 1, free: true}\n"), 24},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			got, config, err := fit(t, free, test.edits...)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got != test.want {
+				t.Fatalf("layout:\n%s", got)
+			}
+			if main, _ := config.module("main"); main.LBA != test.main {
+				t.Fatalf("main at sector %d", main.LBA)
+			}
+		})
+	}
+	for name, test := range map[string]struct {
+		disc  string
+		edit  [2]string
+		error string
+	}{
+		"fixed directory": {free, [2]string{"size: 2049,", "size: 4097,"}, "MAP/MAP001.GNS needs the sectors up to 34, but OPEN/ starts at 33 and its directory is fixed"},
+		"free run full":   {free, [2]string{"size: 4096\n", "size: 30000\n"}, "SCUS_942.21 needs the sectors up to 53, past the free run's end at 48"},
+		"no free run":     {strings.Replace(free, ", free: true}", "}", 1), [2]string{"size: 4096\n", "size: 6000\n"}, "SCUS_942.21 outgrows its place, and no dummy is free"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			if _, _, err := fit(t, test.disc, test.edit); err == nil || err.Error() != discLayoutPath+": "+test.error {
+				t.Fatalf("config-fmt: %v", err)
+			}
+		})
 	}
 }
 
