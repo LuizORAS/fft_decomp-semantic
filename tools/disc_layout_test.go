@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -86,6 +87,61 @@ func TestDiscLayoutRejectsInvalidEntries(t *testing.T) {
 	}
 	if err := p.validateProjectConfig(config); err == nil || !strings.Contains(err.Error(), "disc.yaml is missing") {
 		t.Fatalf("missing layout: %v", err)
+	}
+}
+
+const testDiscWordsYAML = "\ndisc:\n  - {addr: 0x80010300, extent: SYSTEM.CNF}\n  - {addr: 0x80010308, sector: MAP/MAP001.GNS, offset: 1}\n  - {addr: 0x8001030c, size: MAP/MAP001.GNS}\n"
+
+func TestDiscWordsTakeTheirValuesFromTheLayout(t *testing.T) {
+	load := func(main string) (*projectConfig, error) {
+		p := testProject(t, map[string]string{
+			"target/main.yaml":       main,
+			discLayoutPath:           testDiscLayoutYAML,
+			"src/main/main_first.c":  "void main_first(void) {}\n",
+			"src/main/main_second.c": "void main_second(void) {}\n",
+		})
+		config, err := p.loadProjectConfig()
+		if err != nil {
+			t.Fatal(err)
+		}
+		return config, p.validateProjectConfig(config)
+	}
+	config, err := load(testMainYAML + testDiscWordsYAML)
+	if err != nil {
+		t.Fatal(err)
+	}
+	main, _ := config.module("main")
+	var got []string
+	for _, word := range main.DiscWords {
+		got = append(got, fmt.Sprint(word.values))
+	}
+	if strings.Join(got, " ") != "[23 2048] [32] [4096]" {
+		t.Fatalf("disc words %v", got)
+	}
+	if string(renderModuleConfig(main)) != testMainYAML+testDiscWordsYAML {
+		t.Fatalf("not canonical:\n%s", renderModuleConfig(main))
+	}
+	for name, edit := range map[string][2]string{
+		"unknown file":      {"extent: SYSTEM.CNF", "extent: NOPE.BIN"},
+		"offset on extent":  {"extent: SYSTEM.CNF}", "extent: SYSTEM.CNF, offset: 1}"},
+		"offset past file":  {"offset: 1}", "offset: 2}"},
+		"in code":           {"0x80010300, extent", "0x80010000, extent"},
+		"overlap":           {"0x80010308, sector", "0x80010304, sector"},
+		"two kinds":         {"size: MAP/MAP001.GNS}", "size: MAP/MAP001.GNS, sector: SYSTEM.CNF}"},
+		"overlaps a value":  {"\ndisc:", "\nvalues:\n  - {addr: 0x8001030c, why: a count}\n\ndisc:"},
+		"misaligned":        {"0x8001030c, size", "0x8001030e, size"},
+		"outside the file":  {"0x8001030c, size", "0x80020000, size"},
+		"size with offsets": {"size: MAP/MAP001.GNS}", "size: MAP/MAP001.GNS, offset: 1}"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			text := testMainYAML + testDiscWordsYAML
+			if !strings.Contains(text, edit[0]) {
+				t.Fatalf("edit %q does not apply", edit[0])
+			}
+			if _, err := load(strings.Replace(text, edit[0], edit[1], 1)); err == nil || !strings.Contains(err.Error(), "disc word") {
+				t.Fatalf("invalid disc word accepted: %v", err)
+			}
+		})
 	}
 }
 

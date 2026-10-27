@@ -26,13 +26,20 @@ import (
 // linkPiece is one contiguous range of a module image: a function's .text,
 // its .rodata, or the original bytes between them with the data rows inside.
 type linkPiece struct {
-	addr        uint32
-	size        int
-	kind        string // "text", "rodata", "bytes" or MAIN's "header"
-	function    *functionSpec
-	labels      []symbolSpec
-	aliases     []symbolSpec     // data rows inside a text or rodata piece, defined from its address
-	relocations []relocationSpec // words of a bytes piece written from a symbol
+	addr     uint32
+	size     int
+	kind     string // "text", "rodata", "bytes" or MAIN's "header"
+	function *functionSpec
+	labels   []symbolSpec
+	aliases  []symbolSpec // data rows inside a text or rodata piece, defined from its address
+	words    []linkWord   // words of a bytes piece the link writes
+}
+
+// linkWord is a word of the bytes the link writes instead of copying it: a
+// relocation's symbol (plus offset) or a disc word's number from the layout.
+type linkWord struct {
+	addr uint32
+	expr string
 }
 
 // linkLayout is a module's pieces in address order; the .rodata copies that
@@ -126,17 +133,32 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 		}
 		layout.absolute = append(layout.absolute, symbol)
 	}
-	relocations := append([]relocationSpec(nil), m.Relocations...)
-	sort.Slice(relocations, func(a, b int) bool { return relocations[a].Addr < relocations[b].Addr })
-	for _, relocation := range relocations {
+	var words []linkWord
+	for _, relocation := range m.Relocations {
+		expr := relocation.To
+		if relocation.Offset != 0 {
+			expr += fmt.Sprintf("+0x%x", relocation.Offset)
+		}
+		words = append(words, linkWord{relocation.Addr, expr})
+	}
+	for _, word := range m.DiscWords {
+		if len(word.values) == 0 {
+			return layout, fmt.Errorf("%s: disc word 0x%08x has no %s in the disc layout", m.ID, word.Addr, word.File)
+		}
+		for index, value := range word.values {
+			words = append(words, linkWord{word.Addr + uint32(4*index), fmt.Sprintf("%d", value)})
+		}
+	}
+	sort.Slice(words, func(a, b int) bool { return words[a].addr < words[b].addr })
+	for _, word := range words {
 		index := sort.Search(len(layout.pieces), func(i int) bool {
-			return layout.pieces[i].addr+uint32(layout.pieces[i].size) > relocation.Addr
+			return layout.pieces[i].addr+uint32(layout.pieces[i].size) > word.addr
 		})
 		piece := &layout.pieces[min(index, len(layout.pieces)-1)]
-		if index == len(layout.pieces) || piece.kind != "bytes" || piece.addr > relocation.Addr || relocation.Addr+4 > piece.addr+uint32(piece.size) {
-			return layout, fmt.Errorf("%s: relocation 0x%08x is not a word of the bytes between functions", m.ID, relocation.Addr)
+		if index == len(layout.pieces) || piece.kind != "bytes" || piece.addr > word.addr || word.addr+4 > piece.addr+uint32(piece.size) {
+			return layout, fmt.Errorf("%s: data word 0x%08x is not a word of the bytes between functions", m.ID, word.addr)
 		}
-		piece.relocations = append(piece.relocations, relocation)
+		piece.words = append(piece.words, word)
 	}
 	return layout, nil
 }
@@ -293,7 +315,8 @@ func linkObjectRenames(resolver symbolResolver, m *moduleSpec, layout *linkLayou
 
 // linkDataAssembly writes every bytes piece as its own section: the original
 // bytes (`.incbin` of the extracted file) or, without it, zeros, with a global
-// label at each data row and each relocation's word from its symbol.
+// label at each data row, each relocation's word from its symbol and each disc
+// word from the disc layout.
 func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 	var out strings.Builder
 	fmt.Fprintf(&out, "# %s: the bytes between functions, in address order.\n", m.ID)
@@ -327,14 +350,11 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 			at += 8
 		}
 		// A relocated word comes from its symbol, so it follows the symbol
-		// wherever the link puts it.
-		word := func(relocation relocationSpec) {
-			emit(relocation.Addr)
-			if relocation.Offset != 0 {
-				fmt.Fprintf(&out, "\t.word %s+0x%x\n", relocation.To, relocation.Offset)
-			} else {
-				fmt.Fprintf(&out, "\t.word %s\n", relocation.To)
-			}
+		// wherever the link puts it; a disc word follows its file's place
+		// and size in the disc layout.
+		word := func(written linkWord) {
+			emit(written.addr)
+			fmt.Fprintf(&out, "\t.word %s\n", written.expr)
 			at += 4
 		}
 		// A data row inside a relocated word (an array base biased into a
@@ -348,12 +368,12 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 			fmt.Fprintf(&out, "\t.globl %s\n%s:\n", symbol.Name, symbol.Name)
 		}
 		labels := piece.labels
-		for _, relocation := range piece.relocations {
-			for len(labels) > 0 && labels[0].Addr <= relocation.Addr {
+		for _, written := range piece.words {
+			for len(labels) > 0 && labels[0].Addr <= written.addr {
 				label(labels[0])
 				labels = labels[1:]
 			}
-			word(relocation)
+			word(written)
 			for len(labels) > 0 && labels[0].Addr < at {
 				label(labels[0])
 				labels = labels[1:]

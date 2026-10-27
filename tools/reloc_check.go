@@ -50,9 +50,12 @@ type relocFinding struct {
 	what  string
 }
 
-// relocReport counts a module's data words in scope by classification.
+// relocReport counts a module's data words in scope by classification, and
+// its disc words and the words outside scope that look like a sector table's
+// and are neither disc words nor values ("sector" findings).
 type relocReport struct {
 	words, relocations, values, pending, orphans int
+	disc, discPending                            int
 	findings                                     []relocFinding
 }
 
@@ -64,14 +67,19 @@ type relocModuleNames struct {
 	names     []symbolSpec      // functions and data rows, by address
 }
 
-// relocNames describes what an address names, for the pending list.
+// relocNames describes what an address names, for the pending list, and
+// which disc file each first sector starts.
 type relocNames struct {
 	config  *projectConfig
 	modules map[string]relocModuleNames
+	starts  map[uint32]string
 }
 
 func newRelocNames(config *projectConfig) relocNames {
-	names := relocNames{config: config, modules: make(map[string]relocModuleNames, len(config.Modules))}
+	names := relocNames{config: config, modules: make(map[string]relocModuleNames, len(config.Modules)), starts: make(map[uint32]string)}
+	for name, file := range config.discFiles {
+		names.starts[uint32(file.lba)] = name
+	}
 	for _, m := range config.Modules {
 		entry := relocModuleNames{module: m, rows: make(map[uint32]string)}
 		entry.functions = append([]functionSpec(nil), m.Functions...)
@@ -149,9 +157,48 @@ func (n relocNames) describe(m *moduleSpec, value uint32) string {
 	return fmt.Sprintf("in %d modules' files (%s, ...)", len(files), files[0])
 }
 
+// discSector reports which file a data word of piece looks like a sector table
+// entry of: the file's first sector followed by its size rounded up to whole
+// sectors (an extent of a file that is not empty), or one of three or more
+// first sectors in a row.
+func (n relocNames) discSector(m *moduleSpec, piece linkPiece, original []byte, addr uint32) (string, bool) {
+	word := func(at uint32) (uint32, bool) {
+		if at < piece.addr || at+4 > piece.addr+uint32(piece.size) {
+			return 0, false
+		}
+		return binary.LittleEndian.Uint32(original[m.offset(at):]), true
+	}
+	value, _ := word(addr)
+	name, ok := n.starts[value]
+	if !ok {
+		return "", false
+	}
+	file := n.config.discFiles[name]
+	rounded := uint32((file.size + discDataSectorBytes - 1) / discDataSectorBytes * discDataSectorBytes)
+	if next, ok := word(addr + 4); ok && file.size > 0 && next == rounded {
+		return name, true
+	}
+	start := func(at uint32) bool {
+		other, ok := word(at)
+		_, starts := n.starts[other]
+		return ok && starts
+	}
+	run := 1
+	for at := addr + 4; run < 3 && start(at); at += 4 {
+		run++
+	}
+	for at := addr - 4; run < 3 && start(at); at -= 4 {
+		run++
+	}
+	return name, run >= 3
+}
+
 // relocClassify sorts m's data words in scope (whole words of the bytes
-// pieces) into relocations, values and pending, and fails when a relocation
-// does not name the address its original word holds.
+// pieces) into relocations, values and pending, and its disc words, and fails
+// when a relocation does not name the address its original word holds or a
+// disc word differs from what the layout gives. A word outside scope that
+// looks like a sector table's entry (discSector) and is neither a disc word
+// nor a value is a "sector" finding.
 func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, layout linkLayout, original []byte) (relocReport, error) {
 	var report relocReport
 	relocations := make(map[uint32]relocationSpec, len(m.Relocations))
@@ -164,6 +211,12 @@ func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, lay
 			values[addr] = true
 		}
 	}
+	disc := make(map[uint32]uint32)
+	for _, word := range m.DiscWords {
+		for index, value := range word.values {
+			disc[word.Addr+uint32(4*index)] = value
+		}
+	}
 	var wrong []string
 	for _, piece := range layout.pieces {
 		if piece.kind != "bytes" {
@@ -172,6 +225,19 @@ func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, lay
 		for addr := (piece.addr + 3) &^ 3; addr+4 <= piece.addr+uint32(piece.size); addr += 4 {
 			value := binary.LittleEndian.Uint32(original[m.offset(addr):])
 			inScope := relocScopeLow <= value && value < relocScopeHigh
+			if layoutValue, ok := disc[addr]; ok {
+				if layoutValue != value {
+					wrong = append(wrong, fmt.Sprintf("disc word 0x%08x holds %d, but the layout gives %d", addr, value, layoutValue))
+				}
+				report.disc++
+				continue
+			}
+			if !inScope && !values[addr] {
+				if file, ok := names.discSector(m, piece, original, addr); ok {
+					report.discPending++
+					report.findings = append(report.findings, relocFinding{kind: "sector", addr: addr, value: value, what: "first sector of " + file})
+				}
+			}
 			if relocation, ok := relocations[addr]; ok {
 				if to, _ := resolver.resolve(m, relocation.To); to+relocation.Offset != value {
 					wrong = append(wrong, fmt.Sprintf("relocation 0x%08x holds 0x%08x, but %s+0x%x is 0x%08x", addr, value, relocation.To, relocation.Offset, to+relocation.Offset))
@@ -450,21 +516,28 @@ func (p project) relocCheckModule(resolver symbolResolver, names relocNames, m *
 }
 
 // relocPendingError fails a module whose data words in scope are not all
-// relocations or values, naming the first few that are neither.
+// relocations or values, or that holds a word like a sector table's that is
+// neither a disc word nor a value, naming the first few.
 func relocPendingError(report relocReport) error {
-	if report.pending == 0 {
+	if report.pending == 0 && report.discPending == 0 {
 		return nil
 	}
-	var first []string
+	var parts, first []string
+	if report.pending > 0 {
+		parts = append(parts, fmt.Sprintf("%d words neither relocation nor value (%d orphans)", report.pending, report.orphans))
+	}
+	if report.discPending > 0 {
+		parts = append(parts, fmt.Sprintf("%d words like a disc sector table's neither disc word nor value", report.discPending))
+	}
 	for _, finding := range report.findings {
-		if finding.kind == "pending" || finding.kind == "orphan" {
+		if finding.kind == "pending" || finding.kind == "orphan" || finding.kind == "sector" {
 			first = append(first, fmt.Sprintf("0x%08x = 0x%08x (%s)", finding.addr, finding.value, finding.what))
 			if len(first) == 3 {
 				break
 			}
 		}
 	}
-	return fmt.Errorf("%d words neither relocation nor value (%d orphans): %s", report.pending, report.orphans, strings.Join(first, "; "))
+	return fmt.Errorf("%s: %s", strings.Join(parts, ", "), strings.Join(first, "; "))
 }
 
 // writeRelocList writes a module's findings as a tab-separated list.
@@ -527,6 +600,8 @@ func (p project) relocCheckCommand(args []string) error {
 		total.values += report.values
 		total.pending += report.pending
 		total.orphans += report.orphans
+		total.disc += report.disc
+		total.discPending += report.discPending
 		moduleKinds := map[string]int{}
 		for _, finding := range report.findings {
 			moduleKinds[finding.kind]++
@@ -551,6 +626,7 @@ func (p project) relocCheckCommand(args []string) error {
 		checked, total.words, total.relocations, total.values, total.pending, total.orphans)
 	fmt.Fprintf(p.stdout(), "  shifts %s: %d linked with every change explained\n", strings.Join(shifts, " and "), checked)
 	fmt.Fprintf(p.stdout(), "  code: %d own addresses left in place, %d more through a linked module's names, %d data rows bound inside code\n", kinds["code"], kinds["link"], kinds["row"])
+	fmt.Fprintf(p.stdout(), "  disc: %d words written from the layout, %d more like a sector table's left\n", total.disc, total.discPending)
 	fmt.Fprintln(p.stdout(), "  lists: build/reloc-check/<module>.tsv")
 	if failed > 0 {
 		return fmt.Errorf("reloc-check: %d modules failed", failed)

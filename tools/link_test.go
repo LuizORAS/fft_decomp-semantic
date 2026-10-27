@@ -145,6 +145,28 @@ func TestLinkDataAssemblyWritesRelocatedWords(t *testing.T) {
 	}
 }
 
+func TestLinkDataAssemblyWritesDiscWords(t *testing.T) {
+	m := linkTestModule()
+	m.Relocations = []relocationSpec{{Addr: 0x80100024, To: "test_first"}}
+	m.DiscWords = []discWordSpec{
+		{Addr: 0x80100028, Kind: "extent", File: "SYSTEM.CNF", values: []uint32{23, 2048}},
+		{Addr: 0x80100034, Kind: "sector", File: "MAP/MAP001.GNS", Offset: 1, values: []uint32{32}},
+	}
+	layout, err := moduleLinkLayout(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := "\t.word test_first\n\t.word 23\n\t.word 2048\n\t.globl g_test_tail\ng_test_tail:\n" +
+		"\t.incbin \"/disc/EVENT/TEST.OUT\", 48, 4\n\t.word 32\n\t.incbin \"/disc/EVENT/TEST.OUT\", 56, 8\n"
+	if data := linkDataAssembly(m, layout, "/disc/EVENT/TEST.OUT"); !strings.Contains(data, want) {
+		t.Fatalf("data assembly:\n%s", data)
+	}
+	m.DiscWords[0].values = nil
+	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "has no SYSTEM.CNF in the disc layout") {
+		t.Fatalf("a disc word without the layout: %v", err)
+	}
+}
+
 func TestMainLinkWritesTheEXEHeaderAndGlobalPointer(t *testing.T) {
 	m := &moduleSpec{
 		ID: mainModuleID, File: "SCUS_942.21", Load: 0x8000f800, Size: 0x1000, SourceDir: "src/main",

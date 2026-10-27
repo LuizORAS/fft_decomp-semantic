@@ -2506,6 +2506,21 @@ relocations:
   - {addr: 0x801c09dc, to: g_etc_graphic_path_end3}
   - {addr: 0x801c09fc, to: g_etc_graphic_path_end4}
   - {addr: 0x801c0a1c, to: g_etc_graphic_path_end5}
+
+disc:
+  - {addr: 0x801c08a0, extent: EVENT/CHAPTER1.BIN}
+  - {addr: 0x801c08c0, extent: EVENT/CHAPTER1.BIN}
+  - {addr: 0x801c08e0, extent: EVENT/CHAPTER2.BIN}
+  - {addr: 0x801c0900, extent: EVENT/CHAPTER3.BIN}
+  - {addr: 0x801c0920, extent: EVENT/CHAPTER4.BIN}
+  - {addr: 0x801c0940, extent: EVENT/CHAPTER1.BIN}
+  - {addr: 0x801c0960, extent: EVENT/CHAPTER1.BIN}
+  - {addr: 0x801c0980, extent: EVENT/GAMEOVER.BIN}
+  - {addr: 0x801c09a0, extent: EVENT/END1.BIN}
+  - {addr: 0x801c09c0, extent: EVENT/END2.BIN}
+  - {addr: 0x801c09e0, extent: EVENT/END3.BIN}
+  - {addr: 0x801c0a00, extent: EVENT/END4.BIN}
+  - {addr: 0x801c0a20, extent: EVENT/END5.BIN}
 ---
 module: event-helpmenu
 file: EVENT/HELPMENU.OUT

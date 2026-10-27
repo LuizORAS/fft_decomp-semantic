@@ -29,7 +29,9 @@ type projectConfig struct {
 	Modules []*moduleSpec
 	Disc    *discLayout // target/disc.yaml; nil when the checkout has none
 	byID    map[string]*moduleSpec
-	files   map[string][]byte // module files as loaded, for the canonical-form check
+	// discFiles are the layout's files by path, for the disc words.
+	discFiles map[string]discFileFact
+	files     map[string][]byte // module files as loaded, for the canonical-form check
 }
 
 // moduleSpec is one disc file. Runtime address addr maps to file offset
@@ -57,8 +59,30 @@ type moduleSpec struct {
 	// value keeps its original bytes.
 	Relocations []relocationSpec
 	Values      []valueSpec
+	// DiscWords are the data words that hold a disc file's sector or size,
+	// which the link writes from the disc layout.
+	DiscWords []discWordSpec
 
 	path string // file path relative to the project root
+}
+
+// discWordSpec says the data word at Addr holds a fact of the disc file File:
+// its first sector plus Offset sectors ("sector"), its size rounded up to
+// whole sectors ("size"), or the two in a row ("extent", two words).
+type discWordSpec struct {
+	Addr   uint32
+	Kind   string
+	File   string
+	Offset int
+
+	values []uint32 // the words from the disc layout, set when the configuration loads
+}
+
+func (d discWordSpec) size() uint32 {
+	if d.Kind == "extent" {
+		return 8
+	}
+	return 4
 }
 
 type functionSpec struct {
@@ -372,10 +396,11 @@ func (p project) loadProjectConfig() (*projectConfig, error) {
 		return nil, fmt.Errorf("%s has no main module", modulesConfigDir)
 	}
 	if config.Disc != nil {
-		modules := discModuleFiles(config)
-		for _, entry := range config.Disc.Entries {
-			if m := modules[entry.File]; m != nil && entry.File != "" {
-				m.LBA = entry.LBA
+		config.discFiles = config.Disc.files(config)
+		for _, m := range config.Modules {
+			m.LBA = config.discFiles[m.File].lba
+			for index := range m.DiscWords {
+				m.DiscWords[index].values = config.discWordValues(m.DiscWords[index])
 			}
 		}
 	}
@@ -420,6 +445,15 @@ type moduleFileYAML struct {
 
 	Relocations []relocationYAML `yaml:"relocations"`
 	Values      []valueYAML      `yaml:"values"`
+	Disc        []discWordYAML   `yaml:"disc"`
+}
+
+type discWordYAML struct {
+	Addr   uint32 `yaml:"addr"`
+	Sector string `yaml:"sector"`
+	Size   string `yaml:"size"`
+	Extent string `yaml:"extent"`
+	Offset int    `yaml:"offset"`
 }
 
 type relocationYAML struct {
@@ -531,6 +565,19 @@ func parseModuleConfig(data []byte) (*moduleSpec, error) {
 	for _, item := range file.Values {
 		module.Values = append(module.Values, valueSpec(item))
 	}
+	for _, item := range file.Disc {
+		word := discWordSpec{Addr: item.Addr, Offset: item.Offset}
+		for _, kind := range []struct{ name, file string }{{"sector", item.Sector}, {"size", item.Size}, {"extent", item.Extent}} {
+			if kind.file != "" {
+				if word.Kind != "" {
+					word.Kind = "several"
+					break
+				}
+				word.Kind, word.File = kind.name, kind.file
+			}
+		}
+		module.DiscWords = append(module.DiscWords, word)
+	}
 	return module, nil
 }
 
@@ -590,6 +637,7 @@ func (m *moduleSpec) normalize() {
 		}
 	}
 	sort.SliceStable(m.Values, func(i, j int) bool { return m.Values[i].Addr < m.Values[j].Addr })
+	sort.SliceStable(m.DiscWords, func(i, j int) bool { return m.DiscWords[i].Addr < m.DiscWords[j].Addr })
 }
 
 func sortSymbols(symbols []symbolSpec) {
@@ -700,6 +748,14 @@ func renderModuleConfig(m *moduleSpec) []byte {
 			text += fmt.Sprintf(", end: 0x%08x", item.End)
 		}
 		return text + ", why: " + yamlText(item.Why)
+	})
+	section("disc", len(m.DiscWords), func(index int) string {
+		item := m.DiscWords[index]
+		text := fmt.Sprintf("addr: 0x%08x, %s: %s", item.Addr, item.Kind, yamlText(item.File))
+		if item.Offset != 0 {
+			text += fmt.Sprintf(", offset: %d", item.Offset)
+		}
+		return text
 	})
 	return out.Bytes()
 }
@@ -1028,7 +1084,8 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				}
 			}
 		}
-		// Each data word is classified once, as a relocation or as a value.
+		// Each data word is classified once, as a relocation, a value or a
+		// disc word.
 		classified := make(map[uint32]string)
 		for _, relocation := range m.Relocations {
 			where := fmt.Sprintf("%s: relocation 0x%08x", label, relocation.Addr)
@@ -1064,6 +1121,36 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 					break
 				}
 				classified[addr] = "value"
+			}
+		}
+		for _, word := range m.DiscWords {
+			where := fmt.Sprintf("%s: disc word 0x%08x", label, word.Addr)
+			if word.Kind != "sector" && word.Kind != "size" && word.Kind != "extent" {
+				fail("%s must name its file under exactly one of sector, size or extent", where)
+				continue
+			}
+			if word.Addr%4 != 0 || !m.contains(word.Addr, int(word.size())) {
+				fail("%s is not an aligned word of the file", where)
+				continue
+			}
+			if owner := m.codeAt(word.Addr, word.Addr+word.size()); owner != "" {
+				fail("%s lies in %s", where, owner)
+			}
+			for addr := word.Addr; addr < word.Addr+word.size(); addr += 4 {
+				if previous := classified[addr]; previous != "" {
+					fail("%s overlaps a %s at 0x%08x", where, previous, addr)
+					break
+				}
+				classified[addr] = "disc word"
+			}
+			file, ok := config.discFiles[word.File]
+			switch {
+			case config.Disc != nil && !ok:
+				fail("%s: %s is no file in %s", where, word.File, discLayoutPath)
+			case word.Offset != 0 && word.Kind != "sector":
+				fail("%s: only a sector takes an offset", where)
+			case ok && (word.Offset < 0 || word.Offset >= file.sectors):
+				fail("%s: offset %d is outside %s's %d sectors", where, word.Offset, word.File, file.sectors)
 			}
 		}
 	}

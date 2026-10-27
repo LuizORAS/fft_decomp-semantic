@@ -4325,6 +4325,7 @@ relocations:
 
 values:
   - {addr: 0x8013b8f8, end: 0x8014e5c0, why: "g_world_text_glyph_bitmaps: font bitmap bytes"}
+  - {addr: 0x801566f4, end: 0x80156734, why: "s16 mode pairs per action row type, not disc sectors"}
   - {addr: 0x80156750, why: "battle_menu_system_function_t menu_id and text_id"}
   - {addr: 0x80156764, why: "battle_menu_system_function_t menu_id and text_id"}
   - {addr: 0x801567c8, why: "battle_menu_system_function_t menu_id and text_id"}
@@ -4346,3 +4347,71 @@ values:
   - {addr: 0x80157860, end: 0x8016e1a0, why: "g_world_help_data_base: help text bytes"}
   - {addr: 0x8016ee68, end: 0x80189c4c, why: "embedded WLDHELP text file: section offsets and text bytes"}
   - {addr: 0x8018b804, end: 0x8018ba04, why: "g_world_formation_menu_palettes: CLUT colors"}
+
+disc:
+  - {addr: 0x8015638c, sector: EVENT/OPTION.OUT}
+  - {addr: 0x80156390, sector: EVENT/BUNIT.OUT}
+  - {addr: 0x80156394, sector: EVENT/HELPMENU.OUT}
+  - {addr: 0x80156398, sector: EVENT/EVTOOL.OUT}
+  - {addr: 0x8015639c, sector: EVENT/DEBUGMAP.OUT}
+  - {addr: 0x801563a0, sector: EVENT/REQUIRE.OUT}
+  - {addr: 0x801563a4, sector: EVENT/JOBSTTS.OUT}
+  - {addr: 0x801563a8, sector: EVENT/SMALL.OUT}
+  - {addr: 0x801563ac, sector: EVENT/EQUIP.OUT}
+  - {addr: 0x801563b0, sector: EVENT/EQUIP.OUT, offset: 64}
+  - {addr: 0x801563b4, sector: EVENT/DEBUGCHR.OUT}
+  - {addr: 0x801563b8, sector: EVENT/ETC.OUT}
+  - {addr: 0x801563bc, sector: EVENT/ATTACK.OUT}
+  - {addr: 0x801563c0, sector: EVENT/CARD.OUT}
+  - {addr: 0x801563c4, sector: EVENT/BUNIT.OUT, offset: 64}
+  - {addr: 0x801563cc, size: EVENT/OPTION.OUT}
+  - {addr: 0x801563d4, size: EVENT/HELPMENU.OUT}
+  - {addr: 0x801563e0, size: EVENT/REQUIRE.OUT}
+  - {addr: 0x801563e8, size: EVENT/SMALL.OUT}
+  - {addr: 0x801563f4, size: EVENT/DEBUGCHR.OUT}
+  - {addr: 0x801563f8, size: EVENT/ETC.OUT}
+  - {addr: 0x80156450, sector: EVENT/WIN001.BIN}
+  - {addr: 0x80156454, sector: EVENT/BONUS.BIN}
+  - {addr: 0x80156458, sector: EVENT/SPELL.MES}
+  - {addr: 0x80156468, sector: EVENT/WIN001.BIN}
+  - {addr: 0x8015646c, sector: EVENT/WIN001.BIN}
+  - {addr: 0x80156470, sector: EVENT/WIN001.BIN}
+  - {addr: 0x80156474, sector: EVENT/WIN001.BIN}
+  - {addr: 0x80156478, sector: EVENT/WIN001.BIN}
+  - {addr: 0x8015647c, sector: EVENT/WIN001.BIN}
+  - {addr: 0x80156480, sector: EVENT/WIN001.BIN}
+  - {addr: 0x80156484, sector: EVENT/WIN001.BIN}
+  - {addr: 0x80156490, size: EVENT/WIN001.BIN}
+  - {addr: 0x80156494, size: EVENT/BONUS.BIN}
+  - {addr: 0x80156498, size: EVENT/SPELL.MES}
+  - {addr: 0x801564a8, size: EVENT/WIN001.BIN}
+  - {addr: 0x801564ac, size: EVENT/WIN001.BIN}
+  - {addr: 0x801564b0, size: EVENT/WIN001.BIN}
+  - {addr: 0x801564b4, size: EVENT/WIN001.BIN}
+  - {addr: 0x801564b8, size: EVENT/WIN001.BIN}
+  - {addr: 0x801564bc, size: EVENT/WIN001.BIN}
+  - {addr: 0x801564c0, size: EVENT/WIN001.BIN}
+  - {addr: 0x801564c4, size: EVENT/WIN001.BIN}
+  - {addr: 0x8018e4a0, extent: MENU/BK_SHOP.TIM}
+  - {addr: 0x8018e4a8, extent: MENU/BK_SHOP2.TIM}
+  - {addr: 0x8018e4b0, extent: MENU/BK_SHOP3.TIM}
+  - {addr: 0x8018e4b8, extent: MENU/BK_HONE.TIM}
+  - {addr: 0x8018e4c0, extent: MENU/BK_HONE2.TIM}
+  - {addr: 0x8018e4c8, extent: MENU/BK_HONE3.TIM}
+  - {addr: 0x8018e4d0, extent: MENU/BK_FITR.TIM}
+  - {addr: 0x8018e4d8, extent: MENU/BK_FITR2.TIM}
+  - {addr: 0x8018e4e0, extent: MENU/BK_FITR3.TIM}
+  - {addr: 0x80193c40, extent: MENU/TUTO1.MES}
+  - {addr: 0x80193c48, extent: MENU/TUTO2.MES}
+  - {addr: 0x80193c50, extent: MENU/TUTO3.MES}
+  - {addr: 0x80193c58, extent: MENU/TUTO4.MES}
+  - {addr: 0x80193c60, extent: MENU/TUTO5.MES}
+  - {addr: 0x80193c68, extent: MENU/TUTO6.MES}
+  - {addr: 0x80193c70, extent: MENU/TUTO7.MES}
+  - {addr: 0x80193c78, extent: MENU/TUTO1.SCR}
+  - {addr: 0x80193c80, extent: MENU/TUTO2.SCR}
+  - {addr: 0x80193c88, extent: MENU/TUTO3.SCR}
+  - {addr: 0x80193c90, extent: MENU/TUTO4.SCR}
+  - {addr: 0x80193c98, extent: MENU/TUTO5.SCR}
+  - {addr: 0x80193ca0, extent: MENU/TUTO6.SCR}
+  - {addr: 0x80193ca8, extent: MENU/TUTO7.SCR}

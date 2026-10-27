@@ -178,6 +178,53 @@ func (entry *discEntry) sectors(modules map[string]*moduleSpec) int {
 	return max(1, (size+unit-1)/unit)
 }
 
+// discFileFact is one file of the layout: its first sector, its byte size (a
+// module's from its module) and the sectors it takes.
+type discFileFact struct {
+	lba, size, sectors int
+}
+
+// files lists the layout's files by path.
+func (layout *discLayout) files(config *projectConfig) map[string]discFileFact {
+	modules := discModuleFiles(config)
+	files := make(map[string]discFileFact)
+	for index := range layout.Entries {
+		entry := &layout.Entries[index]
+		if entry.File == "" {
+			continue
+		}
+		size := 0
+		if entry.Size != nil {
+			size = *entry.Size
+		} else if m := modules[entry.File]; m != nil {
+			size = m.Size
+		}
+		files[entry.File] = discFileFact{entry.LBA, size, entry.sectors(modules)}
+	}
+	return files
+}
+
+// discWordValues returns the words a disc row holds: the file's first sector
+// plus the row's offset, and its size rounded up to whole 2048-byte sectors
+// (an empty file's is 0). It returns nil for a file the layout lacks.
+func (c *projectConfig) discWordValues(word discWordSpec) []uint32 {
+	file, ok := c.discFiles[word.File]
+	if !ok {
+		return nil
+	}
+	sector := uint32(file.lba + word.Offset)
+	size := uint32((file.size + discDataSectorBytes - 1) / discDataSectorBytes * discDataSectorBytes)
+	switch word.Kind {
+	case "sector":
+		return []uint32{sector}
+	case "size":
+		return []uint32{size}
+	case "extent":
+		return []uint32{sector, size}
+	}
+	return nil
+}
+
 // discModuleFiles maps each module's disc path to its module.
 func discModuleFiles(config *projectConfig) map[string]*moduleSpec {
 	files := make(map[string]*moduleSpec, len(config.Modules))

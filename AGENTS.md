@@ -107,7 +107,7 @@ make twins [MODULE=x]      # group functions identical under renames across modu
 make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
 make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
 make link [MODULE=x]       # link each module whole from its objects and the bytes between them; compare with the original file (function hashes without the BIN); every module with the BIN also builds the disc in build/link/disc
-make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address and is neither relocation nor value, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
+make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address or a disc sector and is neither relocation, disc word nor value, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
@@ -167,10 +167,18 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 - `relocations`: data words that hold an address, `{addr, to}` plus
   `offset` when the word points past the start of `to` (any name the module
   resolves); `make link` writes each word from its symbol, so it follows the
-  symbol. `values`: words that look like RAM addresses but are not,
-  `{addr, why}` for one word or `{addr, end, why}` for a range. Each word
-  lies outside code and is classified once; `make reloc-check` fails on a
-  word in the game's RAM that is neither.
+  symbol. `values`: words that look like RAM addresses or disc sectors but
+  are not, `{addr, why}` for one word or `{addr, end, why}` for a range.
+  Each word lies outside code and is classified once; `make reloc-check`
+  fails on a word in the game's RAM that is neither.
+- `disc`: data words that hold a file's place on the disc, `{addr, sector:
+  FILE}` for its first sector (plus `offset` in sectors past it),
+  `{addr, size: FILE}` for its size rounded up to whole sectors (0 when
+  empty) and `{addr, extent: FILE}` for the two words in a row. `make link`
+  writes each from `disc.yaml`, so it follows the file. `make reloc-check`
+  checks each against the original and fails on a word that reads as a
+  file's first sector followed by its size, or as one of three or more first
+  sectors in a row, unless it is a `disc` word or a value.
 - `units`: the original translation units, `{addr, end, name}` plus `profile`
   when the file was not built with the module default, matched by address
   from upstream's unit tables and named with its labels. The functions in

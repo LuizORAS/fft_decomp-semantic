@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -81,6 +82,51 @@ func TestRelocNamesDescribeValues(t *testing.T) {
 		if got := names.describe(m, value); got != want {
 			t.Errorf("0x%08x: %q, want %q", value, got, want)
 		}
+	}
+}
+
+func TestRelocClassifyChecksDiscWordsAndFindsSectorTables(t *testing.T) {
+	m := linkTestModule()
+	m.DiscWords = []discWordSpec{{Addr: 0x80100024, Kind: "extent", File: "SYSTEM.CNF", values: []uint32{23, 2048}}}
+	m.Values = []valueSpec{{Addr: 0x8010003c, Why: "a count"}}
+	layout, err := moduleLinkLayout(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	config := &projectConfig{discFiles: map[string]discFileFact{
+		"SYSTEM.CNF": {23, 68, 1}, "A.BIN": {100, 4000, 2}, "B.BIN": {102, 2048, 1}, "C.BIN": {103, 0, 1},
+	}}
+	names := newRelocNames(config)
+	original := make([]byte, m.Size)
+	put := func(addr, word uint32) { binary.LittleEndian.PutUint32(original[m.offset(addr):], word) }
+	put(0x80100024, 23)   // the disc word: SYSTEM.CNF's sector
+	put(0x80100028, 2048) // and its size rounded up to a sector
+	put(0x80100000, 100)  // A.BIN's extent, no row
+	put(0x80100004, 4096)
+	put(0x80100018, 103) // an empty file's sector followed by 0, alone
+	put(0x80100030, 102) // three first sectors in a row, the third a value
+	put(0x80100034, 102)
+	put(0x80100038, 103)
+	put(0x8010003c, 100)
+	report, err := relocClassify(symbolResolver{}, names, m, layout, original)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got []string
+	for _, finding := range report.findings {
+		got = append(got, fmt.Sprintf("%s 0x%08x %s", finding.kind, finding.addr, finding.what))
+	}
+	want := []string{"sector 0x80100000 first sector of A.BIN", "sector 0x80100030 first sector of B.BIN",
+		"sector 0x80100034 first sector of B.BIN", "sector 0x80100038 first sector of C.BIN"}
+	if report.disc != 2 || report.discPending != 4 || strings.Join(got, "|") != strings.Join(want, "|") {
+		t.Fatalf("disc %d, pending %d, findings %q", report.disc, report.discPending, got)
+	}
+	if err := relocPendingError(report); err == nil || !strings.Contains(err.Error(), "4 words like a disc sector table's neither disc word nor value") {
+		t.Fatalf("pending disc words: %v", err)
+	}
+	put(0x80100028, 4096)
+	if _, err := relocClassify(symbolResolver{}, names, m, layout, original); err == nil || !strings.Contains(err.Error(), "disc word 0x80100028 holds 4096, but the layout gives 2048") {
+		t.Fatalf("a disc word off the layout: %v", err)
 	}
 }
 
