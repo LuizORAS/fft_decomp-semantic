@@ -32,7 +32,9 @@ type projectConfig struct {
 	byID    map[string]*moduleSpec
 	// discFiles are the layout's files by path, for the disc words.
 	discFiles map[string]discFileFact
-	files     map[string][]byte // module files as loaded, for the canonical-form check
+	// windows is each module's RAM window by name, for residency.
+	windows map[string]string
+	files   map[string][]byte // module files as loaded, for the canonical-form check
 }
 
 // moduleSpec is one disc file. Runtime address addr maps to file offset
@@ -124,11 +126,14 @@ type rodataSpec struct {
 
 // symbolSpec is a data row or an import. A data row's Page, when set, is the
 // high half (with its low half's carry) of its address that code loads as a
-// number, which the link asserts the row stays in.
+// number, which the link asserts the row stays in. In, when set, is the
+// module whose object the row or import names, outside the module's own
+// image: its address comes from that module's link.
 type symbolSpec struct {
 	Addr uint32
 	Name string
 	Page uint32
+	In   string
 }
 
 // overrideSpec binds one name to an address for one function only, ahead of
@@ -155,11 +160,22 @@ type regionSpec struct {
 }
 
 // relocationSpec says the data word at Addr holds the address of To plus
-// Offset; To is any name the module resolves (its own, its links', main's).
+// Offset; To is any name the module resolves (its own, its links', main's),
+// or, with In, a function or data row module In places.
 type relocationSpec struct {
 	Addr   uint32
 	To     string
+	In     string
 	Offset uint32
+}
+
+// target is the name the word's symbol takes in the link: To, qualified with
+// its module when the relocation names one.
+func (relocation relocationSpec) target() string {
+	if relocation.In == "" {
+		return relocation.To
+	}
+	return qualifiedName(relocation.In, relocation.To)
 }
 
 // valueSpec says the words at [Addr, End) are values, not addresses, for the
@@ -354,6 +370,44 @@ func (m *moduleSpec) function(name string) *functionSpec {
 	return nil
 }
 
+// places reports whether the module's link places name in its image: a
+// function, or a data row inside the file.
+func (m *moduleSpec) places(name string) bool {
+	if m.function(name) != nil {
+		return true
+	}
+	for _, symbol := range m.Data {
+		if symbol.Name == name && m.contains(symbol.Addr, 1) {
+			return true
+		}
+	}
+	return false
+}
+
+// symbolStartingAt names the function or the data row inside the file that
+// starts at addr: the row named prefer when several do, else the first by
+// name.
+func (m *moduleSpec) symbolStartingAt(addr uint32, prefer string) (string, bool) {
+	for _, f := range m.Functions {
+		if f.Addr == addr {
+			return f.Name, true
+		}
+	}
+	found := ""
+	for _, symbol := range m.Data {
+		if symbol.Addr != addr || !m.contains(addr, 1) || symbol.In != "" {
+			continue
+		}
+		if symbol.Name == prefer {
+			return prefer, true
+		}
+		if found == "" || symbol.Name < found {
+			found = symbol.Name
+		}
+	}
+	return found, found != ""
+}
+
 func (c *projectConfig) module(id string) (*moduleSpec, bool) {
 	m, ok := c.byID[id]
 	return m, ok
@@ -435,9 +489,11 @@ func (p project) loadProjectConfig() (*projectConfig, error) {
 	}
 	if config.RAM != nil {
 		windows, _ := config.RAM.moduleWindows(config)
+		config.windows = make(map[string]string, len(windows))
 		for _, m := range config.Modules {
 			if window := windows[m.ID]; window != nil {
 				m.ramEnd = window.End
+				config.windows[m.ID] = window.Name
 			}
 			for index := range m.RAMWords {
 				word := &m.RAMWords[index]
@@ -509,6 +565,7 @@ type discWordYAML struct {
 type relocationYAML struct {
 	Addr   uint32 `yaml:"addr"`
 	To     string `yaml:"to"`
+	In     string `yaml:"in"`
 	Offset uint32 `yaml:"offset"`
 }
 
@@ -540,6 +597,7 @@ type symbolYAML struct {
 	Addr uint32 `yaml:"addr"`
 	Name string `yaml:"name"`
 	Page uint32 `yaml:"page"`
+	In   string `yaml:"in"`
 }
 
 type overrideYAML struct {
@@ -779,6 +837,9 @@ func renderModuleConfig(m *moduleSpec) []byte {
 			if symbols[index].Page != 0 {
 				text += fmt.Sprintf(", page: 0x%08x", symbols[index].Page)
 			}
+			if symbols[index].In != "" {
+				text += ", in: " + yamlText(symbols[index].In)
+			}
 			return text
 		}
 	}
@@ -795,6 +856,9 @@ func renderModuleConfig(m *moduleSpec) []byte {
 	section("relocations", len(m.Relocations), func(index int) string {
 		item := m.Relocations[index]
 		text := fmt.Sprintf("addr: 0x%08x, to: %s", item.Addr, yamlText(item.To))
+		if item.In != "" {
+			text += ", in: " + yamlText(item.In)
+		}
 		if item.Offset != 0 {
 			text += fmt.Sprintf(", offset: 0x%x", item.Offset)
 		}
@@ -1091,6 +1155,26 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				}
 			}
 		}
+		// A row or import In another module names that module's object: it
+		// lies outside this image, in that module's, where a function or a
+		// data row starts, and the two modules are in RAM together.
+		owned := func(kind string, symbol symbolSpec) {
+			where := fmt.Sprintf("%s: %s %s", label, kind, symbol.Name)
+			other, ok := config.byID[symbol.In]
+			switch {
+			case symbol.In == "":
+			case !ok || other == m:
+				fail("%s: %s is no other module", where, symbol.In)
+			case m.contains(symbol.Addr, 1):
+				fail("%s lies in the module's own file", where)
+			case !config.resident(m.ID, other.ID):
+				fail("%s: %s is never in RAM with %s", where, other.ID, m.ID)
+			default:
+				if _, ok := other.symbolStartingAt(symbol.Addr, symbol.Name); !ok {
+					fail("%s: %s places no function or data row at 0x%08x", where, other.ID, symbol.Addr)
+				}
+			}
+		}
 		for _, symbol := range m.Data {
 			claim(symbol.Name, "data")
 			switch page := (symbol.Addr + 0x8000) &^ 0xffff; {
@@ -1100,12 +1184,14 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			case symbol.Page != page:
 				fail("%s: data %s: page 0x%08x is not 0x%08x, its address's", label, symbol.Name, symbol.Page, page)
 			}
+			owned("data", symbol)
 		}
 		for _, symbol := range m.Imports {
 			claim(symbol.Name, "import")
 			if symbol.Page != 0 {
 				fail("%s: import %s takes no page", label, symbol.Name)
 			}
+			owned("import", symbol)
 		}
 		for _, override := range m.Overrides {
 			f := m.function(override.Function)
@@ -1203,8 +1289,18 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				fail("%s repeats a %s", where, previous)
 			}
 			classified[relocation.Addr] = "relocation"
-			if _, ok := resolver.resolve(m, relocation.To); !ok {
-				fail("%s: %s is no name this module resolves", where, relocation.To)
+			other, ok := config.byID[relocation.In]
+			switch {
+			case relocation.In == "":
+				if _, ok := resolver.resolve(m, relocation.To); !ok {
+					fail("%s: %s is no name this module resolves", where, relocation.To)
+				}
+			case !ok || other == m:
+				fail("%s: %s is no other module", where, relocation.In)
+			case !config.resident(m.ID, other.ID):
+				fail("%s: %s is never in RAM with %s", where, other.ID, m.ID)
+			case !other.places(relocation.To):
+				fail("%s: %s places no %s", where, other.ID, relocation.To)
 			}
 		}
 		for _, value := range m.Values {

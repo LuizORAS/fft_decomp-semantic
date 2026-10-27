@@ -298,6 +298,8 @@ data:
   - {addr: 0x800c0000, name: g_open_movie_mdec_output_buffer_0}
   - {addr: 0x800c2d00, name: g_open_movie_mdec_output_buffer_1}
   - {addr: 0x800c5a00, name: g_open_work_buffer_0}
+  - {addr: 0x800eda00, name: g_open_work_buffer_1}
+  - {addr: 0x80115a00, name: g_open_movie_cd_stream_ring_buffer}
 
 regions:
   - {addr: 0x800707f8, end: 0x8007348c, kind: data, why: "pointer table and zero-filled region; no decoded control transfer"}

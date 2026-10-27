@@ -253,7 +253,7 @@ func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, lay
 				}
 			}
 			if relocation, ok := relocations[addr]; ok {
-				if to, _ := resolver.resolve(m, relocation.To); to+relocation.Offset != value {
+				if to, _ := resolver.resolve(m, relocation.target()); to+relocation.Offset != value {
 					wrong = append(wrong, fmt.Sprintf("relocation 0x%08x holds 0x%08x, but %s+0x%x is 0x%08x", addr, value, relocation.To, relocation.Offset, to+relocation.Offset))
 				}
 				if inScope {
@@ -374,7 +374,7 @@ func relocCompareShifted(m *moduleSpec, layout linkLayout, original, shifted []b
 			case "bytes":
 				want := before
 				if relocation, ok := relocations[addr]; ok {
-					delta, ok := moved(relocation.To)
+					delta, ok := moved(relocation.target())
 					explained = ok
 					want += delta
 				}
@@ -467,7 +467,7 @@ func (p project) relocCheckModule(resolver symbolResolver, names relocNames, m *
 	if err != nil {
 		return report, err
 	}
-	linked, err := p.linkModule(resolver, m)
+	linked, err := p.linkModule(resolver, m, nil)
 	if err != nil {
 		return report, err
 	}

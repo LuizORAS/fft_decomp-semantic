@@ -970,7 +970,7 @@ data:
   - {addr: 0x801ecbb0, name: g_bunit_menu_list_entry_count}
 
 imports:
-  - {addr: 0x800222fc, name: memset}
+  - {addr: 0x800222fc, name: memset, in: main}
 
 overrides:
   - {function: bunit_menu_script_draw_textured_quad, name: g_equip_menu_list_row_height, addr: 0x801ec8c0}
@@ -1376,7 +1376,7 @@ data:
   - {addr: 0x801d92b8, name: g_card_menu_script_callback}
 
 imports:
-  - {addr: 0x800222fc, name: memset}
+  - {addr: 0x800222fc, name: memset, in: main}
 
 overrides:
   - {function: card_bits_read_primary, name: g_menu_bits_secondary_index, addr: 0x801ca944}
@@ -2249,7 +2249,7 @@ data:
   - {addr: 0x801e9350, name: g_equip_menu_list_entry_count}
 
 imports:
-  - {addr: 0x800222fc, name: memset}
+  - {addr: 0x800222fc, name: memset, in: main}
 
 overrides:
   - {function: equip_gfx_enqueue_tile, name: g_bunit_gfx_tile_count, addr: 0x801e9234}
@@ -2888,7 +2888,7 @@ data:
   - {addr: 0x801fa81c, name: g_jobstts_menu_script_conditions}
 
 imports:
-  - {addr: 0x800222fc, name: memset}
+  - {addr: 0x800222fc, name: memset, in: main}
 
 overrides:
   - {function: jobstts_bits_read_primary, name: g_menu_bits_secondary_index, addr: 0x801f0048}
@@ -3376,7 +3376,7 @@ data:
   - {addr: 0x801ddd84, name: g_require_reward_war_trophy_primitives}
 
 imports:
-  - {addr: 0x801dfe10, name: helpmenu_menu_run_require_help}
+  - {addr: 0x801dfe10, name: helpmenu_menu_run_require_help, in: event-helpmenu}
 
 overrides:
   - {function: menu_build_status_group_primitives, name: gfx_draw_or_append_gpu_primitive, addr: 0x8014a5e8}

@@ -1152,9 +1152,7 @@ data:
   - {addr: 0x800e01c0, name: g_world_card_save_file_name_1}
   - {addr: 0x800e01d4, name: g_world_card_save_file_name_0}
   - {addr: 0x800e01e8, name: g_world_card_save_title_template}
-  - {addr: 0x800eda00, name: g_open_work_buffer_1}
   - {addr: 0x8010042c, name: g_thread_call_saved_ra}
-  - {addr: 0x80115a00, name: g_open_movie_cd_stream_ring_buffer}
   - {addr: 0x8013a310, name: g_world_map_selected_tile_data}
   - {addr: 0x8013a31c, name: g_menu_selected_unit_status}
   - {addr: 0x8013a340, name: g_menu_comparison_unit_status}
@@ -2536,7 +2534,7 @@ data:
   - {addr: 0x801cd934, name: g_world_map_light_color_matrix}
 
 imports:
-  - {addr: 0x800222fc, name: memset}
+  - {addr: 0x800222fc, name: memset, in: main}
   - {addr: 0x801bf3b8, name: card_save_run_menu}
   - {addr: 0x801bf7e0, name: equip_entrypoint}
   - {addr: 0x801c05d4, name: etc_graphic_show_async}

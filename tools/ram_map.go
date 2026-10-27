@@ -215,6 +215,35 @@ func (ram *ramMap) moduleWindows(config *projectConfig) (map[string]*ramWindow, 
 	return windows, unknown
 }
 
+// resident reports whether modules a and b are in RAM together: a module is
+// with itself, and two modules are when a state lists both their windows (two
+// modules of one window replace each other). Without the map no two modules
+// are.
+func (config *projectConfig) resident(a, b string) bool {
+	if a == b {
+		return true
+	}
+	wa, wb := config.windows[a], config.windows[b]
+	if config.RAM == nil || wa == wb {
+		return false
+	}
+	for _, state := range config.RAM.States {
+		found := 0
+		for _, name := range state.Windows {
+			if name == wa {
+				found |= 1
+			}
+			if name == wb {
+				found |= 2
+			}
+		}
+		if found == 3 && wa != "" && wb != "" {
+			return true
+		}
+	}
+	return false
+}
+
 // validateRAMMap checks the windows (unique names, a start before the end, a
 // why), that each module loads at the start of exactly one window and ends
 // inside it, and the states (known windows, none overlapping another, every

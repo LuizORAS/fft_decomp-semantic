@@ -18,6 +18,7 @@ windows:
 
 states:
   - {name: opening, windows: [main, opening]}
+  - {name: opening_title, windows: [main, opening, world]}
   - {name: world, windows: [main, wldcore, world]}
   - {name: battle_menus, windows: [main, battle, companion, high]}
   - {name: battle_unit_screens, windows: [main, battle, unit_screens]}

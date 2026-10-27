@@ -129,13 +129,16 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 
 func TestLinkDataAssemblyWritesRelocatedWords(t *testing.T) {
 	m := linkTestModule()
-	m.Relocations = []relocationSpec{{Addr: 0x80100030, To: "g_test_a", Offset: 4}, {Addr: 0x80100024, To: "test_first"}}
+	m.Relocations = []relocationSpec{{Addr: 0x80100030, To: "g_test_a", Offset: 4}, {Addr: 0x80100024, To: "test_first"},
+		{Addr: 0x80100034, To: "effect_update", In: "effect-e259"}}
 	layout, err := moduleLinkLayout(m)
 	if err != nil {
 		t.Fatal(err)
 	}
+	// A relocation that names another module's object takes its qualified
+	// name, which the link binds from that module.
 	want := "\t.section .bytes_80100024, \"a\", @progbits\n\t.word test_first\n\t.incbin \"/disc/EVENT/TEST.OUT\", 40, 8\n" +
-		"\t.globl g_test_tail\ng_test_tail:\n\t.word g_test_a+0x4\n\t.incbin \"/disc/EVENT/TEST.OUT\", 52, 12\n"
+		"\t.globl g_test_tail\ng_test_tail:\n\t.word g_test_a+0x4\n\t.word effect_e259.effect_update\n\t.incbin \"/disc/EVENT/TEST.OUT\", 56, 8\n"
 	if data := linkDataAssembly(m, layout, "/disc/EVENT/TEST.OUT"); !strings.Contains(data, want) {
 		t.Fatalf("data assembly:\n%s", data)
 	}
@@ -153,6 +156,77 @@ func TestLinkDataAssemblyWritesRelocatedWords(t *testing.T) {
 	m.Relocations = []relocationSpec{{Addr: 0x80100008, To: "test_second"}}
 	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "not a word of the bytes") {
 		t.Fatalf("a relocation in code: %v", err)
+	}
+}
+
+// testOwnedMainYAML is MAIN with a row that names BATTLE's helper (In) and a
+// relocation to BATTLE's value, qualified with its module.
+const testOwnedMainYAML = testMainYAML + "  - {addr: 0x80067000, name: main_battle_helper, in: battle}\n" +
+	"\nrelocations:\n  - {addr: 0x80010300, to: g_battle_value, in: battle}\n"
+
+func TestSymbolResolverOwnersFollowResidentModules(t *testing.T) {
+	config, err := loadRAMTest(t, ramTestProject(t, testOwnedMainYAML, testRAMMapYAML, nil))
+	if err != nil {
+		t.Fatal(err)
+	}
+	main, _ := config.module("main")
+	if string(renderModuleConfig(main)) != testOwnedMainYAML {
+		t.Fatalf("not canonical:\n%s", renderModuleConfig(main))
+	}
+	resolver := newSymbolResolver(config)
+	attack, _ := config.module("event-attack")
+	for _, test := range []struct {
+		m     *moduleSpec
+		name  string
+		owner linkOwner
+		ok    bool
+	}{
+		{main, "main_battle_helper", linkOwner{"battle", "battle_helper"}, true},        // a row In battle
+		{main, "battle.g_battle_value", linkOwner{"battle", "g_battle_value"}, true},    // a qualified name
+		{attack, "battle_helper", linkOwner{"battle", "battle_helper"}, true},           // from a linked module
+		{attack, "main_first", linkOwner{"main", "main_first"}, true},                   // from MAIN
+		{attack, "g_main_value", linkOwner{}, false},                                    // its import outside every image
+		{attack, "event_card.card_entry", linkOwner{"event-card", "card_entry"}, false}, // one window: never together
+	} {
+		if owner, ok := resolver.owner(test.m, test.name); ok != test.ok || ok && owner != test.owner {
+			t.Fatalf("%s %s: %+v %v", test.m.ID, test.name, owner, ok)
+		}
+	}
+	if addr, ok := resolver.resolve(main, "battle.g_battle_value"); !ok || addr != 0x80067100 {
+		t.Fatalf("qualified name at 0x%08x %v", addr, ok)
+	}
+	// The second pass: BATTLE's link placed its helper 0x10 further.
+	bindings := map[string]uint32{"main_battle_helper": 0x80067000, "battle.g_battle_value": 0x80067100, "D_80020000": 0x80020000}
+	exports := map[string]map[string]uint32{"battle": {"battle_helper": 0x80067010, "g_battle_value": 0x80067100}}
+	values, owned, absolute := crossModuleValues(resolver, main, bindings, exports)
+	if len(values) != 1 || values["main_battle_helper"] != 0x80067010 || owned != 2 || absolute != 1 {
+		t.Fatalf("second pass: %x %d %d", values, owned, absolute)
+	}
+	if values, _, _ = crossModuleValues(resolver, main, bindings, nil); len(values) != 0 {
+		t.Fatalf("without BATTLE's link: %x", values)
+	}
+}
+
+func TestProjectConfigValidatesOwnedRows(t *testing.T) {
+	attack := strings.Replace(testEventYAML, "\noverrides:", "\nrelocations:\n  - {addr: 0x801bf010, to: card_entry, in: event-card}\n\noverrides:", 1)
+	for name, edit := range map[string][3]string{
+		"unknown module":  {"in: battle}\n", "in: nope}\n", "data main_battle_helper: nope is no other module"},
+		"its own module":  {"in: battle}\n", "in: main}\n", "data main_battle_helper: main is no other module"},
+		"in its own file": {"0x80067000, name: main_battle_helper", "0x80010104, name: main_battle_helper", "data main_battle_helper lies in the module's own file"},
+		"nothing there":   {"0x80067000, name: main_battle_helper", "0x80067004, name: main_battle_helper", "battle places no function or data row at 0x80067004"},
+		"no such object":  {"to: g_battle_value, in: battle", "to: g_battle_nothing, in: battle", "relocation 0x80010300: battle places no g_battle_nothing"},
+		"never together":  {"", "", "relocation 0x801bf010: event-card is never in RAM with event-attack"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			more := map[string]string{}
+			if edit[0] == "" {
+				more["target/event.yaml"] = attack
+			}
+			_, err := loadRAMTest(t, ramTestProject(t, strings.Replace(testOwnedMainYAML, edit[0], edit[1], 1), testRAMMapYAML, more))
+			if err == nil || !strings.Contains(err.Error(), edit[2]) {
+				t.Fatalf("invalid owner accepted: %v", err)
+			}
+		})
 	}
 }
 
@@ -379,7 +453,7 @@ func TestLinkModuleRebuildsTheOriginalImage(t *testing.T) {
 	}
 	sum := sha256.Sum256(image)
 	m.SHA256 = hex.EncodeToString(sum[:])
-	result, err := p.linkModule(resolver, m)
+	result, err := p.linkModule(resolver, m, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -401,18 +475,18 @@ func TestLinkModuleRebuildsTheOriginalImage(t *testing.T) {
 		t.Fatalf("relocated words:\n%s", data)
 	}
 	m.Relocations[0].To = "main_first"
-	if _, err := p.linkModule(resolver, m); err == nil || !strings.Contains(err.Error(), "linked image differs at file offset 0xb01") {
+	if _, err := p.linkModule(resolver, m, nil); err == nil || !strings.Contains(err.Error(), "linked image differs at file offset 0xb01") {
 		t.Fatalf("a relocation to the wrong symbol: %v", err)
 	}
 	m.Relocations[0].To = "main_second"
 	if err := os.Remove(path); err != nil {
 		t.Fatal(err)
 	}
-	if result, err = p.linkModule(resolver, m); err != nil || result.identical || !strings.Contains(result.checked, "3 function hashes") {
+	if result, err = p.linkModule(resolver, m, nil); err != nil || result.identical || !strings.Contains(result.checked, "3 function hashes") {
 		t.Fatalf("without the disc: %+v, %v", result, err)
 	}
 	m.Functions[1].Hash = "0000000000000000"
-	if _, err := p.linkModule(resolver, m); err == nil || !strings.Contains(err.Error(), "main_second differs") {
+	if _, err := p.linkModule(resolver, m, nil); err == nil || !strings.Contains(err.Error(), "main_second differs") {
 		t.Fatalf("wrong hash: %v", err)
 	}
 }

@@ -107,7 +107,7 @@ make share-audit [MODULE=x] # report shared C implementation candidates as JSON
 make twins [MODULE=x]      # group functions identical under renames across modules (needs the BIN)
 make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
 make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
-make link [MODULE=x]       # link each module whole from its objects and the bytes between them; compare with the original file (function hashes without the BIN); fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc in build/link/disc
+make link [MODULE=x]       # link each module whole from its objects and the bytes between them, taking each name another module places from that module's link (a second pass); compare with the original file (function hashes without the BIN); fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc in build/link/disc
 make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address or a disc sector and is neither relocation, disc or ram word nor value, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
@@ -162,14 +162,19 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
 - `data`: named addresses with no reconstruction (globals, library entry
   points). A data row inside a function names that place in the code and
   moves with it; one named with another module's prefix is that module's
-  object at a fixed address. A row's `page` is the high half of its address
+  object at a fixed address. A row or import outside the image that names
+  another module's object gives that module in `in`; `make link` takes its
+  address from that module's link while the two are in RAM together
+  (`ram.yaml` states). A row outside every image with no `in` is a fixed area
+  and keeps its address. A row's `page` is the high half of its address
   that code loads as a number where no symbol spelling matches the bytes;
   `make link` asserts the row stays in that page. `imports`: names from
   overlays that linking cannot otherwise reach. `overrides`: per-function
   bindings. `regions`: bytes deliberately left original, with the reason.
 - `relocations`: data words that hold an address, `{addr, to}` plus
   `offset` when the word points past the start of `to` (any name the module
-  resolves); `make link` writes each word from its symbol, so it follows the
+  resolves, or with `in` a function or data row that module places);
+  `make link` writes each word from its symbol, so it follows the
   symbol. `values`: words that look like RAM addresses or disc sectors but
   are not, `{addr, why}` for one word or `{addr, end, why}` for a range.
   Each word lies outside code and is classified once; `make reloc-check`
@@ -193,7 +198,10 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
   `[addr, end)` were one source file; each keeps its own source, and
   `make unit-check` rebuilds the unit from them.
 - Linking one function binds each name it uses from its own module, then
-  each `links` module in order, then main.
+  each `links` module in order, then main. `make link` then binds each name
+  another module places at the address that module's link gave it, when the
+  two are in RAM together; a name from a module never resident with it
+  (WORLD's copies of BATTLE and EVENT code) keeps its target address.
 
 `disc.yaml` is the disc: the volume, then every directory record, file and
 dummy (sectors the original mastering left empty) at its first sector
@@ -216,8 +224,9 @@ with `/` and `.` as `_`; `make check-config` fails when the header differs.
 load address (`addr`) to where the next thing resident with them starts
 (`end`, the reason in `why`); each module, listed by id or by family
 (`effect`), is in one window, starts at its start and ends by its end. A
-state lists the windows resident at one time, which never overlap.
-`make link` fails on an image that passes its window's end and prints the
+state lists the windows resident at one time, which never overlap; two
+modules are in RAM together when one state lists both their windows (two
+modules of one window never are). `make link` fails on an image that passes its window's end and prints the
 room each window has left. A window's size in code is
 `RAM_WINDOW_BYTES_<WINDOW>` and its start past another's
 `RAM_WINDOW_START_<WINDOW>_FROM_<OTHER>`, which `make config-fmt` writes to

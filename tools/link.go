@@ -138,7 +138,7 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 	}
 	var words []linkWord
 	for _, relocation := range m.Relocations {
-		expr := relocation.To
+		expr := relocation.target()
 		if relocation.Offset != 0 {
 			expr += fmt.Sprintf("+0x%x", relocation.Offset)
 		}
@@ -533,8 +533,10 @@ func linkObjects(script, elfPath string, inputs []string) error {
 // linkModule compiles every function of m to an object, writes the data
 // assembly and the linker script under build/link/<module>/, links them and
 // compares the image with the original file (or, without it, every function
-// and rodata range with its hash).
-func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult, error) {
+// and rodata range with its hash). Each name another module defines is bound
+// where target/ puts it, or at the address in values (another module's link
+// output, linkCommand's second pass).
+func (p project) linkModule(resolver symbolResolver, m *moduleSpec, values map[string]uint32) (linkResult, error) {
 	var result linkResult
 	layout, err := moduleLinkLayout(m)
 	if err != nil {
@@ -660,6 +662,11 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 			if addr, ok := resolver.resolve(m, name); ok && !defined[name] {
 				bindings[name] = addr
 			}
+		}
+	}
+	for name, value := range values {
+		if _, ok := bindings[name]; ok {
+			bindings[name] = value
 		}
 	}
 	script := filepath.Join(outDir, "link.ld")
@@ -808,6 +815,60 @@ func (p project) checkLinkedSizes(elfPath string, layout linkLayout) error {
 	return nil
 }
 
+// linkCrossModule is make link's second pass. Each name another module's link
+// places (symbolResolver.owner) takes the address that link gave it, and a
+// module whose bindings change links again. Sizes and places never depend on
+// those addresses, so the two passes settle every module; in the identical
+// build nothing changes. It returns how many names took another module's
+// address, how many stay where target/ puts them, and the modules linked
+// again.
+func (p project) linkCrossModule(resolver symbolResolver, modules []*moduleSpec, results map[string]linkResult) (int, int, []string, error) {
+	exports := make(map[string]map[string]uint32, len(results))
+	for id, result := range results {
+		symbols, err := elfSymbolValues(result.elf)
+		if err != nil {
+			return 0, 0, nil, err
+		}
+		exports[id] = symbols
+	}
+	followed, kept := 0, 0
+	var again []string
+	for _, m := range modules {
+		values, owned, absolute := crossModuleValues(resolver, m, results[m.ID].bindings, exports)
+		followed, kept = followed+owned, kept+absolute
+		if len(values) == 0 {
+			continue
+		}
+		result, err := p.linkModule(resolver, m, values)
+		if err != nil {
+			return followed, kept, again, fmt.Errorf("%s with other modules' addresses: %w", m.ID, err)
+		}
+		results[m.ID] = result
+		again = append(again, m.ID)
+	}
+	return followed, kept, again, nil
+}
+
+// crossModuleValues gives, of m's bindings, the ones whose owner's link
+// (exports, by module) placed them elsewhere, with the new address; it counts
+// the bindings an owner places and the ones that keep target/'s address.
+func crossModuleValues(resolver symbolResolver, m *moduleSpec, bindings map[string]uint32, exports map[string]map[string]uint32) (map[string]uint32, int, int) {
+	values := map[string]uint32{}
+	owned, absolute := 0, 0
+	for name, addr := range bindings {
+		owner, ok := resolver.owner(m, name)
+		if !ok {
+			absolute++
+			continue
+		}
+		owned++
+		if value, ok := exports[owner.module][owner.symbol]; ok && value != addr {
+			values[name] = value
+		}
+	}
+	return values, owned, absolute
+}
+
 func (p project) linkCommand(args []string) error {
 	flags := flag.NewFlagSet("link", flag.ContinueOnError)
 	selection := flags.String("module", "", "modules to link (default: all)")
@@ -831,24 +892,33 @@ func (p project) linkCommand(args []string) error {
 		return err
 	}
 	resolver := newSymbolResolver(config)
-	linked, failed := 0, 0
-	built := make(map[string]string, len(modules))
+	failed := 0
+	results := make(map[string]linkResult, len(modules))
 	var linkedModules []*moduleSpec
-	original := true
 	for _, m := range modules {
-		result, err := p.linkModule(resolver, m)
+		result, err := p.linkModule(resolver, m, nil)
 		if err != nil {
 			failed++
 			fmt.Fprintf(p.stdout(), "FAIL %s: %s\n", m.ID, strings.ReplaceAll(firstLines(err.Error(), 8), "\n", "\n     "))
 			continue
 		}
-		linked++
-		built[m.ID] = result.output
+		results[m.ID] = result
 		linkedModules = append(linkedModules, m)
-		original = original && result.identical
 		fmt.Fprintf(p.stdout(), "ok   %s (%d bytes, %s)\n", m.ID, m.Size, result.checked)
 	}
-	fmt.Fprintf(p.stdout(), "link: %d of %d modules linked whole and identical\n", linked, linked+failed)
+	followed, kept, again, err := p.linkCrossModule(resolver, linkedModules, results)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(p.stdout(), "cross-module: %d names at the address another module's link gives, %d where target/ puts them (fixed areas, modules never resident); %d modules linked again%s\n",
+		followed, kept, len(again), strings.Join(append([]string{""}, again...), " "))
+	built := make(map[string]string, len(results))
+	original := true
+	for id, result := range results {
+		built[id] = result.output
+		original = original && result.identical
+	}
+	fmt.Fprintf(p.stdout(), "link: %d of %d modules linked whole and identical\n", len(results), len(results)+failed)
 	if config.RAM != nil && len(linkedModules) > 0 {
 		fmt.Fprintln(p.stdout(), "ram: the room each window has left after its largest module")
 		for _, line := range ramRoom(config.RAM, config, linkedModules) {

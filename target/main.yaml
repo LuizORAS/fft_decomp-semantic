@@ -1458,25 +1458,25 @@ data:
   - {addr: 0x800662d0, name: g_main_status_check_sets}
   - {addr: 0x80066308, name: g_main_party_highest_level}
   - {addr: 0x80067000, name: g_main_low_overlay_window}
-  - {addr: 0x800670f0, name: open_system_run_main_loop}
-  - {addr: 0x8006720c, name: open_system_run_ending_cutscene}
-  - {addr: 0x800672f8, name: wldcore_entrypoint}
-  - {addr: 0x80079a98, name: battle_state_run_game_loop}
-  - {addr: 0x80093170, name: battle_map_color_field}
-  - {addr: 0x800a778c, name: g_main_system_game_flow_state}
-  - {addr: 0x800d0bbc, name: g_main_save_slot_buffer}
+  - {addr: 0x800670f0, name: open_system_run_main_loop, in: opening}
+  - {addr: 0x8006720c, name: open_system_run_ending_cutscene, in: opening}
+  - {addr: 0x800672f8, name: wldcore_entrypoint, in: wldcore}
+  - {addr: 0x80079a98, name: battle_state_run_game_loop, in: battle}
+  - {addr: 0x80093170, name: battle_map_color_field, in: battle}
+  - {addr: 0x800a778c, name: g_main_system_game_flow_state, in: battle}
+  - {addr: 0x800d0bbc, name: g_main_save_slot_buffer, in: wldcore}
   - {addr: 0x800e0000, name: g_main_world_overlay_window}
-  - {addr: 0x800e6edc, name: world_text_find_entry}
-  - {addr: 0x800ef25c, name: world_script_set_variable}
-  - {addr: 0x800fc55c, name: g_battle_render_buffers}
-  - {addr: 0x8010656c, name: world_menu_init_with_world_text}
-  - {addr: 0x8011a2d4, name: g_battle_gfx_current_render_buffer}
-  - {addr: 0x80132824, name: battle_text_find_entry}
-  - {addr: 0x8013b590, name: script_get_variable}
-  - {addr: 0x8013b644, name: script_set_variable}
-  - {addr: 0x8014a81c, name: battle_return_zero}
-  - {addr: 0x8018e9bc, name: battle_status_queue_graphics_change_if_executing}
-  - {addr: 0x801908cc, name: g_battle_unit_stats}
+  - {addr: 0x800e6edc, name: world_text_find_entry, in: world}
+  - {addr: 0x800ef25c, name: world_script_set_variable, in: world}
+  - {addr: 0x800fc55c, name: g_battle_render_buffers, in: battle}
+  - {addr: 0x8010656c, name: world_menu_init_with_world_text, in: world}
+  - {addr: 0x8011a2d4, name: g_battle_gfx_current_render_buffer, in: battle}
+  - {addr: 0x80132824, name: battle_text_find_entry, in: battle}
+  - {addr: 0x8013b590, name: script_get_variable, in: battle}
+  - {addr: 0x8013b644, name: script_set_variable, in: battle}
+  - {addr: 0x8014a81c, name: battle_return_zero, in: battle}
+  - {addr: 0x8018e9bc, name: battle_status_queue_graphics_change_if_executing, in: battle}
+  - {addr: 0x801908cc, name: g_battle_unit_stats, in: battle}
   - {addr: 0x801bf000, name: g_main_companion_overlay_window}
   - {addr: 0x801df000, name: g_main_high_overlay_window}
 

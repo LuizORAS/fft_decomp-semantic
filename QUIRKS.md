@@ -1107,6 +1107,19 @@ translation unit. Share their types and constants through headers.
   absolute data addresses 0x80173cbc, 0x8017403c, 0x80174048 and 0x8017404c.
   In WORLD's image those lie inside the text file embedded at 0x8016ee68, so
   the routines would read and write text bytes there.
+- WORLD's copies of BATTLE and EVENT code bind 117 of those modules' names at
+  their original addresses, and `make link` keeps them there: neither module
+  is ever in RAM with WORLD. Of the 93 WORLD functions that name one, 70 are
+  unreachable from code that runs; the other 23 are reached only through the
+  menu tables WORLD copied from BATTLE or the text thread. With WORLD loaded
+  each address lies inside WLDCORE code or WORLD data, never on the routine,
+  so no working path depends on them.
+- `helpmenu_menu_run_battle_help` and `helpmenu_menu_run_require_help` test
+  `g_helpmenu_selected_unit_panel_mode`, a fixed halfword at 0x801ce8fe in the
+  companion window: BUNIT's `g_bunit_panel_selected_billboard` + 2 while BUNIT
+  is loaded, and whatever the overlay there holds otherwise (0xb6d9 in
+  REQUIRE's file), which adds the navigation between help entries 2 and 7.
+  `make link` keeps the address fixed.
 - `g_main_terrain_geomancy_abilities` gives Gusty Wind for Sky and Kamaitachi
   for Darkness, Cross section and the unnamed surfaces 0x2f-0x3e; the terrain
   help text says "None" for Sky, Darkness and Cross section.

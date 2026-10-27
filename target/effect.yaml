@@ -15,6 +15,7 @@ functions:
 
 data:
   - {addr: 0x801c44a8, name: g_effect_particle_ribbon_short_brightness_table}
+  - {addr: 0x801c4580, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4580, end: 0x801cf024, why: "effect data from the file header on"}
@@ -35,6 +36,7 @@ functions:
 data:
   - {addr: 0x801c5174, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c524c, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c52f4, name: g_effect_file_header}
 ---
 module: effect-e005
 file: EFFECT/E005.BIN
@@ -50,6 +52,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e006
 file: EFFECT/E006.BIN
@@ -65,6 +68,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e007
 file: EFFECT/E007.BIN
@@ -80,6 +84,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e015
 file: EFFECT/E015.BIN
@@ -99,6 +104,7 @@ data:
   - {addr: 0x801c573c, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c5814, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c585c, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c58e8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c58e8, end: 0x801d998c, why: "effect data from the file header on"}
@@ -119,6 +125,7 @@ functions:
 data:
   - {addr: 0x801c47e8, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c4890, name: g_effect_wave_mesh_brightness_table}
+  - {addr: 0x801c498c, name: g_effect_file_header}
 ---
 module: effect-e035
 file: EFFECT/E035.BIN
@@ -136,6 +143,7 @@ functions:
 data:
   - {addr: 0x801c47e8, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c4890, name: g_effect_wave_mesh_brightness_table}
+  - {addr: 0x801c498c, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c498c, end: 0x801d7fcc, why: "effect data from the file header on"}
@@ -154,6 +162,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e047
 file: EFFECT/E047.BIN
@@ -169,6 +178,7 @@ functions:
 
 data:
   - {addr: 0x801c2c74, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2d00, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c2d00, end: 0x801d6660, why: "effect data from the file header on"}
@@ -191,6 +201,7 @@ data:
   - {addr: 0x801c58e8, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c5974, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c5a1c, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c5af4, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c5af4, end: 0x801da6a0, why: "effect data from the file header on"}
@@ -211,6 +222,7 @@ functions:
 data:
   - {addr: 0x801c416c, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c4244, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c42d0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c42d0, end: 0x801d809c, why: "effect data from the file header on"}
@@ -230,6 +242,7 @@ functions:
 data:
   - {addr: 0x801c3c10, name: g_effect_tube_mesh_brightness_table}
   - {addr: 0x801c3ce8, name: g_effect_tube_mesh_ring_scales}
+  - {addr: 0x801c3cfc, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3cfc, end: 0x801d7cbc, why: "effect data from the file header on"}
@@ -248,6 +261,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801cfac4, why: "effect data from the file header on"}
@@ -270,6 +284,7 @@ data:
   - {addr: 0x801c6390, name: g_effect_particle_ribbon_long_brightness_table}
   - {addr: 0x801c656c, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c6614, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c66a0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c66a0, end: 0x801db850, why: "effect data from the file header on"}
@@ -294,6 +309,7 @@ functions:
 data:
   - {addr: 0x801c3f74, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c4000, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c40d8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c40d8, end: 0x801d8ae4, why: "effect data from the file header on"}
@@ -312,6 +328,7 @@ functions:
 
 data:
   - {addr: 0x801c2c74, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2d00, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c2d00, end: 0x801d6730, why: "effect data from the file header on"}
@@ -332,6 +349,7 @@ functions:
 data:
   - {addr: 0x801c4564, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c463c, name: g_effect_wave_mesh_brightness_table}
+  - {addr: 0x801c4738, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4738, end: 0x801d8adc, why: "effect data from the file header on"}
@@ -358,6 +376,7 @@ data:
   - {addr: 0x801c546c, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c54f8, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c55d0, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c56a8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c56a8, end: 0x801d9580, why: "effect data from the file header on"}
@@ -376,6 +395,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801d8010, why: "effect data from the file header on"}
@@ -397,6 +417,7 @@ functions:
 data:
   - {addr: 0x801c676c, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c6814, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c68ec, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c68ec, end: 0x801db030, why: "effect data from the file header on"}
@@ -417,6 +438,7 @@ functions:
 data:
   - {addr: 0x801c4564, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c463c, name: g_effect_wave_mesh_brightness_table}
+  - {addr: 0x801c4738, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4738, end: 0x801d912c, why: "effect data from the file header on"}
@@ -439,6 +461,7 @@ data:
   - {addr: 0x801c4db0, name: g_effect_wave_mesh_brightness_table}
   - {addr: 0x801c4eac, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c4ef4, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c4f80, name: g_effect_file_header}
 ---
 module: effect-e088
 file: EFFECT/E088.BIN
@@ -454,6 +477,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 ---
 module: effect-e089
 file: EFFECT/E089.BIN
@@ -469,6 +493,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 ---
 module: effect-e090
 file: EFFECT/E090.BIN
@@ -484,6 +509,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 ---
 module: effect-e091
 file: EFFECT/E091.BIN
@@ -499,6 +525,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 ---
 module: effect-e092
 file: EFFECT/E092.BIN
@@ -514,6 +541,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3b18, end: 0x801cf3e4, why: "effect data from the file header on"}
@@ -532,6 +560,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 ---
 module: effect-e094
 file: EFFECT/E094.BIN
@@ -547,6 +576,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 ---
 module: effect-e134
 file: EFFECT/E134.BIN
@@ -564,6 +594,7 @@ functions:
 data:
   - {addr: 0x801c4fc8, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5010, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c50e8, name: g_effect_file_header}
 ---
 module: effect-e138
 file: EFFECT/E138.BIN
@@ -579,6 +610,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801cf2c8, why: "effect data from the file header on"}
@@ -594,6 +626,9 @@ links: [battle]
 
 functions:
   - {addr: 0x801c2500, size: 5624, name: effect_update_particle_trails, hash: 5dd38672ebdee544}
+
+data:
+  - {addr: 0x801c3af8, name: g_effect_file_header}
 ---
 module: effect-e167
 file: EFFECT/E167.BIN
@@ -609,6 +644,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801ce8e0, why: "effect data from the file header on"}
@@ -631,6 +667,7 @@ data:
   - {addr: 0x801c573c, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c5814, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c585c, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c58e8, name: g_effect_file_header}
 ---
 module: effect-e176
 file: EFFECT/E176.BIN
@@ -646,6 +683,7 @@ functions:
 
 data:
   - {addr: 0x801c3c7c, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c3d24, name: g_effect_file_header}
 ---
 module: effect-e193
 file: EFFECT/E193.BIN
@@ -661,6 +699,7 @@ functions:
 
 data:
   - {addr: 0x801c3c7c, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c3d24, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3d24, end: 0x801ceb64, why: "effect data from the file header on"}
@@ -679,6 +718,7 @@ functions:
 
 data:
   - {addr: 0x801c2c74, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2d00, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c2d00, end: 0x801d64bc, why: "effect data from the file header on"}
@@ -697,6 +737,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801d7ce0, why: "effect data from the file header on"}
@@ -719,6 +760,7 @@ data:
   - {addr: 0x801c3f5c, name: g_effect_textured_quad_grid_8x8_brightness_table}
   - {addr: 0x801c4058, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c40e4, name: g_effect_wave_mesh_brightness_table}
+  - {addr: 0x801c41e0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c41e0, end: 0x801d793c, why: "effect data from the file header on"}
@@ -737,6 +779,7 @@ functions:
 
 data:
   - {addr: 0x801c3c7c, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c3d24, name: g_effect_file_header}
 ---
 module: effect-e235
 file: EFFECT/E235.BIN
@@ -754,6 +797,7 @@ functions:
 data:
   - {addr: 0x801c4244, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c42d0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c4318, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4318, end: 0x801d7a14, why: "effect data from the file header on"}
@@ -772,6 +816,7 @@ functions:
 
 data:
   - {addr: 0x801c2c74, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2d00, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c2d00, end: 0x801d6910, why: "effect data from the file header on"}
@@ -790,6 +835,7 @@ functions:
 
 data:
   - {addr: 0x801c3c7c, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c3d24, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3d24, end: 0x801d8168, why: "effect data from the file header on"}
@@ -810,6 +856,7 @@ functions:
 data:
   - {addr: 0x801c43f0, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c447c, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c4524, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4524, end: 0x801d90e4, why: "effect data from the file header on"}
@@ -834,6 +881,7 @@ data:
   - {addr: 0x801c7960, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c79ec, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c7ac4, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c7b6c, name: g_effect_file_header}
 ---
 module: effect-e244
 file: EFFECT/E244.BIN
@@ -849,6 +897,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801d77e4, why: "effect data from the file header on"}
@@ -869,6 +918,7 @@ functions:
 data:
   - {addr: 0x801c43f0, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c4498, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c4524, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4524, end: 0x801cf8f8, why: "effect data from the file header on"}
@@ -887,6 +937,7 @@ functions:
 
 data:
   - {addr: 0x801c3ad0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c3b18, name: g_effect_file_header}
 ---
 module: effect-e247
 file: EFFECT/E247.BIN
@@ -902,6 +953,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e248
 file: EFFECT/E248.BIN
@@ -917,6 +969,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e249
 file: EFFECT/E249.BIN
@@ -932,6 +985,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801cf41c, why: "effect data from the file header on"}
@@ -950,6 +1004,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e256
 file: EFFECT/E256.BIN
@@ -967,6 +1022,7 @@ functions:
 data:
   - {addr: 0x801c4fc8, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c50a0, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c50e8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c50e8, end: 0x801d1dfc, why: "effect data from the file header on"}
@@ -985,6 +1041,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e258
 file: EFFECT/E258.BIN
@@ -1000,6 +1057,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 ---
 module: effect-e259
 file: EFFECT/E259.BIN
@@ -1021,6 +1079,7 @@ functions:
 data:
   - {addr: 0x801c4cf8, name: g_effect_dome_mesh_brightness_table}
   - {addr: 0x801c4dd0, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c4ea8, name: g_effect_file_header}
 ---
 module: effect-e314
 file: EFFECT/E314.BIN
@@ -1036,6 +1095,7 @@ functions:
 
 data:
   - {addr: 0x801c2c74, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2d00, name: g_effect_file_header}
 ---
 module: effect-e317
 file: EFFECT/E317.BIN
@@ -1054,6 +1114,7 @@ data:
   - {addr: 0x801c5bb0, name: g_effect_particle_ribbon_short_brightness_table}
   - {addr: 0x801c5c88, name: g_effect_tube_mesh_brightness_table}
   - {addr: 0x801c5d60, name: g_effect_tube_mesh_ring_scales}
+  - {addr: 0x801c5d74, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c5d74, end: 0x801ccf10, why: "effect data from the file header on"}
@@ -1072,6 +1133,7 @@ functions:
 
 data:
   - {addr: 0x801c44a0, name: g_effect_particle_ribbon_short_brightness_table}
+  - {addr: 0x801c4578, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4578, end: 0x801cb1b0, why: "effect data from the file header on"}
@@ -1094,6 +1156,7 @@ functions:
 
 data:
   - {addr: 0x801c3800, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c38d8, name: g_effect_file_header}
 ---
 module: effect-e341
 file: EFFECT/E341.BIN
@@ -1110,6 +1173,7 @@ functions:
 data:
   - {addr: 0x801c3c10, name: g_effect_tube_mesh_brightness_table}
   - {addr: 0x801c3ce8, name: g_effect_tube_mesh_ring_scales}
+  - {addr: 0x801c3cfc, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3cfc, end: 0x801caa4c, why: "effect data from the file header on"}
@@ -1128,6 +1192,7 @@ functions:
 
 data:
   - {addr: 0x801c44a0, name: g_effect_particle_ribbon_short_brightness_table}
+  - {addr: 0x801c4578, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4578, end: 0x801cf5a8, why: "effect data from the file header on"}
@@ -1148,6 +1213,7 @@ functions:
 data:
   - {addr: 0x801c5a70, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5ab8, name: g_effect_particle_ribbon_short_brightness_table}
+  - {addr: 0x801c5b90, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c5b90, end: 0x801d13e4, why: "effect data from the file header on"}
@@ -1172,6 +1238,7 @@ functions:
 data:
   - {addr: 0x801c4dd0, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c4e18, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c4ef0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4ef0, end: 0x801d0eb8, why: "effect data from the file header on"}
@@ -1190,6 +1257,7 @@ functions:
 
 data:
   - {addr: 0x801c46dc, name: g_effect_tentacle_mesh_brightness_table}
+  - {addr: 0x801c47b4, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c47b4, end: 0x801cb46c, why: "effect data from the file header on"}
@@ -1208,6 +1276,7 @@ functions:
 
 data:
   - {addr: 0x801c46dc, name: g_effect_tentacle_mesh_brightness_table}
+  - {addr: 0x801c47b4, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c47b4, end: 0x801cbb14, why: "effect data from the file header on"}
@@ -1226,6 +1295,7 @@ functions:
 
 data:
   - {addr: 0x801c46dc, name: g_effect_tentacle_mesh_brightness_table}
+  - {addr: 0x801c47b4, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c47b4, end: 0x801cb788, why: "effect data from the file header on"}
@@ -1249,6 +1319,7 @@ data:
   - {addr: 0x801c6720, name: g_effect_ring_stack_mesh_brightness_table}
   - {addr: 0x801c67f8, name: g_effect_tube_mesh_brightness_table}
   - {addr: 0x801c68d0, name: g_effect_tube_mesh_ring_scales}
+  - {addr: 0x801c68e4, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c68e4, end: 0x801ce0e0, why: "effect data from the file header on"}
@@ -1271,6 +1342,7 @@ data:
   - {addr: 0x801c65cc, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c6674, name: g_effect_tentacle_mesh_brightness_table}
   - {addr: 0x801c674c, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c67d8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c67d8, end: 0x801da33c, why: "effect data from the file header on"}
@@ -1289,6 +1361,7 @@ functions:
 
 data:
   - {addr: 0x801c2c74, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2d00, name: g_effect_file_header}
 ---
 module: effect-e395
 file: EFFECT/E395.BIN
@@ -1304,6 +1377,7 @@ functions:
 
 data:
   - {addr: 0x801c39f8, name: g_effect_ring_stack_mesh_brightness_table}
+  - {addr: 0x801c3ad0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3ad0, end: 0x801caed0, why: "effect data from the file header on"}
@@ -1322,6 +1396,7 @@ functions:
 
 data:
   - {addr: 0x801c46dc, name: g_effect_tentacle_mesh_brightness_table}
+  - {addr: 0x801c47b4, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c47b4, end: 0x801ce048, why: "effect data from the file header on"}
@@ -1340,6 +1415,7 @@ functions:
 
 data:
   - {addr: 0x801c44a0, name: g_effect_particle_ribbon_short_brightness_table}
+  - {addr: 0x801c4578, name: g_effect_file_header}
 ---
 module: effect-e403
 file: EFFECT/E403.BIN
@@ -1355,6 +1431,7 @@ functions:
 
 data:
   - {addr: 0x801c44a0, name: g_effect_particle_ribbon_long_brightness_table}
+  - {addr: 0x801c467c, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c467c, end: 0x801d8c88, why: "effect data from the file header on"}
@@ -1375,6 +1452,7 @@ functions:
 data:
   - {addr: 0x801c43f0, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c447c, name: g_effect_polar_mesh_brightness_table}
+  - {addr: 0x801c4524, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4524, end: 0x801d8ed0, why: "effect data from the file header on"}
@@ -1395,6 +1473,7 @@ functions:
 data:
   - {addr: 0x801c5c1c, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c5cc4, name: g_effect_particle_ribbon_short_brightness_table}
+  - {addr: 0x801c5d9c, name: g_effect_file_header}
 ---
 module: effect-e411
 file: EFFECT/E411.BIN
@@ -1410,6 +1489,7 @@ functions:
 
 data:
   - {addr: 0x801c3854, name: g_effect_single_ring_mesh_brightness_table}
+  - {addr: 0x801c3884, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3884, end: 0x801ce9c4, why: "effect data from the file header on"}
@@ -1430,6 +1510,7 @@ functions:
 data:
   - {addr: 0x801c4c14, name: g_effect_particle_ribbon_long_brightness_table}
   - {addr: 0x801c4df0, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c4e7c, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4e7c, end: 0x801d0048, why: "effect data from the file header on"}
@@ -1452,6 +1533,7 @@ functions:
 data:
   - {addr: 0x801c436c, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c43f8, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c4440, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c4440, end: 0x801d140c, why: "effect data from the file header on"}
@@ -1471,6 +1553,7 @@ functions:
 
 data:
   - {addr: 0x801c50c8, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c5110, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c5110, end: 0x801d15b8, why: "effect data from the file header on"}
@@ -1497,6 +1580,7 @@ data:
   - {addr: 0x801c554c, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5594, name: g_effect_dome_mesh_brightness_table}
   - {addr: 0x801c566c, name: g_effect_textured_quad_grid_2x2_brightness_table}
+  - {addr: 0x801c56c0, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c56c0, end: 0x801d1590, why: "effect data from the file header on"}
@@ -1520,6 +1604,7 @@ data:
   - {addr: 0x801c6b04, name: g_effect_tentacle_mesh_brightness_table}
   - {addr: 0x801c6bdc, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c6c84, name: g_effect_wave_mesh_brightness_table}
+  - {addr: 0x801c6d80, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c6d80, end: 0x801d313c, why: "effect data from the file header on"}
@@ -1547,6 +1632,7 @@ data:
   - {addr: 0x801c48dd, name: g_effect_e454_particle_work_offset_scale_64}
   - {addr: 0x801c48f4, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c499c, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c4a28, name: g_effect_file_header}
 ---
 module: effect-e455
 file: EFFECT/E455.BIN
@@ -1562,6 +1648,9 @@ functions:
   - {addr: 0x801c2604, size: 260, name: effect_map_set_3d_objects_state_2, hash: 488bc19ae1b5f90f}
   - {addr: 0x801c2708, size: 148, name: effect_map_unfreeze, hash: 816d3ed7ef0dcafa}
   - {addr: 0x801c279c, size: 148, name: effect_map_freeze, hash: b055bca9b224bb19}
+
+data:
+  - {addr: 0x801c2830, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c2830, end: 0x801cebb0, why: "effect data from the file header on"}
@@ -1583,6 +1672,7 @@ functions:
 
 data:
   - {addr: 0x801c3240, name: g_effect_wave_mesh_brightness_table}
+  - {addr: 0x801c333c, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c333c, end: 0x801cf0dc, why: "effect data from the file header on"}
@@ -1602,6 +1692,7 @@ functions:
 
 data:
   - {addr: 0x801c2d1c, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2da8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c2da8, end: 0x801cead0, why: "effect data from the file header on"}
@@ -1620,6 +1711,7 @@ functions:
 
 data:
   - {addr: 0x801c2c74, name: g_effect_textured_quad_grid_4x4_brightness_table}
+  - {addr: 0x801c2d00, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c2d00, end: 0x801cebd8, why: "effect data from the file header on"}
@@ -1642,6 +1734,7 @@ data:
   - {addr: 0x801c71ec, name: g_effect_particle_ribbon_long_brightness_table}
   - {addr: 0x801c73c8, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c7470, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c74b8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c74b8, end: 0x801d3590, why: "effect data from the file header on"}
@@ -1664,6 +1757,7 @@ data:
   - {addr: 0x801c71ec, name: g_effect_particle_ribbon_long_brightness_table}
   - {addr: 0x801c73c8, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c7470, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c74b8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c74b8, end: 0x801d3590, why: "effect data from the file header on"}
@@ -1686,6 +1780,7 @@ data:
   - {addr: 0x801c71ec, name: g_effect_particle_ribbon_long_brightness_table}
   - {addr: 0x801c73c8, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c7470, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c74b8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c74b8, end: 0x801d3590, why: "effect data from the file header on"}
@@ -1714,6 +1809,7 @@ data:
   - {addr: 0x801c4e9c, name: g_effect_single_ring_mesh_brightness_table}
   - {addr: 0x801c4ecc, name: g_effect_e464_altima_transformation_vertex_locations}
   - {addr: 0x801c4ecd, name: g_effect_e464_particle_work_offset_scale_64}
+  - {addr: 0x801c4ed4, name: g_effect_file_header}
 ---
 module: effect-e465
 file: EFFECT/E465.BIN
@@ -1733,6 +1829,7 @@ data:
   - {addr: 0x801c71ec, name: g_effect_particle_ribbon_long_brightness_table}
   - {addr: 0x801c73c8, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c7470, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c74b8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c74b8, end: 0x801d3590, why: "effect data from the file header on"}
@@ -1755,6 +1852,7 @@ data:
   - {addr: 0x801c71ec, name: g_effect_particle_ribbon_long_brightness_table}
   - {addr: 0x801c73c8, name: g_effect_polar_mesh_brightness_table}
   - {addr: 0x801c7470, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c74b8, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c74b8, end: 0x801d3590, why: "effect data from the file header on"}
@@ -1773,6 +1871,7 @@ functions:
 
 data:
   - {addr: 0x801c3e5c, name: g_effect_anchored_polar_mesh_brightness_table}
+  - {addr: 0x801c3f04, name: g_effect_file_header}
 ---
 module: effect-e468
 file: EFFECT/E468.BIN
@@ -1788,6 +1887,7 @@ functions:
 
 data:
   - {addr: 0x801c3e5c, name: g_effect_anchored_polar_mesh_brightness_table}
+  - {addr: 0x801c3f04, name: g_effect_file_header}
 ---
 module: effect-e469
 file: EFFECT/E469.BIN
@@ -1803,6 +1903,7 @@ functions:
 
 data:
   - {addr: 0x801c3e5c, name: g_effect_anchored_polar_mesh_brightness_table}
+  - {addr: 0x801c3f04, name: g_effect_file_header}
 ---
 module: effect-e471
 file: EFFECT/E471.BIN
@@ -1818,6 +1919,7 @@ functions:
 
 data:
   - {addr: 0x801c3e5c, name: g_effect_anchored_polar_mesh_brightness_table}
+  - {addr: 0x801c3f04, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3f04, end: 0x801cf31c, why: "effect data from the file header on"}
@@ -1836,6 +1938,7 @@ functions:
 
 data:
   - {addr: 0x801c3e5c, name: g_effect_anchored_polar_mesh_brightness_table}
+  - {addr: 0x801c3f04, name: g_effect_file_header}
 ---
 module: effect-e473
 file: EFFECT/E473.BIN
@@ -1851,6 +1954,7 @@ functions:
 
 data:
   - {addr: 0x801c2c7c, name: g_effect_textured_quad_grid_8x8_brightness_table}
+  - {addr: 0x801c2d78, name: g_effect_file_header}
 ---
 module: effect-e474
 file: EFFECT/E474.BIN
@@ -1874,6 +1978,7 @@ data:
   - {addr: 0x801c554c, name: g_effect_textured_quad_grid_8x8_brightness_table}
   - {addr: 0x801c5648, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5690, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c5768, name: g_effect_file_header}
 ---
 module: effect-e475
 file: EFFECT/E475.BIN
@@ -1897,6 +2002,7 @@ data:
   - {addr: 0x801c554c, name: g_effect_textured_quad_grid_8x8_brightness_table}
   - {addr: 0x801c5648, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5690, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c5768, name: g_effect_file_header}
 ---
 module: effect-e476
 file: EFFECT/E476.BIN
@@ -1920,6 +2026,7 @@ data:
   - {addr: 0x801c554c, name: g_effect_textured_quad_grid_8x8_brightness_table}
   - {addr: 0x801c5648, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5690, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c5768, name: g_effect_file_header}
 ---
 module: effect-e477
 file: EFFECT/E477.BIN
@@ -1943,6 +2050,7 @@ data:
   - {addr: 0x801c554c, name: g_effect_textured_quad_grid_8x8_brightness_table}
   - {addr: 0x801c5648, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5690, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c5768, name: g_effect_file_header}
 ---
 module: effect-e478
 file: EFFECT/E478.BIN
@@ -1966,6 +2074,7 @@ data:
   - {addr: 0x801c554c, name: g_effect_textured_quad_grid_8x8_brightness_table}
   - {addr: 0x801c5648, name: g_effect_ring_mesh_brightness_table}
   - {addr: 0x801c5690, name: g_effect_dome_mesh_brightness_table}
+  - {addr: 0x801c5768, name: g_effect_file_header}
 ---
 module: effect-e480
 file: EFFECT/E480.BIN
@@ -1985,6 +2094,7 @@ functions:
 data:
   - {addr: 0x801c436c, name: g_effect_textured_quad_grid_4x4_brightness_table}
   - {addr: 0x801c43f8, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c4440, name: g_effect_file_header}
 ---
 module: effect-e481
 file: EFFECT/E481.BIN
@@ -2000,6 +2110,7 @@ functions:
 
 data:
   - {addr: 0x801c2c7c, name: g_effect_textured_quad_grid_2x2_brightness_table}
+  - {addr: 0x801c2cd0, name: g_effect_file_header}
 ---
 module: effect-e482
 file: EFFECT/E482.BIN
@@ -2015,6 +2126,7 @@ functions:
 
 data:
   - {addr: 0x801c2c7c, name: g_effect_textured_quad_grid_2x2_brightness_table}
+  - {addr: 0x801c2cd0, name: g_effect_file_header}
 ---
 module: effect-e483
 file: EFFECT/E483.BIN
@@ -2030,6 +2142,7 @@ functions:
 
 data:
   - {addr: 0x801c3854, name: g_effect_single_ring_mesh_brightness_table}
+  - {addr: 0x801c3884, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c3884, end: 0x801ce9c4, why: "effect data from the file header on"}
@@ -2049,6 +2162,7 @@ functions:
 
 data:
   - {addr: 0x801c50c8, name: g_effect_ring_mesh_brightness_table}
+  - {addr: 0x801c5110, name: g_effect_file_header}
 
 values:
   - {addr: 0x801c5110, end: 0x801d1810, why: "effect data from the file header on"}

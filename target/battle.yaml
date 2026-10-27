@@ -3020,28 +3020,28 @@ data:
   - {addr: 0x801cc074, name: g_battle_menu_scratch_buffer}
 
 imports:
-  - {addr: 0x801bf3b8, name: card_save_run_menu}
-  - {addr: 0x801bf7e0, name: equip_entrypoint}
-  - {addr: 0x801c05d4, name: etc_graphic_show_async}
-  - {addr: 0x801c1a3c, name: option_entrypoint}
-  - {addr: 0x801c3078, name: attack_deploy_find_fieldable_units}
-  - {addr: 0x801c3190, name: bunit_entrypoint}
-  - {addr: 0x801c34b4, name: attack_scenario_load_conditionals}
-  - {addr: 0x801c3b00, name: attack_sound_resync_scenario_music_and_apply_map_darkness}
-  - {addr: 0x801c3d84, name: debugchr_editor_run_unit_thread}
-  - {addr: 0x801c3f44, name: attack_deploy_run_screen}
-  - {addr: 0x801c438c, name: debugchr_editor_run_session}
-  - {addr: 0x801c5a50, name: attack_deploy_get_coordinate_slots}
-  - {addr: 0x801c7fe4, name: attack_gfx_build_formation_sprites}
-  - {addr: 0x801c8004, name: attack_gfx_load_portraits}
-  - {addr: 0x801c9488, name: attack_text_build_deployment_strings}
-  - {addr: 0x801c9d68, name: attack_map_show_title}
-  - {addr: 0x801c9ec0, name: attack_map_load_title_graphic}
-  - {addr: 0x801ca664, name: require_bonus_run_dark_screen_burst}
-  - {addr: 0x801cafd4, name: require_condition_dispatch}
-  - {addr: 0x801d7000, name: small_text_init_battle_pointers}
-  - {addr: 0x801df050, name: helpmenu_menu_run_battle_help}
-  - {addr: 0x801df198, name: jobstts_entrypoint}
+  - {addr: 0x801bf3b8, name: card_save_run_menu, in: event-card}
+  - {addr: 0x801bf7e0, name: equip_entrypoint, in: event-equip}
+  - {addr: 0x801c05d4, name: etc_graphic_show_async, in: event-etc}
+  - {addr: 0x801c1a3c, name: option_entrypoint, in: event-option}
+  - {addr: 0x801c3078, name: attack_deploy_find_fieldable_units, in: event-attack}
+  - {addr: 0x801c3190, name: bunit_entrypoint, in: event-bunit}
+  - {addr: 0x801c34b4, name: attack_scenario_load_conditionals, in: event-attack}
+  - {addr: 0x801c3b00, name: attack_sound_resync_scenario_music_and_apply_map_darkness, in: event-attack}
+  - {addr: 0x801c3d84, name: debugchr_editor_run_unit_thread, in: event-debugchr}
+  - {addr: 0x801c3f44, name: attack_deploy_run_screen, in: event-attack}
+  - {addr: 0x801c438c, name: debugchr_editor_run_session, in: event-debugchr}
+  - {addr: 0x801c5a50, name: attack_deploy_get_coordinate_slots, in: event-attack}
+  - {addr: 0x801c7fe4, name: attack_gfx_build_formation_sprites, in: event-attack}
+  - {addr: 0x801c8004, name: attack_gfx_load_portraits, in: event-attack}
+  - {addr: 0x801c9488, name: attack_text_build_deployment_strings, in: event-attack}
+  - {addr: 0x801c9d68, name: attack_map_show_title, in: event-attack}
+  - {addr: 0x801c9ec0, name: attack_map_load_title_graphic, in: event-attack}
+  - {addr: 0x801ca664, name: require_bonus_run_dark_screen_burst, in: event-require}
+  - {addr: 0x801cafd4, name: require_condition_dispatch, in: event-require}
+  - {addr: 0x801d7000, name: small_text_init_battle_pointers, in: event-small}
+  - {addr: 0x801df050, name: helpmenu_menu_run_battle_help, in: event-helpmenu}
+  - {addr: 0x801df198, name: jobstts_entrypoint, in: event-jobstts}
 
 overrides:
   - {function: battle_camera_set_zoom_delta_from_values, name: g_battle_camera_real_coord_countdown, addr: 0x80096164}
@@ -3635,14 +3635,14 @@ relocations:
   - {addr: 0x8018f798, to: battle_formula_lower_brave_y_without_faith}
   - {addr: 0x8018f79c, to: battle_formula_throw_damage_sp_times_wp}
   - {addr: 0x8018f7a0, to: battle_formula_jump_damage_pa_times_wp}
-  - {addr: 0x801b48d0, to: g_battle_effect_overlay_window, offset: 0x2080}
+  - {addr: 0x801b48d0, to: g_effect_file_header, in: effect-e000}
   - {addr: 0x801b48d4, to: g_battle_effect_overlay_window}
   - {addr: 0x801b48d8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b48dc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b48e0, to: g_battle_effect_overlay_window, offset: 0x2df4}
-  - {addr: 0x801b48e4, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b48e8, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b48ec, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b48e0, to: g_effect_file_header, in: effect-e004}
+  - {addr: 0x801b48e4, to: g_effect_file_header, in: effect-e005}
+  - {addr: 0x801b48e8, to: g_effect_file_header, in: effect-e006}
+  - {addr: 0x801b48ec, to: g_effect_file_header, in: effect-e007}
   - {addr: 0x801b48f0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b48f4, to: g_battle_effect_overlay_window}
   - {addr: 0x801b48f8, to: g_battle_effect_overlay_window}
@@ -3650,7 +3650,7 @@ relocations:
   - {addr: 0x801b4900, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4904, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4908, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b490c, to: g_battle_effect_overlay_window, offset: 0x33e8}
+  - {addr: 0x801b490c, to: g_effect_file_header, in: effect-e015}
   - {addr: 0x801b4910, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4914, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4918, to: g_battle_effect_overlay_window}
@@ -3668,21 +3668,21 @@ relocations:
   - {addr: 0x801b4948, to: g_battle_effect_overlay_window}
   - {addr: 0x801b494c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4950, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4954, to: g_battle_effect_overlay_window, offset: 0x248c}
+  - {addr: 0x801b4954, to: g_effect_file_header, in: effect-e033}
   - {addr: 0x801b4958, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b495c, to: g_battle_effect_overlay_window, offset: 0x248c}
+  - {addr: 0x801b495c, to: g_effect_file_header, in: effect-e035}
   - {addr: 0x801b4960, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4964, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4968, to: g_battle_effect_overlay_window}
   - {addr: 0x801b496c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4970, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4974, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4974, to: g_effect_file_header, in: effect-e041}
   - {addr: 0x801b4978, to: g_battle_effect_overlay_window}
   - {addr: 0x801b497c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4980, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4984, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4988, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b498c, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b498c, to: g_effect_file_header, in: effect-e047}
   - {addr: 0x801b4990, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4994, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4998, to: g_battle_effect_overlay_window}
@@ -3700,22 +3700,22 @@ relocations:
   - {addr: 0x801b49c8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b49cc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b49d0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b49d4, to: g_battle_effect_overlay_window, offset: 0x35f4}
+  - {addr: 0x801b49d4, to: g_effect_file_header, in: effect-e065}
   - {addr: 0x801b49d8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b49dc, to: g_battle_effect_overlay_window, offset: 0x1dd0}
-  - {addr: 0x801b49e0, to: g_battle_effect_overlay_window, offset: 0x17fc}
-  - {addr: 0x801b49e4, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b49e8, to: g_battle_effect_overlay_window, offset: 0x41a0}
-  - {addr: 0x801b49ec, to: g_battle_effect_overlay_window, offset: 0x1bd8}
-  - {addr: 0x801b49f0, to: g_battle_effect_overlay_window, offset: 0x800}
-  - {addr: 0x801b49f4, to: g_battle_effect_overlay_window, offset: 0x2238}
-  - {addr: 0x801b49f8, to: g_battle_effect_overlay_window, offset: 0x31a8}
+  - {addr: 0x801b49dc, to: g_effect_file_header, in: effect-e067}
+  - {addr: 0x801b49e0, to: g_effect_file_header, in: effect-e068}
+  - {addr: 0x801b49e4, to: g_effect_file_header, in: effect-e069}
+  - {addr: 0x801b49e8, to: g_effect_file_header, in: effect-e070}
+  - {addr: 0x801b49ec, to: g_effect_file_header, in: effect-e071}
+  - {addr: 0x801b49f0, to: g_effect_file_header, in: effect-e072}
+  - {addr: 0x801b49f4, to: g_effect_file_header, in: effect-e073}
+  - {addr: 0x801b49f8, to: g_effect_file_header, in: effect-e074}
   - {addr: 0x801b49fc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4a00, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4a04, to: g_battle_effect_overlay_window, offset: 0x43ec}
+  - {addr: 0x801b4a00, to: g_effect_file_header, in: effect-e076}
+  - {addr: 0x801b4a04, to: g_effect_file_header, in: effect-e077}
   - {addr: 0x801b4a08, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4a0c, to: g_battle_effect_overlay_window, offset: 0x2238}
-  - {addr: 0x801b4a10, to: g_battle_effect_overlay_window, offset: 0x2a80}
+  - {addr: 0x801b4a0c, to: g_effect_file_header, in: effect-e079}
+  - {addr: 0x801b4a10, to: g_effect_file_header, in: effect-e080}
   - {addr: 0x801b4a14, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4a18, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4a1c, to: g_battle_effect_overlay_window}
@@ -3723,13 +3723,13 @@ relocations:
   - {addr: 0x801b4a24, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4a28, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4a2c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4a30, to: g_battle_effect_overlay_window, offset: 0x1618}
-  - {addr: 0x801b4a34, to: g_battle_effect_overlay_window, offset: 0x1618}
-  - {addr: 0x801b4a38, to: g_battle_effect_overlay_window, offset: 0x1618}
-  - {addr: 0x801b4a3c, to: g_battle_effect_overlay_window, offset: 0x1618}
-  - {addr: 0x801b4a40, to: g_battle_effect_overlay_window, offset: 0x1618}
-  - {addr: 0x801b4a44, to: g_battle_effect_overlay_window, offset: 0x1618}
-  - {addr: 0x801b4a48, to: g_battle_effect_overlay_window, offset: 0x1618}
+  - {addr: 0x801b4a30, to: g_effect_file_header, in: effect-e088}
+  - {addr: 0x801b4a34, to: g_effect_file_header, in: effect-e089}
+  - {addr: 0x801b4a38, to: g_effect_file_header, in: effect-e090}
+  - {addr: 0x801b4a3c, to: g_effect_file_header, in: effect-e091}
+  - {addr: 0x801b4a40, to: g_effect_file_header, in: effect-e092}
+  - {addr: 0x801b4a44, to: g_effect_file_header, in: effect-e093}
+  - {addr: 0x801b4a48, to: g_effect_file_header, in: effect-e094}
   - {addr: 0x801b4a4c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4a50, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4a54, to: g_battle_effect_overlay_window}
@@ -3769,11 +3769,11 @@ relocations:
   - {addr: 0x801b4adc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ae0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ae4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4ae8, to: g_battle_effect_overlay_window, offset: 0x2be8}
+  - {addr: 0x801b4ae8, to: g_effect_file_header, in: effect-e134}
   - {addr: 0x801b4aec, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4af0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4af4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4af8, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4af8, to: g_effect_file_header, in: effect-e138}
   - {addr: 0x801b4afc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b00, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b04, to: g_battle_effect_overlay_window}
@@ -3796,22 +3796,22 @@ relocations:
   - {addr: 0x801b4b48, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b4c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b50, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4b54, to: g_battle_effect_overlay_window, offset: 0x15f8}
+  - {addr: 0x801b4b54, to: g_effect_file_header, in: effect-e161}
   - {addr: 0x801b4b58, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b5c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b60, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b64, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b68, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4b6c, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4b6c, to: g_effect_file_header, in: effect-e167}
   - {addr: 0x801b4b70, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b74, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b78, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b7c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b80, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b84, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4b88, to: g_battle_effect_overlay_window, offset: 0x33e8}
+  - {addr: 0x801b4b88, to: g_effect_file_header, in: effect-e174}
   - {addr: 0x801b4b8c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4b90, to: g_battle_effect_overlay_window, offset: 0x1824}
+  - {addr: 0x801b4b90, to: g_effect_file_header, in: effect-e176}
   - {addr: 0x801b4b94, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b98, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4b9c, to: g_battle_effect_overlay_window}
@@ -3828,7 +3828,7 @@ relocations:
   - {addr: 0x801b4bc8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4bcc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4bd0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4bd4, to: g_battle_effect_overlay_window, offset: 0x1824}
+  - {addr: 0x801b4bd4, to: g_effect_file_header, in: effect-e193}
   - {addr: 0x801b4bd8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4bdc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4be0, to: g_battle_effect_overlay_window}
@@ -3863,38 +3863,38 @@ relocations:
   - {addr: 0x801b4c54, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4c58, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4c5c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4c60, to: g_battle_effect_overlay_window, offset: 0x800}
-  - {addr: 0x801b4c64, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4c68, to: g_battle_effect_overlay_window, offset: 0x1ce0}
+  - {addr: 0x801b4c60, to: g_effect_file_header, in: effect-e228}
+  - {addr: 0x801b4c64, to: g_effect_file_header, in: effect-e229}
+  - {addr: 0x801b4c68, to: g_effect_file_header, in: effect-e230}
   - {addr: 0x801b4c6c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4c70, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4c74, to: g_battle_effect_overlay_window, offset: 0x1824}
+  - {addr: 0x801b4c74, to: g_effect_file_header, in: effect-e233}
   - {addr: 0x801b4c78, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4c7c, to: g_battle_effect_overlay_window, offset: 0x1e18}
-  - {addr: 0x801b4c80, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4c7c, to: g_effect_file_header, in: effect-e235}
+  - {addr: 0x801b4c80, to: g_effect_file_header, in: effect-e236}
   - {addr: 0x801b4c84, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4c88, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4c8c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4c90, to: g_battle_effect_overlay_window, offset: 0x1824}
-  - {addr: 0x801b4c94, to: g_battle_effect_overlay_window, offset: 0x2024}
-  - {addr: 0x801b4c98, to: g_battle_effect_overlay_window, offset: 0x566c}
+  - {addr: 0x801b4c90, to: g_effect_file_header, in: effect-e240}
+  - {addr: 0x801b4c94, to: g_effect_file_header, in: effect-e241}
+  - {addr: 0x801b4c98, to: g_effect_file_header, in: effect-e242}
   - {addr: 0x801b4c9c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4ca0, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4ca4, to: g_battle_effect_overlay_window, offset: 0x2024}
-  - {addr: 0x801b4ca8, to: g_battle_effect_overlay_window, offset: 0x1618}
-  - {addr: 0x801b4cac, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4cb0, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4cb4, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4ca0, to: g_effect_file_header, in: effect-e244}
+  - {addr: 0x801b4ca4, to: g_effect_file_header, in: effect-e245}
+  - {addr: 0x801b4ca8, to: g_effect_file_header, in: effect-e246}
+  - {addr: 0x801b4cac, to: g_effect_file_header, in: effect-e247}
+  - {addr: 0x801b4cb0, to: g_effect_file_header, in: effect-e248}
+  - {addr: 0x801b4cb4, to: g_effect_file_header, in: effect-e249}
   - {addr: 0x801b4cb8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4cbc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4cc0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4cc4, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4cc8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4ccc, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4cd0, to: g_battle_effect_overlay_window, offset: 0x2be8}
-  - {addr: 0x801b4cd4, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4cd8, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b4cdc, to: g_battle_effect_overlay_window, offset: 0x29a8}
+  - {addr: 0x801b4ccc, to: g_effect_file_header, in: effect-e255}
+  - {addr: 0x801b4cd0, to: g_effect_file_header, in: effect-e256}
+  - {addr: 0x801b4cd4, to: g_effect_file_header, in: effect-e257}
+  - {addr: 0x801b4cd8, to: g_effect_file_header, in: effect-e258}
+  - {addr: 0x801b4cdc, to: g_effect_file_header, in: effect-e259}
   - {addr: 0x801b4ce0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ce4, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ce8, to: g_battle_effect_overlay_window}
@@ -3949,10 +3949,10 @@ relocations:
   - {addr: 0x801b4dac, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4db0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4db4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4db8, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4db8, to: g_effect_file_header, in: effect-e314}
   - {addr: 0x801b4dbc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4dc0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4dc4, to: g_battle_effect_overlay_window, offset: 0x3874}
+  - {addr: 0x801b4dc4, to: g_effect_file_header, in: effect-e317}
   - {addr: 0x801b4dc8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4dcc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4dd0, to: g_battle_effect_overlay_window}
@@ -3971,12 +3971,12 @@ relocations:
   - {addr: 0x801b4e04, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e08, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e0c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4e10, to: g_battle_effect_overlay_window, offset: 0x2078}
+  - {addr: 0x801b4e10, to: g_effect_file_header, in: effect-e336}
   - {addr: 0x801b4e14, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4e18, to: g_battle_effect_overlay_window, offset: 0x13d8}
+  - {addr: 0x801b4e18, to: g_effect_file_header, in: effect-e338}
   - {addr: 0x801b4e1c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e20, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4e24, to: g_battle_effect_overlay_window, offset: 0x17fc}
+  - {addr: 0x801b4e24, to: g_effect_file_header, in: effect-e341}
   - {addr: 0x801b4e28, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e2c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e30, to: g_battle_effect_overlay_window}
@@ -3990,7 +3990,7 @@ relocations:
   - {addr: 0x801b4e50, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e54, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e58, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4e5c, to: g_battle_effect_overlay_window, offset: 0x2078}
+  - {addr: 0x801b4e5c, to: g_effect_file_header, in: effect-e355}
   - {addr: 0x801b4e60, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e64, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e68, to: g_battle_effect_overlay_window}
@@ -4006,21 +4006,21 @@ relocations:
   - {addr: 0x801b4e90, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e94, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4e98, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4e9c, to: g_battle_effect_overlay_window, offset: 0x3690}
+  - {addr: 0x801b4e9c, to: g_effect_file_header, in: effect-e371}
   - {addr: 0x801b4ea0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4ea4, to: g_battle_effect_overlay_window, offset: 0x29f0}
+  - {addr: 0x801b4ea4, to: g_effect_file_header, in: effect-e373}
   - {addr: 0x801b4ea8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4eac, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4eb0, to: g_battle_effect_overlay_window, offset: 0x22b4}
+  - {addr: 0x801b4eb0, to: g_effect_file_header, in: effect-e376}
   - {addr: 0x801b4eb4, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4eb8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ebc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ec0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4ec4, to: g_battle_effect_overlay_window, offset: 0x22b4}
-  - {addr: 0x801b4ec8, to: g_battle_effect_overlay_window, offset: 0x22b4}
-  - {addr: 0x801b4ecc, to: g_battle_effect_overlay_window, offset: 0x43e4}
-  - {addr: 0x801b4ed0, to: g_battle_effect_overlay_window, offset: 0x42d8}
-  - {addr: 0x801b4ed4, to: g_battle_effect_overlay_window, offset: 0x800}
+  - {addr: 0x801b4ec4, to: g_effect_file_header, in: effect-e381}
+  - {addr: 0x801b4ec8, to: g_effect_file_header, in: effect-e382}
+  - {addr: 0x801b4ecc, to: g_effect_file_header, in: effect-e383}
+  - {addr: 0x801b4ed0, to: g_effect_file_header, in: effect-e384}
+  - {addr: 0x801b4ed4, to: g_effect_file_header, in: effect-e385}
   - {addr: 0x801b4ed8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4edc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ee0, to: g_battle_effect_overlay_window}
@@ -4030,24 +4030,24 @@ relocations:
   - {addr: 0x801b4ef0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ef4, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4ef8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4efc, to: g_battle_effect_overlay_window, offset: 0x15d0}
+  - {addr: 0x801b4efc, to: g_effect_file_header, in: effect-e395}
   - {addr: 0x801b4f00, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f04, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f08, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f0c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f10, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4f14, to: g_battle_effect_overlay_window, offset: 0x22b4}
-  - {addr: 0x801b4f18, to: g_battle_effect_overlay_window, offset: 0x2078}
-  - {addr: 0x801b4f1c, to: g_battle_effect_overlay_window, offset: 0x217c}
+  - {addr: 0x801b4f14, to: g_effect_file_header, in: effect-e401}
+  - {addr: 0x801b4f18, to: g_effect_file_header, in: effect-e402}
+  - {addr: 0x801b4f1c, to: g_effect_file_header, in: effect-e403}
   - {addr: 0x801b4f20, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f24, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f28, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f2c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4f30, to: g_battle_effect_overlay_window, offset: 0x2024}
-  - {addr: 0x801b4f34, to: g_battle_effect_overlay_window, offset: 0x389c}
+  - {addr: 0x801b4f30, to: g_effect_file_header, in: effect-e408}
+  - {addr: 0x801b4f34, to: g_effect_file_header, in: effect-e409}
   - {addr: 0x801b4f38, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4f3c, to: g_battle_effect_overlay_window, offset: 0x1384}
-  - {addr: 0x801b4f40, to: g_battle_effect_overlay_window, offset: 0x297c}
+  - {addr: 0x801b4f3c, to: g_effect_file_header, in: effect-e411}
+  - {addr: 0x801b4f40, to: g_effect_file_header, in: effect-e412}
   - {addr: 0x801b4f44, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f48, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4f4c, to: g_battle_effect_overlay_window}
@@ -4085,42 +4085,42 @@ relocations:
   - {addr: 0x801b4fcc, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4fd0, to: g_battle_effect_overlay_window}
   - {addr: 0x801b4fd4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4fd8, to: g_battle_effect_overlay_window, offset: 0x1f40}
-  - {addr: 0x801b4fdc, to: g_battle_effect_overlay_window, offset: 0x2c10}
-  - {addr: 0x801b4fe0, to: g_battle_effect_overlay_window, offset: 0x31c0}
-  - {addr: 0x801b4fe4, to: g_battle_effect_overlay_window, offset: 0x4880}
-  - {addr: 0x801b4fe8, to: g_battle_effect_overlay_window, offset: 0x2528}
-  - {addr: 0x801b4fec, to: g_battle_effect_overlay_window, offset: 0x330}
-  - {addr: 0x801b4ff0, to: g_battle_effect_overlay_window, offset: 0xe3c}
+  - {addr: 0x801b4fd8, to: g_effect_file_header, in: effect-e450}
+  - {addr: 0x801b4fdc, to: g_effect_file_header, in: effect-e451}
+  - {addr: 0x801b4fe0, to: g_effect_file_header, in: effect-e452}
+  - {addr: 0x801b4fe4, to: g_effect_file_header, in: effect-e453}
+  - {addr: 0x801b4fe8, to: g_effect_file_header, in: effect-e454}
+  - {addr: 0x801b4fec, to: g_effect_file_header, in: effect-e455}
+  - {addr: 0x801b4ff0, to: g_effect_file_header, in: effect-e456}
   - {addr: 0x801b4ff4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b4ff8, to: g_battle_effect_overlay_window, offset: 0x8a8}
+  - {addr: 0x801b4ff8, to: g_effect_file_header, in: effect-e458}
   - {addr: 0x801b4ffc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5000, to: g_battle_effect_overlay_window, offset: 0x800}
-  - {addr: 0x801b5004, to: g_battle_effect_overlay_window, offset: 0x4fb8}
-  - {addr: 0x801b5008, to: g_battle_effect_overlay_window, offset: 0x4fb8}
-  - {addr: 0x801b500c, to: g_battle_effect_overlay_window, offset: 0x4fb8}
-  - {addr: 0x801b5010, to: g_battle_effect_overlay_window, offset: 0x29d4}
-  - {addr: 0x801b5014, to: g_battle_effect_overlay_window, offset: 0x4fb8}
-  - {addr: 0x801b5018, to: g_battle_effect_overlay_window, offset: 0x4fb8}
-  - {addr: 0x801b501c, to: g_battle_effect_overlay_window, offset: 0x1a04}
-  - {addr: 0x801b5020, to: g_battle_effect_overlay_window, offset: 0x1a04}
-  - {addr: 0x801b5024, to: g_battle_effect_overlay_window, offset: 0x1a04}
+  - {addr: 0x801b5000, to: g_effect_file_header, in: effect-e460}
+  - {addr: 0x801b5004, to: g_effect_file_header, in: effect-e461}
+  - {addr: 0x801b5008, to: g_effect_file_header, in: effect-e462}
+  - {addr: 0x801b500c, to: g_effect_file_header, in: effect-e463}
+  - {addr: 0x801b5010, to: g_effect_file_header, in: effect-e464}
+  - {addr: 0x801b5014, to: g_effect_file_header, in: effect-e465}
+  - {addr: 0x801b5018, to: g_effect_file_header, in: effect-e466}
+  - {addr: 0x801b501c, to: g_effect_file_header, in: effect-e467}
+  - {addr: 0x801b5020, to: g_effect_file_header, in: effect-e468}
+  - {addr: 0x801b5024, to: g_effect_file_header, in: effect-e469}
   - {addr: 0x801b5028, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b502c, to: g_battle_effect_overlay_window, offset: 0x1a04}
-  - {addr: 0x801b5030, to: g_battle_effect_overlay_window, offset: 0x1a04}
-  - {addr: 0x801b5034, to: g_battle_effect_overlay_window, offset: 0x878}
-  - {addr: 0x801b5038, to: g_battle_effect_overlay_window, offset: 0x3268}
-  - {addr: 0x801b503c, to: g_battle_effect_overlay_window, offset: 0x3268}
-  - {addr: 0x801b5040, to: g_battle_effect_overlay_window, offset: 0x3268}
-  - {addr: 0x801b5044, to: g_battle_effect_overlay_window, offset: 0x3268}
-  - {addr: 0x801b5048, to: g_battle_effect_overlay_window, offset: 0x3268}
+  - {addr: 0x801b502c, to: g_effect_file_header, in: effect-e471}
+  - {addr: 0x801b5030, to: g_effect_file_header, in: effect-e472}
+  - {addr: 0x801b5034, to: g_effect_file_header, in: effect-e473}
+  - {addr: 0x801b5038, to: g_effect_file_header, in: effect-e474}
+  - {addr: 0x801b503c, to: g_effect_file_header, in: effect-e475}
+  - {addr: 0x801b5040, to: g_effect_file_header, in: effect-e476}
+  - {addr: 0x801b5044, to: g_effect_file_header, in: effect-e477}
+  - {addr: 0x801b5048, to: g_effect_file_header, in: effect-e478}
   - {addr: 0x801b504c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5050, to: g_battle_effect_overlay_window, offset: 0x1f40}
-  - {addr: 0x801b5054, to: g_battle_effect_overlay_window, offset: 0x7d0}
-  - {addr: 0x801b5058, to: g_battle_effect_overlay_window, offset: 0x7d0}
-  - {addr: 0x801b505c, to: g_battle_effect_overlay_window, offset: 0x1384}
+  - {addr: 0x801b5050, to: g_effect_file_header, in: effect-e480}
+  - {addr: 0x801b5054, to: g_effect_file_header, in: effect-e481}
+  - {addr: 0x801b5058, to: g_effect_file_header, in: effect-e482}
+  - {addr: 0x801b505c, to: g_effect_file_header, in: effect-e483}
   - {addr: 0x801b5060, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5064, to: g_battle_effect_overlay_window, offset: 0x2c10}
+  - {addr: 0x801b5064, to: g_effect_file_header, in: effect-e485}
   - {addr: 0x801b5068, to: g_battle_effect_overlay_window}
   - {addr: 0x801b506c, to: g_battle_effect_overlay_window}
   - {addr: 0x801b5070, to: g_battle_effect_overlay_window}
@@ -4147,204 +4147,204 @@ relocations:
   - {addr: 0x801b50c4, to: g_battle_effect_overlay_window}
   - {addr: 0x801b50c8, to: g_battle_effect_overlay_window}
   - {addr: 0x801b50cc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50d0, to: g_battle_effect_overlay_window, offset: 0x1fa0}
+  - {addr: 0x801b50d0, to: effect_e000_noop, in: effect-e000}
   - {addr: 0x801b50d4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50d8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50dc, to: g_battle_effect_overlay_window, offset: 0x14f8}
-  - {addr: 0x801b50e0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50e4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50e8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50ec, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50f0, to: g_battle_effect_overlay_window, offset: 0x14f8}
-  - {addr: 0x801b50f4, to: g_battle_effect_overlay_window, offset: 0x2ac8}
-  - {addr: 0x801b50f8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b50fc, to: g_battle_effect_overlay_window, offset: 0x177c}
-  - {addr: 0x801b5100, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5104, to: g_battle_effect_overlay_window, offset: 0x177c}
-  - {addr: 0x801b5108, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b510c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5110, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5114, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b5118, to: g_battle_effect_overlay_window, offset: 0x1ef0}
-  - {addr: 0x801b511c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5120, to: g_battle_effect_overlay_window, offset: 0x14f8}
-  - {addr: 0x801b5124, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5128, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b512c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5130, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b5134, to: g_battle_effect_overlay_window, offset: 0x371c}
-  - {addr: 0x801b5138, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b513c, to: g_battle_effect_overlay_window, offset: 0x7ec}
-  - {addr: 0x801b5140, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5144, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5148, to: g_battle_effect_overlay_window, offset: 0x14f8}
-  - {addr: 0x801b514c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5150, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b5154, to: g_battle_effect_overlay_window, offset: 0x1ce4}
-  - {addr: 0x801b5158, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b515c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5160, to: g_battle_effect_overlay_window, offset: 0x177c}
-  - {addr: 0x801b5164, to: g_battle_effect_overlay_window, offset: 0x2c74}
-  - {addr: 0x801b5168, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b516c, to: g_battle_effect_overlay_window, offset: 0x14f8}
-  - {addr: 0x801b5170, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5174, to: g_battle_effect_overlay_window, offset: 0xb6c}
-  - {addr: 0x801b5178, to: g_battle_effect_overlay_window, offset: 0x213c}
-  - {addr: 0x801b517c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5180, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5184, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5188, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b518c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5190, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5194, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5198, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b519c, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b51a0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51a4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51a8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51ac, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51b0, to: g_battle_effect_overlay_window, offset: 0x14f8}
-  - {addr: 0x801b51b4, to: g_battle_effect_overlay_window, offset: 0x2ac8}
-  - {addr: 0x801b51b8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51bc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51c0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51c4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51c8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51cc, to: g_battle_effect_overlay_window, offset: 0x77c}
-  - {addr: 0x801b51d0, to: g_battle_effect_overlay_window, offset: 0xef0}
-  - {addr: 0x801b51d4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51d8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51dc, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b51e0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51e4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51e8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51ec, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b51f0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b51f4, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b51f8, to: g_battle_effect_overlay_window, offset: 0x2714}
-  - {addr: 0x801b51fc, to: g_battle_effect_overlay_window, offset: 0x3c0c}
-  - {addr: 0x801b5200, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5204, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5208, to: g_battle_effect_overlay_window, offset: 0x177c}
-  - {addr: 0x801b520c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5210, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5214, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5218, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b521c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5220, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5224, to: g_battle_effect_overlay_window, offset: 0x14f8}
-  - {addr: 0x801b5228, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b522c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5230, to: g_battle_effect_overlay_window, offset: 0x78}
-  - {addr: 0x801b5234, to: g_battle_effect_overlay_window, offset: 0x1300}
+  - {addr: 0x801b50d8, to: effect_update_ring_stack_mesh, in: effect-e004}
+  - {addr: 0x801b50dc, to: effect_update_polar_mesh, in: effect-e004}
+  - {addr: 0x801b50e0, to: effect_update_ring_stack_mesh, in: effect-e005}
+  - {addr: 0x801b50e4, to: effect_update_ring_stack_mesh, in: effect-e006}
+  - {addr: 0x801b50e8, to: effect_update_ring_stack_mesh, in: effect-e007}
+  - {addr: 0x801b50ec, to: effect_update_ring_stack_mesh, in: effect-e015}
+  - {addr: 0x801b50f0, to: effect_update_ring_mesh, in: effect-e015}
+  - {addr: 0x801b50f4, to: effect_update_textured_quad_grid_4x4, in: effect-e015}
+  - {addr: 0x801b50f8, to: effect_update_polar_mesh, in: effect-e033}
+  - {addr: 0x801b50fc, to: effect_update_wave_mesh, in: effect-e033}
+  - {addr: 0x801b5100, to: effect_update_polar_mesh, in: effect-e035}
+  - {addr: 0x801b5104, to: effect_update_wave_mesh, in: effect-e035}
+  - {addr: 0x801b5108, to: effect_update_ring_stack_mesh, in: effect-e041}
+  - {addr: 0x801b510c, to: effect_update_textured_quad_grid_4x4, in: effect-e047}
+  - {addr: 0x801b5110, to: effect_update_textured_quad_grid_4x4, in: effect-e065}
+  - {addr: 0x801b5114, to: effect_update_polar_mesh, in: effect-e065}
+  - {addr: 0x801b5118, to: effect_update_ring_stack_mesh, in: effect-e065}
+  - {addr: 0x801b511c, to: effect_update_ring_stack_mesh, in: effect-e067}
+  - {addr: 0x801b5120, to: effect_update_textured_quad_grid_4x4, in: effect-e067}
+  - {addr: 0x801b5124, to: effect_update_tube_mesh, in: effect-e068}
+  - {addr: 0x801b5128, to: effect_update_ring_stack_mesh, in: effect-e069}
+  - {addr: 0x801b512c, to: effect_update_particle_ribbon_long, in: effect-e070}
+  - {addr: 0x801b5130, to: effect_update_polar_mesh, in: effect-e070}
+  - {addr: 0x801b5134, to: effect_update_textured_quad_grid_4x4, in: effect-e070}
+  - {addr: 0x801b5138, to: effect_update_textured_quad_grid_4x4, in: effect-e071}
+  - {addr: 0x801b513c, to: effect_update_dome_mesh, in: effect-e071}
+  - {addr: 0x801b5140, to: effect_update_textured_quad_grid_4x4, in: effect-e072}
+  - {addr: 0x801b5144, to: effect_update_ring_stack_mesh, in: effect-e073}
+  - {addr: 0x801b5148, to: effect_update_wave_mesh, in: effect-e073}
+  - {addr: 0x801b514c, to: effect_update_textured_quad_grid_4x4, in: effect-e074}
+  - {addr: 0x801b5150, to: effect_update_ring_stack_mesh, in: effect-e074}
+  - {addr: 0x801b5154, to: effect_update_dome_mesh, in: effect-e074}
+  - {addr: 0x801b5158, to: effect_update_ring_stack_mesh, in: effect-e076}
+  - {addr: 0x801b515c, to: effect_update_polar_mesh, in: effect-e077}
+  - {addr: 0x801b5160, to: effect_update_ring_stack_mesh, in: effect-e077}
+  - {addr: 0x801b5164, to: effect_update_particle_trails, in: effect-e077}
+  - {addr: 0x801b5168, to: effect_update_ring_stack_mesh, in: effect-e079}
+  - {addr: 0x801b516c, to: effect_update_wave_mesh, in: effect-e079}
+  - {addr: 0x801b5170, to: effect_update_wave_mesh, in: effect-e080}
+  - {addr: 0x801b5174, to: effect_update_ring_mesh, in: effect-e080}
+  - {addr: 0x801b5178, to: effect_update_textured_quad_grid_4x4, in: effect-e080}
+  - {addr: 0x801b517c, to: effect_update_ring_mesh, in: effect-e088}
+  - {addr: 0x801b5180, to: effect_update_ring_mesh, in: effect-e089}
+  - {addr: 0x801b5184, to: effect_update_ring_mesh, in: effect-e090}
+  - {addr: 0x801b5188, to: effect_update_ring_mesh, in: effect-e091}
+  - {addr: 0x801b518c, to: effect_update_ring_mesh, in: effect-e092}
+  - {addr: 0x801b5190, to: effect_update_ring_mesh, in: effect-e093}
+  - {addr: 0x801b5194, to: effect_update_ring_mesh, in: effect-e094}
+  - {addr: 0x801b5198, to: effect_update_ring_mesh, in: effect-e134}
+  - {addr: 0x801b519c, to: effect_update_ring_stack_mesh, in: effect-e134}
+  - {addr: 0x801b51a0, to: effect_update_ring_stack_mesh, in: effect-e138}
+  - {addr: 0x801b51a4, to: effect_update_particle_trails, in: effect-e161}
+  - {addr: 0x801b51a8, to: effect_update_ring_stack_mesh, in: effect-e167}
+  - {addr: 0x801b51ac, to: effect_update_ring_stack_mesh, in: effect-e174}
+  - {addr: 0x801b51b0, to: effect_update_ring_mesh, in: effect-e174}
+  - {addr: 0x801b51b4, to: effect_update_textured_quad_grid_4x4, in: effect-e174}
+  - {addr: 0x801b51b8, to: effect_update_polar_mesh, in: effect-e176}
+  - {addr: 0x801b51bc, to: effect_update_polar_mesh, in: effect-e193}
+  - {addr: 0x801b51c0, to: effect_update_textured_quad_grid_4x4, in: effect-e228}
+  - {addr: 0x801b51c4, to: effect_update_ring_stack_mesh, in: effect-e229}
+  - {addr: 0x801b51c8, to: effect_update_textured_quad_grid_8x8, in: effect-e230}
+  - {addr: 0x801b51cc, to: effect_update_textured_quad_grid_4x4, in: effect-e230}
+  - {addr: 0x801b51d0, to: effect_update_wave_mesh, in: effect-e230}
+  - {addr: 0x801b51d4, to: effect_update_polar_mesh, in: effect-e233}
+  - {addr: 0x801b51d8, to: effect_update_textured_quad_grid_4x4, in: effect-e235}
+  - {addr: 0x801b51dc, to: effect_update_ring_mesh, in: effect-e235}
+  - {addr: 0x801b51e0, to: effect_update_textured_quad_grid_4x4, in: effect-e236}
+  - {addr: 0x801b51e4, to: effect_update_polar_mesh, in: effect-e240}
+  - {addr: 0x801b51e8, to: effect_update_textured_quad_grid_4x4, in: effect-e241}
+  - {addr: 0x801b51ec, to: effect_update_polar_mesh, in: effect-e241}
+  - {addr: 0x801b51f0, to: effect_update_particle_ribbon_short, in: effect-e242}
+  - {addr: 0x801b51f4, to: effect_update_textured_quad_grid_4x4, in: effect-e242}
+  - {addr: 0x801b51f8, to: effect_update_ring_stack_mesh, in: effect-e242}
+  - {addr: 0x801b51fc, to: effect_update_polar_mesh, in: effect-e242}
+  - {addr: 0x801b5200, to: effect_update_ring_stack_mesh, in: effect-e244}
+  - {addr: 0x801b5204, to: effect_update_polar_mesh, in: effect-e245}
+  - {addr: 0x801b5208, to: effect_update_textured_quad_grid_4x4, in: effect-e245}
+  - {addr: 0x801b520c, to: effect_update_ring_mesh, in: effect-e246}
+  - {addr: 0x801b5210, to: effect_update_ring_stack_mesh, in: effect-e247}
+  - {addr: 0x801b5214, to: effect_update_ring_stack_mesh, in: effect-e248}
+  - {addr: 0x801b5218, to: effect_update_ring_stack_mesh, in: effect-e249}
+  - {addr: 0x801b521c, to: effect_update_ring_stack_mesh, in: effect-e255}
+  - {addr: 0x801b5220, to: effect_update_ring_stack_mesh, in: effect-e256}
+  - {addr: 0x801b5224, to: effect_update_ring_mesh, in: effect-e256}
+  - {addr: 0x801b5228, to: effect_update_ring_stack_mesh, in: effect-e257}
+  - {addr: 0x801b522c, to: effect_update_ring_stack_mesh, in: effect-e258}
+  - {addr: 0x801b5230, to: effect_update_dome_mesh, in: effect-e259}
+  - {addr: 0x801b5234, to: effect_update_ring_stack_mesh, in: effect-e259}
   - {addr: 0x801b5238, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b523c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5240, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b5244, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5248, to: g_battle_effect_overlay_window, offset: 0x78}
-  - {addr: 0x801b524c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5250, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5254, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5258, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b525c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5260, to: g_battle_effect_overlay_window, offset: 0x1648}
-  - {addr: 0x801b5264, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5268, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b526c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5270, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5274, to: g_battle_effect_overlay_window, offset: 0x15d0}
-  - {addr: 0x801b5278, to: g_battle_effect_overlay_window, offset: 0x2ac8}
-  - {addr: 0x801b527c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5280, to: g_battle_effect_overlay_window, offset: 0x177c}
-  - {addr: 0x801b5284, to: g_battle_effect_overlay_window, offset: 0x3958}
-  - {addr: 0x801b5288, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b528c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5290, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5294, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5298, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b529c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52a0, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b52a4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52a8, to: g_battle_effect_overlay_window, offset: 0x177c}
-  - {addr: 0x801b52ac, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52b0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52b4, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b52b8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52bc, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b52c0, to: g_battle_effect_overlay_window, offset: 0x808}
-  - {addr: 0x801b52c4, to: g_battle_effect_overlay_window, offset: 0x1dd8}
-  - {addr: 0x801b52c8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52cc, to: g_battle_effect_overlay_window, offset: 0x15f8}
-  - {addr: 0x801b52d0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52d4, to: g_battle_effect_overlay_window, offset: 0x1648}
-  - {addr: 0x801b52d8, to: g_battle_effect_overlay_window, offset: 0x28d0}
-  - {addr: 0x801b52dc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52e0, to: g_battle_effect_overlay_window, offset: 0x21dc}
-  - {addr: 0x801b52e4, to: g_battle_effect_overlay_window, offset: 0x3958}
-  - {addr: 0x801b52e8, to: g_battle_effect_overlay_window, offset: 0x44c4}
-  - {addr: 0x801b52ec, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b52f0, to: g_battle_effect_overlay_window, offset: 0x3e8}
-  - {addr: 0x801b52f4, to: g_battle_effect_overlay_window, offset: 0x4ec}
-  - {addr: 0x801b52f8, to: g_battle_effect_overlay_window, offset: 0x1c68}
-  - {addr: 0x801b52fc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5300, to: g_battle_effect_overlay_window, offset: 0x104}
-  - {addr: 0x801b5304, to: g_battle_effect_overlay_window, offset: 0x208}
-  - {addr: 0x801b5308, to: g_battle_effect_overlay_window, offset: 0x29c}
-  - {addr: 0x801b530c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5310, to: g_battle_effect_overlay_window, offset: 0xac}
-  - {addr: 0x801b5314, to: g_battle_effect_overlay_window, offset: 0xc18}
-  - {addr: 0x801b5318, to: g_battle_effect_overlay_window, offset: 0xcac}
-  - {addr: 0x801b531c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5320, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b5324, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5328, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b532c, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b5330, to: g_battle_effect_overlay_window, offset: 0x371c}
-  - {addr: 0x801b5334, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5338, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b533c, to: g_battle_effect_overlay_window, offset: 0x371c}
-  - {addr: 0x801b5340, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5344, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b5348, to: g_battle_effect_overlay_window, offset: 0x371c}
-  - {addr: 0x801b534c, to: g_battle_effect_overlay_window, offset: 0x78}
-  - {addr: 0x801b5350, to: g_battle_effect_overlay_window, offset: 0x1300}
-  - {addr: 0x801b5354, to: g_battle_effect_overlay_window, offset: 0x2654}
-  - {addr: 0x801b5358, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b535c, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b5360, to: g_battle_effect_overlay_window, offset: 0x371c}
-  - {addr: 0x801b5364, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5368, to: g_battle_effect_overlay_window, offset: 0x1fa0}
-  - {addr: 0x801b536c, to: g_battle_effect_overlay_window, offset: 0x371c}
-  - {addr: 0x801b5370, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5374, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5378, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b537c, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5380, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5384, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5388, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b538c, to: g_battle_effect_overlay_window, offset: 0x77c}
-  - {addr: 0x801b5390, to: g_battle_effect_overlay_window, offset: 0x1dc4}
-  - {addr: 0x801b5394, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b5398, to: g_battle_effect_overlay_window, offset: 0x77c}
-  - {addr: 0x801b539c, to: g_battle_effect_overlay_window, offset: 0x1dc4}
-  - {addr: 0x801b53a0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53a4, to: g_battle_effect_overlay_window, offset: 0x77c}
-  - {addr: 0x801b53a8, to: g_battle_effect_overlay_window, offset: 0x1dc4}
-  - {addr: 0x801b53ac, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53b0, to: g_battle_effect_overlay_window, offset: 0x77c}
-  - {addr: 0x801b53b4, to: g_battle_effect_overlay_window, offset: 0x1dc4}
-  - {addr: 0x801b53b8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53bc, to: g_battle_effect_overlay_window, offset: 0x77c}
-  - {addr: 0x801b53c0, to: g_battle_effect_overlay_window, offset: 0x1dc4}
-  - {addr: 0x801b53c4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53c8, to: g_battle_effect_overlay_window, offset: 0x774}
-  - {addr: 0x801b53cc, to: g_battle_effect_overlay_window, offset: 0x808}
-  - {addr: 0x801b53d0, to: g_battle_effect_overlay_window, offset: 0x1dd8}
-  - {addr: 0x801b53d4, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53d8, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53dc, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53e0, to: g_battle_effect_overlay_window}
-  - {addr: 0x801b53e4, to: g_battle_effect_overlay_window, offset: 0x15f8}
+  - {addr: 0x801b523c, to: effect_update_particle_ribbon_short, in: effect-e317}
+  - {addr: 0x801b5240, to: effect_update_tube_mesh, in: effect-e317}
+  - {addr: 0x801b5244, to: effect_update_particle_ribbon_short, in: effect-e336}
+  - {addr: 0x801b5248, to: effect_update_dome_mesh, in: effect-e338}
+  - {addr: 0x801b524c, to: effect_update_tube_mesh, in: effect-e341}
+  - {addr: 0x801b5250, to: effect_update_particle_ribbon_short, in: effect-e355}
+  - {addr: 0x801b5254, to: effect_update_ring_mesh, in: effect-e371}
+  - {addr: 0x801b5258, to: effect_update_particle_ribbon_short, in: effect-e371}
+  - {addr: 0x801b525c, to: effect_update_ring_mesh, in: effect-e373}
+  - {addr: 0x801b5260, to: effect_update_dome_mesh, in: effect-e373}
+  - {addr: 0x801b5264, to: effect_update_tentacle_mesh, in: effect-e376}
+  - {addr: 0x801b5268, to: effect_update_tentacle_mesh, in: effect-e381}
+  - {addr: 0x801b526c, to: effect_update_tentacle_mesh, in: effect-e382}
+  - {addr: 0x801b5270, to: effect_update_ring_mesh, in: effect-e383}
+  - {addr: 0x801b5274, to: effect_update_ring_stack_mesh, in: effect-e383}
+  - {addr: 0x801b5278, to: effect_update_tube_mesh, in: effect-e383}
+  - {addr: 0x801b527c, to: effect_update_polar_mesh, in: effect-e384}
+  - {addr: 0x801b5280, to: effect_update_tentacle_mesh, in: effect-e384}
+  - {addr: 0x801b5284, to: effect_update_textured_quad_grid_4x4, in: effect-e384}
+  - {addr: 0x801b5288, to: effect_update_textured_quad_grid_4x4, in: effect-e385}
+  - {addr: 0x801b528c, to: effect_update_ring_stack_mesh, in: effect-e395}
+  - {addr: 0x801b5290, to: effect_update_tentacle_mesh, in: effect-e401}
+  - {addr: 0x801b5294, to: effect_update_particle_ribbon_short, in: effect-e402}
+  - {addr: 0x801b5298, to: effect_update_particle_ribbon_long, in: effect-e403}
+  - {addr: 0x801b529c, to: effect_update_textured_quad_grid_4x4, in: effect-e408}
+  - {addr: 0x801b52a0, to: effect_update_polar_mesh, in: effect-e408}
+  - {addr: 0x801b52a4, to: effect_update_polar_mesh, in: effect-e409}
+  - {addr: 0x801b52a8, to: effect_update_particle_ribbon_short, in: effect-e409}
+  - {addr: 0x801b52ac, to: effect_update_single_ring_mesh, in: effect-e411}
+  - {addr: 0x801b52b0, to: effect_update_particle_ribbon_long, in: effect-e412}
+  - {addr: 0x801b52b4, to: effect_update_textured_quad_grid_4x4, in: effect-e412}
+  - {addr: 0x801b52b8, to: effect_update_textured_quad_grid_4x4, in: effect-e450}
+  - {addr: 0x801b52bc, to: effect_map_unfreeze, in: effect-e450}
+  - {addr: 0x801b52c0, to: effect_update_ring_mesh, in: effect-e450}
+  - {addr: 0x801b52c4, to: effect_map_freeze, in: effect-e450}
+  - {addr: 0x801b52c8, to: effect_update_particle_trails, in: effect-e451}
+  - {addr: 0x801b52cc, to: effect_update_ring_mesh, in: effect-e451}
+  - {addr: 0x801b52d0, to: effect_update_ring_mesh, in: effect-e452}
+  - {addr: 0x801b52d4, to: effect_update_dome_mesh, in: effect-e452}
+  - {addr: 0x801b52d8, to: effect_update_textured_quad_grid_2x2, in: effect-e452}
+  - {addr: 0x801b52dc, to: effect_update_tentacle_mesh, in: effect-e453}
+  - {addr: 0x801b52e0, to: effect_update_polar_mesh, in: effect-e453}
+  - {addr: 0x801b52e4, to: effect_update_wave_mesh, in: effect-e453}
+  - {addr: 0x801b52e8, to: effect_e453_map_split_mesh_and_set_3d_objects_to_state_3_state, in: effect-e453}
+  - {addr: 0x801b52ec, to: effect_e454_particle_update_banish_state, in: effect-e454}
+  - {addr: 0x801b52f0, to: effect_map_set_3d_objects_state_2, in: effect-e454}
+  - {addr: 0x801b52f4, to: effect_update_polar_mesh, in: effect-e454}
+  - {addr: 0x801b52f8, to: effect_update_textured_quad_grid_4x4, in: effect-e454}
+  - {addr: 0x801b52fc, to: effect_e455_map_set_3d_objects_to_state_1_state, in: effect-e455}
+  - {addr: 0x801b5300, to: effect_map_set_3d_objects_state_2, in: effect-e455}
+  - {addr: 0x801b5304, to: effect_map_unfreeze, in: effect-e455}
+  - {addr: 0x801b5308, to: effect_map_freeze, in: effect-e455}
+  - {addr: 0x801b530c, to: effect_e456_map_update_specialized_destruction_state, in: effect-e456}
+  - {addr: 0x801b5310, to: effect_update_wave_mesh, in: effect-e456}
+  - {addr: 0x801b5314, to: effect_map_unfreeze, in: effect-e456}
+  - {addr: 0x801b5318, to: effect_map_freeze, in: effect-e456}
+  - {addr: 0x801b531c, to: effect_update_textured_quad_grid_4x4, in: effect-e458}
+  - {addr: 0x801b5320, to: effect_e458_timeline_set_remaining_duration_state, in: effect-e458}
+  - {addr: 0x801b5324, to: effect_update_textured_quad_grid_4x4, in: effect-e460}
+  - {addr: 0x801b5328, to: effect_update_particle_ribbon_long, in: effect-e461}
+  - {addr: 0x801b532c, to: effect_update_polar_mesh, in: effect-e461}
+  - {addr: 0x801b5330, to: effect_update_ring_mesh, in: effect-e461}
+  - {addr: 0x801b5334, to: effect_update_particle_ribbon_long, in: effect-e462}
+  - {addr: 0x801b5338, to: effect_update_polar_mesh, in: effect-e462}
+  - {addr: 0x801b533c, to: effect_update_ring_mesh, in: effect-e462}
+  - {addr: 0x801b5340, to: effect_update_particle_ribbon_long, in: effect-e463}
+  - {addr: 0x801b5344, to: effect_update_polar_mesh, in: effect-e463}
+  - {addr: 0x801b5348, to: effect_update_ring_mesh, in: effect-e463}
+  - {addr: 0x801b534c, to: effect_update_dome_mesh, in: effect-e464}
+  - {addr: 0x801b5350, to: effect_update_single_ring_mesh, in: effect-e464}
+  - {addr: 0x801b5354, to: effect_e464_update_altima_transformation_map_vertex_particles, in: effect-e464}
+  - {addr: 0x801b5358, to: effect_update_particle_ribbon_long, in: effect-e465}
+  - {addr: 0x801b535c, to: effect_update_polar_mesh, in: effect-e465}
+  - {addr: 0x801b5360, to: effect_update_ring_mesh, in: effect-e465}
+  - {addr: 0x801b5364, to: effect_update_particle_ribbon_long, in: effect-e466}
+  - {addr: 0x801b5368, to: effect_update_polar_mesh, in: effect-e466}
+  - {addr: 0x801b536c, to: effect_update_ring_mesh, in: effect-e466}
+  - {addr: 0x801b5370, to: effect_update_anchored_polar_mesh, in: effect-e467}
+  - {addr: 0x801b5374, to: effect_update_anchored_polar_mesh, in: effect-e468}
+  - {addr: 0x801b5378, to: effect_update_anchored_polar_mesh, in: effect-e469}
+  - {addr: 0x801b537c, to: effect_update_anchored_polar_mesh, in: effect-e471}
+  - {addr: 0x801b5380, to: effect_update_anchored_polar_mesh, in: effect-e472}
+  - {addr: 0x801b5384, to: effect_update_textured_quad_grid_8x8, in: effect-e473}
+  - {addr: 0x801b5388, to: effect_update_textured_quad_grid_8x8, in: effect-e474}
+  - {addr: 0x801b538c, to: effect_update_ring_mesh, in: effect-e474}
+  - {addr: 0x801b5390, to: effect_update_dome_mesh, in: effect-e474}
+  - {addr: 0x801b5394, to: effect_update_textured_quad_grid_8x8, in: effect-e475}
+  - {addr: 0x801b5398, to: effect_update_ring_mesh, in: effect-e475}
+  - {addr: 0x801b539c, to: effect_update_dome_mesh, in: effect-e475}
+  - {addr: 0x801b53a0, to: effect_update_textured_quad_grid_8x8, in: effect-e476}
+  - {addr: 0x801b53a4, to: effect_update_ring_mesh, in: effect-e476}
+  - {addr: 0x801b53a8, to: effect_update_dome_mesh, in: effect-e476}
+  - {addr: 0x801b53ac, to: effect_update_textured_quad_grid_8x8, in: effect-e477}
+  - {addr: 0x801b53b0, to: effect_update_ring_mesh, in: effect-e477}
+  - {addr: 0x801b53b4, to: effect_update_dome_mesh, in: effect-e477}
+  - {addr: 0x801b53b8, to: effect_update_textured_quad_grid_8x8, in: effect-e478}
+  - {addr: 0x801b53bc, to: effect_update_ring_mesh, in: effect-e478}
+  - {addr: 0x801b53c0, to: effect_update_dome_mesh, in: effect-e478}
+  - {addr: 0x801b53c4, to: effect_update_textured_quad_grid_4x4, in: effect-e480}
+  - {addr: 0x801b53c8, to: effect_map_unfreeze, in: effect-e480}
+  - {addr: 0x801b53cc, to: effect_update_ring_mesh, in: effect-e480}
+  - {addr: 0x801b53d0, to: effect_map_freeze, in: effect-e480}
+  - {addr: 0x801b53d4, to: effect_update_textured_quad_grid_2x2, in: effect-e481}
+  - {addr: 0x801b53d8, to: effect_update_textured_quad_grid_2x2, in: effect-e482}
+  - {addr: 0x801b53dc, to: effect_update_single_ring_mesh, in: effect-e483}
+  - {addr: 0x801b53e0, to: effect_update_particle_trails, in: effect-e485}
+  - {addr: 0x801b53e4, to: effect_update_ring_mesh, in: effect-e485}
   - {addr: 0x801b67c8, to: battle_effect_code_script_00_jump_and_yield}
   - {addr: 0x801b67cc, to: battle_effect_code_script_01_jump}
   - {addr: 0x801b67d0, to: battle_effect_code_script_02_spawn_child}

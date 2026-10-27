@@ -127,7 +127,7 @@ trial: image ## Compile a candidate source at an entry and report the match or f
 	@$(TOOLS) trial $(if $(strip $(BATCH)),--batch="$(BATCH)") $(if $(strip $(TWINS)),--twins="$(TWINS)") $(if $(strip $(MODULE)),--module="$(MODULE)") $(if $(strip $(ENTRY)),--entry="$(ENTRY)") $(if $(strip $(SOURCE)),--source="$(SOURCE)") $(ARGS)
 
 .PHONY: link
-link: image ## Link each module whole from its objects and the bytes between them, compare with the original, fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc (MODULE=x)
+link: image ## Link each module whole from its objects and the bytes between them, taking each name another module places from that module's link, compare with the original, fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc (MODULE=x)
 	@if [ -f scus-94221.bin ]; then $(MAKE) --no-print-directory extract; fi
 	@$(TOOLS) link $(if $(strip $(MODULE)),--module="$(MODULE)")
 
