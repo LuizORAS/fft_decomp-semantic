@@ -25,7 +25,7 @@ void menu_run_equip_thread(void) {
     g_menu_overlay_state = 1;
     thread_wait_for_unit_view_panels();
     menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP);
-    menu_reserve_high_overlay(0x20000);
+    menu_reserve_high_overlay(RAM_WINDOW_BYTES_HIGH);
     menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_EQUIP_SECOND_HALF);
     thread_suspend(THREAD_SLOT_MENU);
     thread_suspend(THREAD_SLOT_MENU_CHILD);

@@ -492,6 +492,12 @@ func (p project) writeDisc(config *projectConfig, built map[string]string, build
 	}
 	output := filepath.Join(buildDir, targetOutput+".bin")
 	cue := filepath.Join(buildDir, targetOutput+".cue")
+	// mkpsxiso writes into an existing image in place, and a blank Form 2
+	// sector clears only its first 2048 data bytes: the rest of an earlier
+	// disc's sector would stay. Each disc starts from a new file.
+	if err := os.Remove(output); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
 	if err := runInDir(p.root, "mkpsxiso", "-q", "-y", "-o", output, "-c", cue, buildXML); err != nil {
 		return err
 	}

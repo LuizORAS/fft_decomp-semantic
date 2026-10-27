@@ -333,6 +333,10 @@ and mark code that a cleanup must not "fix". Details live in the named file.
   (`g_battle_menu_companion_executable_sizes`), so the top two cells (0x801fe000-0x801ff000) are
   overwritten without being claimed; JOBSTTS.OUT is 0x1b85c bytes, so they receive the disc bytes past
   its end. `battle_menu_run_jobstts_thread` reserves the full 0x20000.
+- `require_overlay_run_helpmenu` reserves 0x10000 bytes (32 cells) at the game heap's base before
+  loading HELPMENU.OUT, but BATTLE's companion overlay 3 reads 0x18800 bytes there (the file rounded
+  up to a sector), so 17 cells (0x801ef000-0x801f7800) are overwritten without being claimed.
+  `battle_menu_run_helpmenu_thread` reserves the whole high window.
 - `helpmenu_menu_run_battle_help` and `world_menu_run_battle_help`: the
   `UNIT_VIEW_MODE_HOVERED_UNIT` arm and its navigation table cannot be reached
   (the first arm, which closes the help, takes modes 1 and 2); request
@@ -989,6 +993,17 @@ translation unit. Share their types and constants through headers.
   between the C start-up and the game code, which run as nops up to the
   `jr ra` at 0x80011ba8. The call returns at once; `main_system_run_game_loop`
   enters BATTLE through `battle_state_run_game_loop` after the load.
+- `main_overlay_exec_battle_bin` reads 752 sectors from BATTLE.BIN's, the
+  whole overlay area up to `g_main_high_overlay_window`, 69 past the file:
+  the EVENT directory record and 67 blank sectors land at
+  0x801bc800-0x801df000, so BATTLE's effect state from `D_801BF000` on starts
+  as the disc's zeros. Port debt: a loader that reads only the file leaves
+  those bytes as they were, and a disc that moves BATTLE.BIN puts other
+  sectors there.
+- `main_overlay_exec_wldcore_and_world_bin` and `main_overlay_load_world_bin`
+  read 480 sectors from WORLD.BIN's, its whole RAM window up to
+  `WLDCORE_SCRATCH_BUFFER`, 4 past the file: the SOUND directory record lands
+  at 0x801ce000-0x801d0000.
 - WORLD's copy of the event interpreter never runs: `world_script_execute_event` is reached only through `world_script_start_current_event_thread`, whose callers `world_menu_start_entry_thread` (no caller) and `world_menu_dispatch_system_function` (reached only from `world_menu_init_system_function`, below) never run, and no table holds their addresses. It calls BATTLE routines (`battle_map_freeze`, `battle_gfx_load_unit_graphics_by_battle_id` and others), since WORLD links against BATTLE's addresses for the code it copies: `camera_wait_until_idle`, for one, calls `battle_camera_is_active` at 0x8008e17c, which with WORLD loaded is inside WLDCORE's `wldcore_map_find_best_route_path`, as do `world_menu_display_triangle_selection` and `world_menu_start_help_menu_thread`. The other copies bind the same way: `world_script_map_darkness_thread` calls `battle_map_start_ambient_light_blend` (0x800934d0, WLDCORE data), `world_unit_apply_staged_status_data` runs `battle_status_queue_runtime_graphics_flag_change` (0x80068e80, 0x10 bytes into `wldcore_map_update_scroll_axis_speed`), `world_unit_save_staged_status_data` runs `battle_status_apply_unit_action_removal` (0x8018ec44, WORLD text data), `world_unit_get_battle_id_by_entd_unit_id`, `world_unit_set_animation`, `world_script_blue_remove_unit`, `world_script_blue_remove_all_enemy_units` and `world_script_teleport_out_event_instruction` call `battle_unit_get_battle_id_by_runtime_id` (0x8008cdd0, 0x20 bytes before the end of WLDCORE's `wldcore_map_color_and_draw_dots`), and `world_menu_update_menus_and_event_speed` calls `battle_state_get_vsync_interval` (0x8008ded8, 0x2dc bytes into `wldcore_map_draw_path_animation`). Its camera threads (`world_camera_thread`, `world_camera_fusion_thread`) never run either.
 - WORLD's copy of the battle menus is dead code: nothing in any module calls or names `world_menu_init_system_function` (0x800f5230) or `world_menu_start_mini_menu_display_thread` (0x800f0e48), so modes 1 (AT list) and 2 (crystal pickup panel) of `world_option_run_menu` never run; the world map's Options row runs mode 0.
 - `src/shared/script/script_resolve_runtime_id.c` (BATTLE and WORLD): during

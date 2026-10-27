@@ -28,6 +28,7 @@ const (
 type projectConfig struct {
 	Modules []*moduleSpec
 	Disc    *discLayout // target/disc.yaml; nil when the checkout has none
+	RAM     *ramMap     // target/ram.yaml; nil when the checkout has none
 	byID    map[string]*moduleSpec
 	// discFiles are the layout's files by path, for the disc words.
 	discFiles map[string]discFileFact
@@ -62,8 +63,22 @@ type moduleSpec struct {
 	// DiscWords are the data words that hold a disc file's sector or size,
 	// which the link writes from the disc layout.
 	DiscWords []discWordSpec
+	// RAMWords are the data words that hold a RAM window's size, which the
+	// link writes from the RAM map.
+	RAMWords []ramWordSpec
 
-	path string // file path relative to the project root
+	path   string // file path relative to the project root
+	ramEnd uint32 // the end of the module's RAM window, from target/ram.yaml
+}
+
+// ramWordSpec says the data word at Addr holds the size in bytes of the RAM
+// window Window.
+type ramWordSpec struct {
+	Addr   uint32
+	Window string
+
+	value uint32 // the window's size, set when the configuration loads
+	found bool
 }
 
 // discWordSpec says the data word at Addr holds a fact of the disc file File:
@@ -376,6 +391,12 @@ func (p project) loadProjectConfig() (*projectConfig, error) {
 			}
 			continue
 		}
+		if relative == ramMapPath {
+			if config.RAM, err = parseRAMMap(data); err != nil {
+				return nil, fmt.Errorf("%s: %w", relative, err)
+			}
+			continue
+		}
 		for index, document := range splitYAMLDocuments(data) {
 			module, err := parseModuleConfig(document)
 			if err != nil {
@@ -401,6 +422,20 @@ func (p project) loadProjectConfig() (*projectConfig, error) {
 			m.LBA = config.discFiles[m.File].lba
 			for index := range m.DiscWords {
 				m.DiscWords[index].values = config.discWordValues(m.DiscWords[index])
+			}
+		}
+	}
+	if config.RAM != nil {
+		windows, _ := config.RAM.moduleWindows(config)
+		for _, m := range config.Modules {
+			if window := windows[m.ID]; window != nil {
+				m.ramEnd = window.End
+			}
+			for index := range m.RAMWords {
+				word := &m.RAMWords[index]
+				if window := config.RAM.window(word.Window); window != nil {
+					word.value, word.found = window.End-window.Addr, true
+				}
 			}
 		}
 	}
@@ -446,6 +481,12 @@ type moduleFileYAML struct {
 	Relocations []relocationYAML `yaml:"relocations"`
 	Values      []valueYAML      `yaml:"values"`
 	Disc        []discWordYAML   `yaml:"disc"`
+	RAM         []ramWordYAML    `yaml:"ram"`
+}
+
+type ramWordYAML struct {
+	Addr   uint32 `yaml:"addr"`
+	Window string `yaml:"window"`
 }
 
 type discWordYAML struct {
@@ -578,6 +619,9 @@ func parseModuleConfig(data []byte) (*moduleSpec, error) {
 		}
 		module.DiscWords = append(module.DiscWords, word)
 	}
+	for _, item := range file.RAM {
+		module.RAMWords = append(module.RAMWords, ramWordSpec{Addr: item.Addr, Window: item.Window})
+	}
 	return module, nil
 }
 
@@ -638,6 +682,7 @@ func (m *moduleSpec) normalize() {
 	}
 	sort.SliceStable(m.Values, func(i, j int) bool { return m.Values[i].Addr < m.Values[j].Addr })
 	sort.SliceStable(m.DiscWords, func(i, j int) bool { return m.DiscWords[i].Addr < m.DiscWords[j].Addr })
+	sort.SliceStable(m.RAMWords, func(i, j int) bool { return m.RAMWords[i].Addr < m.RAMWords[j].Addr })
 }
 
 func sortSymbols(symbols []symbolSpec) {
@@ -757,6 +802,9 @@ func renderModuleConfig(m *moduleSpec) []byte {
 		}
 		return text
 	})
+	section("ram", len(m.RAMWords), func(index int) string {
+		return fmt.Sprintf("addr: 0x%08x, window: %s", m.RAMWords[index].Addr, yamlText(m.RAMWords[index].Window))
+	})
 	return out.Bytes()
 }
 
@@ -791,6 +839,9 @@ func renderConfigFiles(config *projectConfig) map[string][]byte {
 	if config.Disc != nil {
 		fitted, _ := config.Disc.fitted(config)
 		files[discLayoutPath] = renderDiscLayout(fitted)
+	}
+	if config.RAM != nil {
+		files[ramMapPath] = renderRAMMap(config.RAM)
 	}
 	for path, modules := range grouped {
 		sort.Slice(modules, func(i, j int) bool { return modules[i].ID < modules[j].ID })
@@ -860,6 +911,11 @@ func (p project) configFormat() error {
 		} else if wrote {
 			fmt.Printf("config-fmt: wrote %s\n", discHeaderPath)
 		}
+		if wrote, err := p.writeRAMHeader(config); err != nil {
+			return err
+		} else if wrote {
+			fmt.Printf("config-fmt: wrote %s\n", ramHeaderPath)
+		}
 		return nil
 	})
 }
@@ -902,6 +958,14 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 	} else {
 		validateDiscLayout(config.Disc, config, fail)
 		if err := p.validateDiscHeader(config, fail); err != nil {
+			return err
+		}
+	}
+	if config.RAM == nil {
+		fail("%s is missing", ramMapPath)
+	} else {
+		validateRAMMap(config.RAM, config, fail)
+		if err := p.validateRAMHeader(config, fail); err != nil {
 			return err
 		}
 	}
@@ -1093,8 +1157,8 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				}
 			}
 		}
-		// Each data word is classified once, as a relocation, a value or a
-		// disc word.
+		// Each data word is classified once, as a relocation, a value, a disc
+		// word or a RAM word.
 		classified := make(map[uint32]string)
 		for _, relocation := range m.Relocations {
 			where := fmt.Sprintf("%s: relocation 0x%08x", label, relocation.Addr)
@@ -1160,6 +1224,23 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				fail("%s: only a sector takes an offset", where)
 			case ok && (word.Offset < 0 || word.Offset >= file.sectors):
 				fail("%s: offset %d is outside %s's %d sectors", where, word.Offset, word.File, file.sectors)
+			}
+		}
+		for _, word := range m.RAMWords {
+			where := fmt.Sprintf("%s: ram word 0x%08x", label, word.Addr)
+			if word.Addr%4 != 0 || !m.contains(word.Addr, 4) {
+				fail("%s is not an aligned word of the file", where)
+				continue
+			}
+			if owner := m.codeAt(word.Addr, word.Addr+4); owner != "" {
+				fail("%s lies in %s", where, owner)
+			}
+			if previous := classified[word.Addr]; previous != "" {
+				fail("%s repeats a %s", where, previous)
+			}
+			classified[word.Addr] = "ram word"
+			if config.RAM != nil && !word.found {
+				fail("%s: %s is no window in %s", where, word.Window, ramMapPath)
 			}
 		}
 	}

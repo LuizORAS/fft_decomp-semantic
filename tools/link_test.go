@@ -67,6 +67,7 @@ func TestModuleLinkLayoutSplitsTheFile(t *testing.T) {
 
 func TestLinkDataAssemblyAndScript(t *testing.T) {
 	m := linkTestModule()
+	m.ramEnd = 0x80100080
 	layout, err := moduleLinkLayout(m)
 	if err != nil {
 		t.Fatal(err)
@@ -95,6 +96,7 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 		"  /DISCARD/ : { \"/w/data.o\"(.text) ",
 		"ASSERT(test_second == 0x80100010, \"test_second must begin at 0x80100010\");\n",
 		"ASSERT(g_test_tail == 0x80100030, \"g_test_tail must be at 0x80100030\");\n",
+		"ASSERT(ADDR(.bytes_80100024) + SIZEOF(.bytes_80100024) <= 0x80100080, \"the image must end by its RAM window's end 0x80100080\");\n",
 	} {
 		if !strings.Contains(script, line) {
 			t.Fatalf("script lacks %q:\n%s", line, script)
@@ -109,6 +111,7 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 		"  .bytes_80100018 0x80110028 : SUBALIGN(1) { *(.bytes_80100018) }\n",
 		"ASSERT(test_second == 0x80110020, \"test_second must begin at 0x80110020\");\n",
 		"ASSERT(g_test_tail == 0x80110040, \"g_test_tail must be at 0x80110040\");\n",
+		"<= 0x80110090, \"the image must end by its RAM window's end 0x80110090\");\n",
 	} {
 		if !strings.Contains(shifted, line) {
 			t.Fatalf("shifted script lacks %q:\n%s", line, shifted)
@@ -145,21 +148,26 @@ func TestLinkDataAssemblyWritesRelocatedWords(t *testing.T) {
 	}
 }
 
-func TestLinkDataAssemblyWritesDiscWords(t *testing.T) {
+func TestLinkDataAssemblyWritesDiscAndRAMWords(t *testing.T) {
 	m := linkTestModule()
 	m.Relocations = []relocationSpec{{Addr: 0x80100024, To: "test_first"}}
 	m.DiscWords = []discWordSpec{
 		{Addr: 0x80100028, Kind: "extent", File: "SYSTEM.CNF", values: []uint32{23, 2048}},
 		{Addr: 0x80100034, Kind: "sector", File: "MAP/MAP001.GNS", Offset: 1, values: []uint32{32}},
 	}
+	m.RAMWords = []ramWordSpec{{Addr: 0x80100038, Window: "companion", value: 0x20000, found: true}}
 	layout, err := moduleLinkLayout(m)
 	if err != nil {
 		t.Fatal(err)
 	}
 	want := "\t.word test_first\n\t.word 23\n\t.word 2048\n\t.globl g_test_tail\ng_test_tail:\n" +
-		"\t.incbin \"/disc/EVENT/TEST.OUT\", 48, 4\n\t.word 32\n\t.incbin \"/disc/EVENT/TEST.OUT\", 56, 8\n"
+		"\t.incbin \"/disc/EVENT/TEST.OUT\", 48, 4\n\t.word 32\n\t.word 0x20000\n\t.incbin \"/disc/EVENT/TEST.OUT\", 60, 4\n"
 	if data := linkDataAssembly(m, layout, "/disc/EVENT/TEST.OUT"); !strings.Contains(data, want) {
 		t.Fatalf("data assembly:\n%s", data)
+	}
+	m.RAMWords[0].found = false
+	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "has no window companion in the RAM map") {
+		t.Fatalf("a RAM word without the map: %v", err)
 	}
 	m.DiscWords[0].values = nil
 	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "has no SYSTEM.CNF in the disc layout") {

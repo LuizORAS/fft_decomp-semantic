@@ -5,7 +5,7 @@
 
 /* Thread that opens the unit list (BUNIT.OUT): fade the screen out over 16
  * frames, suspend the menus, ask the menu and the four unit panel threads to
- * stop, load the overlay's first half, reserve 0x20000 bytes for the high overlay
+ * stop, load the overlay's first half, reserve the high window
  * and load the second half there, then start the return thread (menu_fade_out_thread) in the
  * fade-out slot and exit. WORLD compiles this text too. */
 void menu_run_bunit_transition_thread(void) {
@@ -24,7 +24,7 @@ void menu_run_bunit_transition_thread(void) {
     thread_set_parameters(THREAD_SLOT_HOVERED_UNIT_STATS, 0, 0, 1);
     thread_wait_for_unit_view_panels();
     menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_BUNIT);
-    menu_reserve_high_overlay(0x20000);
+    menu_reserve_high_overlay(RAM_WINDOW_BYTES_HIGH);
     menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_BUNIT_SECOND_HALF);
     thread_wait_frames(2);
     g_world_menu_help_open = 1;

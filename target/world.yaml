@@ -4415,3 +4415,12 @@ disc:
   - {addr: 0x80193c98, extent: MENU/TUTO5.SCR}
   - {addr: 0x80193ca0, extent: MENU/TUTO6.SCR}
   - {addr: 0x80193ca8, extent: MENU/TUTO7.SCR}
+
+ram:
+  - {addr: 0x801563d0, window: companion}
+  - {addr: 0x801563e4, window: high}
+  - {addr: 0x801563ec, window: companion}
+  - {addr: 0x801563f0, window: high}
+  - {addr: 0x801563fc, window: companion}
+  - {addr: 0x80156400, window: companion}
+  - {addr: 0x80156404, window: high}

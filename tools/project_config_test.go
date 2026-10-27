@@ -13,8 +13,8 @@ import (
 )
 
 // testProject writes target files and sources into a temporary project. A
-// project with module files and no target/disc.yaml gets one from
-// testDiscYAML.
+// project with module files and no target/disc.yaml or target/ram.yaml gets
+// them from testDiscYAML and testRAMYAML.
 func testProject(t *testing.T, files map[string]string) project {
 	t.Helper()
 	root := t.TempDir()
@@ -22,6 +22,12 @@ func testProject(t *testing.T, files map[string]string) project {
 		if disc := testDiscYAML(files); disc != "" {
 			files = maps.Clone(files)
 			files[discLayoutPath] = disc
+		}
+	}
+	if _, ok := files[ramMapPath]; !ok {
+		if ram := testRAMYAML(files); ram != "" {
+			files = maps.Clone(files)
+			files[ramMapPath] = ram
 		}
 	}
 	for path, content := range files {
@@ -77,6 +83,41 @@ func testDiscYAML(files map[string]string) string {
 		lba += max(1, (m.Size+discDataSectorBytes-1)/discDataSectorBytes)
 	}
 	return out.String()
+}
+
+// testRAMYAML gives each module the target fixtures name a window of its own,
+// from its RAM start to its end, in a state of its own.
+func testRAMYAML(files map[string]string) string {
+	type moduleHeader struct {
+		Module string `yaml:"module"`
+		Size   int    `yaml:"size"`
+		Load   uint32 `yaml:"load"`
+	}
+	ram := &ramMap{}
+	for name, content := range files {
+		if !strings.HasPrefix(name, modulesConfigDir+"/") || name == discLayoutPath {
+			continue
+		}
+		for _, document := range splitYAMLDocuments([]byte(content)) {
+			var header moduleHeader
+			if yaml.Unmarshal(document, &header) != nil || header.Module == "" {
+				continue
+			}
+			start, end := moduleRAM(&moduleSpec{ID: header.Module, Load: header.Load, Size: header.Size})
+			ram.Windows = append(ram.Windows, ramWindow{
+				Name: strings.ReplaceAll(header.Module, "-", "_"), Addr: start, End: max(end, start+4),
+				Modules: []string{header.Module}, Why: "the test",
+			})
+		}
+	}
+	if len(ram.Windows) == 0 {
+		return ""
+	}
+	sort.Slice(ram.Windows, func(i, j int) bool { return ram.Windows[i].Name < ram.Windows[j].Name })
+	for _, window := range ram.Windows {
+		ram.States = append(ram.States, ramState{Name: window.Name, Windows: []string{window.Name}})
+	}
+	return string(renderRAMMap(ram))
 }
 
 const testMainYAML = `# The main executable.

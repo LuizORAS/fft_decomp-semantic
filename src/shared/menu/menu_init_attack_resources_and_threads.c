@@ -28,7 +28,8 @@ s32 menu_init_attack_resources_and_threads(void) {
         g_script_attack_entry_mode = SCRIPT_ATTACK_ENTRY_PRELOAD_USED;
     } else {
         g_thread_call_target = main_file_load_to_address_checked;
-        thread_call_on_main_stack(DISC_SECTOR_EVENT_ATTACK_OUT, 0x20000, g_main_heap_companion_overlay_load_address);
+        thread_call_on_main_stack(
+            DISC_SECTOR_EVENT_ATTACK_OUT, RAM_WINDOW_BYTES_COMPANION, g_main_heap_companion_overlay_load_address);
     }
     result = attack_scenario_load_conditionals();
     if (g_script_attack_entry_mode != SCRIPT_ATTACK_ENTRY_PRELOAD_USED) {

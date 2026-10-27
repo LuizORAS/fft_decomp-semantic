@@ -457,6 +457,15 @@ func discName(file string) string {
 // discCodeNames lists the DISC_SECTOR_ names the C sources and headers use in
 // code or directives, apart from the generated header itself.
 func discCodeNames(root string) (map[string]bool, error) {
+	names, err := codeNamesWithPrefix(root, discSectorPrefix, discHeaderPath)
+	delete(names, discSectorBytes)
+	return names, err
+}
+
+// codeNamesWithPrefix lists the names starting with prefix that the C sources
+// and headers use in code or directives, apart from the generated header that
+// defines them.
+func codeNamesWithPrefix(root, prefix, header string) (map[string]bool, error) {
 	names := make(map[string]bool)
 	for _, dir := range declarationScanDirs {
 		err := filepath.WalkDir(filepath.Join(root, dir), func(file string, entry fs.DirEntry, err error) error {
@@ -468,7 +477,7 @@ func discCodeNames(root string) (map[string]bool, error) {
 				return nil
 			}
 			relative, err := filepath.Rel(root, file)
-			if err != nil || filepath.ToSlash(relative) == discHeaderPath {
+			if err != nil || filepath.ToSlash(relative) == header {
 				return err
 			}
 			data, err := os.ReadFile(file)
@@ -487,7 +496,7 @@ func discCodeNames(root string) (map[string]bool, error) {
 				tokens = append(tokens, more...)
 			}
 			for _, token := range tokens {
-				if token.kind == cIdent && strings.HasPrefix(token.text, discSectorPrefix) && token.text != discSectorBytes {
+				if token.kind == cIdent && strings.HasPrefix(token.text, prefix) {
 					names[token.text] = true
 				}
 			}

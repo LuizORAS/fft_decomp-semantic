@@ -36,7 +36,8 @@ type linkPiece struct {
 }
 
 // linkWord is a word of the bytes the link writes instead of copying it: a
-// relocation's symbol (plus offset) or a disc word's number from the layout.
+// relocation's symbol (plus offset), a disc word's number from the layout or
+// a RAM window's size from the RAM map.
 type linkWord struct {
 	addr uint32
 	expr string
@@ -46,11 +47,13 @@ type linkWord struct {
 // lie inside another function's (a literal several functions share, which
 // each object carries); and the data rows the link binds to their absolute
 // addresses: those past the file, and those inside a function that name
-// another module's object (see linkRowIsForeign).
+// another module's object (see linkRowIsForeign); and the end of the module's
+// RAM window, which the image must not pass (0 for none).
 type linkLayout struct {
 	pieces   []linkPiece
 	shadows  []linkPiece
 	absolute []symbolSpec
+	ramEnd   uint32
 }
 
 // The resident executable starts with its PS-X EXE header (psxEXEHeaderSize
@@ -78,7 +81,7 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 		}
 		return pieces[a].size > pieces[b].size
 	})
-	var layout linkLayout
+	layout := linkLayout{ramEnd: m.ramEnd}
 	cursor, end := m.Load, uint32(m.end())
 	for _, piece := range pieces {
 		if piece.addr < cursor {
@@ -148,6 +151,12 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 		for index, value := range word.values {
 			words = append(words, linkWord{word.Addr + uint32(4*index), fmt.Sprintf("%d", value)})
 		}
+	}
+	for _, word := range m.RAMWords {
+		if !word.found {
+			return layout, fmt.Errorf("%s: ram word 0x%08x has no window %s in the RAM map", m.ID, word.Addr, word.Window)
+		}
+		words = append(words, linkWord{word.Addr, fmt.Sprintf("0x%x", word.value)})
 	}
 	sort.Slice(words, func(a, b int) bool { return words[a].addr < words[b].addr })
 	for _, word := range words {
@@ -391,7 +400,8 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 // its piece's name, see linkObjectSections), binds the names the objects
 // leave undefined that this module cannot define (its links, MAIN, imports,
 // the absolute data rows), defines each data row inside its own code from its
-// piece, and asserts every function, label and such row.
+// piece, and asserts every function, label and such row, and that the image
+// ends inside its RAM window.
 // A module with `$gp`-relative code sets `_gp` to the label gp names. A
 // nonzero shift moves every piece and label by that many bytes (reloc-check's
 // shifted links); the bound names stay where they are.
@@ -445,6 +455,11 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 		for _, label := range append(append([]symbolSpec(nil), piece.labels...), piece.aliases...) {
 			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must be at 0x%08x\");\n", label.Name, label.Addr+shift, label.Name, label.Addr+shift)
 		}
+	}
+	if layout.ramEnd != 0 {
+		last := linkSectionName(layout.pieces[len(layout.pieces)-1])
+		fmt.Fprintf(&script, "ASSERT(ADDR(%s) + SIZEOF(%s) <= 0x%08x, \"the image must end by its RAM window's end 0x%08x\");\n",
+			last, last, layout.ramEnd+shift, layout.ramEnd+shift)
 	}
 	return script.String()
 }
@@ -811,6 +826,7 @@ func (p project) linkCommand(args []string) error {
 	resolver := newSymbolResolver(config)
 	linked, failed := 0, 0
 	built := make(map[string]string, len(modules))
+	var linkedModules []*moduleSpec
 	original := true
 	for _, m := range modules {
 		result, err := p.linkModule(resolver, m)
@@ -821,10 +837,17 @@ func (p project) linkCommand(args []string) error {
 		}
 		linked++
 		built[m.ID] = result.output
+		linkedModules = append(linkedModules, m)
 		original = original && result.identical
 		fmt.Fprintf(p.stdout(), "ok   %s (%d bytes, %s)\n", m.ID, m.Size, result.checked)
 	}
 	fmt.Fprintf(p.stdout(), "link: %d of %d modules linked whole and identical\n", linked, linked+failed)
+	if config.RAM != nil && len(linkedModules) > 0 {
+		fmt.Fprintln(p.stdout(), "ram: the room each window has left after its largest module")
+		for _, line := range ramRoom(config.RAM, config, linkedModules) {
+			fmt.Fprintln(p.stdout(), line)
+		}
+	}
 	if failed > 0 {
 		return fmt.Errorf("link: %d modules failed", failed)
 	}

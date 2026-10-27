@@ -5375,3 +5375,12 @@ disc:
   - {addr: 0x801b63d0, extent: EFFECT/E509.BIN}
   - {addr: 0x801b63d8, extent: EFFECT/E510.BIN}
   - {addr: 0x801b63e0, extent: EFFECT/E511.BIN}
+
+ram:
+  - {addr: 0x80168f40, window: companion}
+  - {addr: 0x80168f54, window: high}
+  - {addr: 0x80168f5c, window: companion}
+  - {addr: 0x80168f60, window: high}
+  - {addr: 0x80168f6c, window: companion}
+  - {addr: 0x80168f70, window: companion}
+  - {addr: 0x80168f74, window: high}

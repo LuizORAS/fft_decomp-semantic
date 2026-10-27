@@ -7,7 +7,7 @@
 #include "fft/thread.h"
 
 /* Thread of a status list row (BATTLE_MENU_ID_JOBSTTS): unless the menu-building or event thread
- * runs, block the help, reserve 0x20000 bytes for the high overlay, load JOBSTTS.OUT and run it
+ * runs, block the help, reserve the high window, load JOBSTTS.OUT and run it
  * (companion overlay state JOBSTTS) until it returns, then free the reservation and unblock the help.
  * WORLD compiles this text too. */
 void menu_run_jobstts_thread(void) {
@@ -19,7 +19,7 @@ void menu_run_jobstts_thread(void) {
     }
     battle_menu_set_modal_open();
     sound_queue_sfx_confirm();
-    menu_reserve_high_overlay(0x20000);
+    menu_reserve_high_overlay(RAM_WINDOW_BYTES_HIGH);
     menu_request_open_companion_executable(BATTLE_COMPANION_OVERLAY_JOBSTTS);
     thread_wait_frames(2);
     g_battle_companion_overlay_state = BATTLE_COMPANION_OVERLAY_STATE_JOBSTTS;

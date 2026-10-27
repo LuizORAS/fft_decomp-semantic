@@ -61,10 +61,11 @@ remain excluded. Never modify `meta/`.
 | `src/<module>/` | One C file per function, named after it (a `.s` file for an original hand-written routine) |
 | `src/shared/<subsystem>/` | Proven shared implementations: one source compiled at every original entry that runs it, bound per module with `source:` and `source_symbol` in `target/` |
 | `src/lib/psyq/<library>/`, `src/lib/suzuki/` | Byte-exact library reconstructions, registered with explicit `source:` paths in their original module |
-| `include/fft/` | Module headers (`main.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), BATTLE's subsystem headers (`battle_<subsystem>.h`, all included by `battle.h`) and shared type headers (`data.h`, `gfx.h`, `map.h`, `memory.h`, `menu.h`, `menu_script.h`, `script.h`, `sound.h`, `thread.h`, `unit.h`), plus `disc.h`, generated from `target/disc.yaml` |
+| `include/fft/` | Module headers (`main.h`, `world.h`, `wldcore.h`, `open.h`, `effect.h`, `event_<overlay>.h`), BATTLE's subsystem headers (`battle_<subsystem>.h`, all included by `battle.h`) and shared type headers (`data.h`, `gfx.h`, `map.h`, `memory.h`, `menu.h`, `menu_script.h`, `script.h`, `sound.h`, `thread.h`, `unit.h`), plus `disc.h` and `ram.h`, generated from `target/disc.yaml` and `target/ram.yaml` |
 | `include/psx/` | Psy-Q SDK, library and PS1 hardware declarations (keep SDK names and signatures) |
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `target/disc.yaml` | The disc's file system: every directory, file and dummy at its sector, with sizes and dates, never bytes |
+| `target/ram.yaml` | The RAM the modules load into: each window with its modules and what bounds it, and the windows resident together |
 | `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
 | `QUIRKS.md` | Index of retail bugs and code that looks wrong on purpose |
 | `CODEBASE.md` | Architecture guide: disc modules, boot and game loop, engine services, how to find things |
@@ -106,7 +107,7 @@ make share-audit [MODULE=x] # report shared C implementation candidates as JSON
 make twins [MODULE=x]      # group functions identical under renames across modules (needs the BIN)
 make trial TWINS=t0001     # compile each twin's source at the others' entries (or MODULE ENTRY SOURCE)
 make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
-make link [MODULE=x]       # link each module whole from its objects and the bytes between them; compare with the original file (function hashes without the BIN); every module with the BIN also builds the disc in build/link/disc
+make link [MODULE=x]       # link each module whole from its objects and the bytes between them; compare with the original file (function hashes without the BIN); fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc in build/link/disc
 make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address or a disc sector and is neither relocation, disc word nor value, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
@@ -144,7 +145,7 @@ the shards' module lists cover every module once. Optional overrides: `JOBS`,
 
 ## target/*.yaml
 
-One YAML document per module, plus `disc.yaml` (below); `event.yaml` and
+One YAML document per module, plus `disc.yaml` and `ram.yaml` (below); `event.yaml` and
 `effect.yaml` hold many, separated by `---`. `make config-fmt` defines the canonical form (unquoted hex
 addresses, decimal sizes, one flow mapping per line, sorted rows) and
 `make check-config` rejects anything else.
@@ -179,6 +180,8 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
   checks each against the original and fails on a word that reads as a
   file's first sector followed by its size, or as one of three or more first
   sectors in a row, unless it is a `disc` word or a value.
+- `ram`: data words that hold a RAM window's size, `{addr, window}`;
+  `make link` writes each from `ram.yaml`.
 - `units`: the original translation units, `{addr, end, name}` plus `profile`
   when the file was not built with the module default, matched by address
   from upstream's unit tables and named with its labels. The functions in
@@ -203,6 +206,16 @@ code is a name `make config-fmt` writes to `include/fft/disc.h` for each one
 the code uses: `DISC_SECTOR_<FILE>` is its first sector and
 `DISC_SECTOR_COUNT_<FILE>` its length in sectors, `<FILE>` being its path
 with `/` and `.` as `_`; `make check-config` fails when the header differs.
+
+`ram.yaml` is the RAM the modules load into. A window runs from its modules'
+load address (`addr`) to where the next thing resident with them starts
+(`end`, the reason in `why`); each module, listed by id or by family
+(`effect`), is in one window, starts at its start and ends by its end. A
+state lists the windows resident at one time, which never overlap.
+`make link` fails on an image that passes its window's end and prints the
+room each window has left. A window's size in code is
+`RAM_WINDOW_BYTES_<WINDOW>`, which `make config-fmt` writes to
+`include/fft/ram.h` for each one the code uses.
 
 To add a function: write `src/<module>/<name>.c`, add its `functions` row and
 any new `data` rows, then `make config-fmt`, `make checksums`,

@@ -11,7 +11,7 @@ void etc_graphic_open(s32 graphic_id) {
     s32 frame;
 
     while (1) {
-        image_buffer = main_heap_reserve_at(g_main_heap_high_overlay_load_address, 0x20000);
+        image_buffer = main_heap_reserve_at(g_main_heap_high_overlay_load_address, RAM_WINDOW_BYTES_HIGH);
         if (image_buffer == g_main_heap_high_overlay_load_address) {
             break;
         }

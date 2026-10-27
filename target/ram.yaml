@@ -1,0 +1,25 @@
+# The RAM the modules load into. A window runs from its modules' load address
+# to where the next thing resident with them starts (why); `make link` fails
+# when a module's image passes its window's end and prints the room each
+# window has left. A state lists windows resident at one time, which never
+# overlap. MAIN stays resident below the overlays, the game heap is 64 cells
+# of 2 KB from 0x801df000, and the stack starts at 0x801ff000.
+windows:
+  - {name: main, addr: 0x80010000, end: 0x80067000, modules: [main], why: "the overlays load at g_main_low_overlay_window"}
+  - {name: opening, addr: 0x80067000, end: 0x800c0000, modules: [opening], why: "OPEN's MDEC output buffers (g_open_movie_mdec_output_buffer_0)"}
+  - {name: wldcore, addr: 0x80067000, end: 0x800e0000, modules: [wldcore], why: "WORLD loads at g_main_world_overlay_window"}
+  - {name: battle, addr: 0x80067000, end: 0x801bf000, modules: [battle], why: "BATTLE's effect state and the EVENT overlays at g_main_companion_overlay_window"}
+  - {name: world, addr: 0x800e0000, end: 0x801d0000, modules: [world], why: "WLDCORE_SCRATCH_BUFFER; MAIN reads the whole window from WORLD.BIN's sector"}
+  - {name: companion, addr: 0x801bf000, end: 0x801df000, modules: [event-attack, event-card, event-debugchr, event-etc, event-option, event-require], why: "the game heap at g_main_high_overlay_window; BATTLE reads at most the whole window"}
+  - {name: unit_screens, addr: 0x801bf000, end: 0x801ff000, modules: [event-bunit, event-equip], why: "the stack; each half is read into a window of its own, the second over the reserved game heap"}
+  - {name: effect, addr: 0x801c2500, end: 0x801df000, modules: [effect], why: "the game heap; the battle heap runs from the effect's palette section to there"}
+  - {name: small, addr: 0x801d7000, end: 0x801df000, modules: [event-small], why: "the game heap"}
+  - {name: high, addr: 0x801df000, end: 0x801ff000, modules: [event-helpmenu, event-jobstts], why: "the stack; they load over the game heap once a menu reserves it"}
+
+states:
+  - {name: opening, windows: [main, opening]}
+  - {name: world, windows: [main, wldcore, world]}
+  - {name: battle_menus, windows: [main, battle, companion, high]}
+  - {name: battle_unit_screens, windows: [main, battle, unit_screens]}
+  - {name: battle_small, windows: [main, battle, small]}
+  - {name: battle_effect, windows: [main, battle, effect]}
