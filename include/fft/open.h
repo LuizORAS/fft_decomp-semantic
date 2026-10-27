@@ -93,6 +93,13 @@ extern u32 g_open_input_previous_buttons;
 extern s32 g_open_input_up_repeat_counter;
 u32 open_input_check_repeating_directional(u32 buttons);
 
+/* memory */
+/* Fixed RAM areas outside every module image: where OPEN's disc reads land, and where it keeps the
+ * OPNTEX data its script uploads. */
+
+#define OPEN_FILE_DESTINATION_BUFFER ((u8*)0x801d0000)
+#define OPEN_GFX_OPNTEX_DATA_BUFFER  ((u32*)0x80140000)
+
 /* file */
 /* OPEN's disc reads through MAIN's loader, one at a time: the OPNTEX.BIN textures and the OPNBK.BIN
  * pictures (the title's frame, the prologue's pictures and the ending's). */

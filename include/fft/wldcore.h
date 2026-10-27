@@ -319,6 +319,13 @@ void wldcore_system_init_world_menus_and_date(void);
 void wldcore_system_restore_previous_stack(void);
 void wldcore_system_switch_to_stack(void*);
 
+/* memory */
+/* Fixed RAM areas past WORLD's image: the scratch buffer WLDCORE and WORLD clear and read images
+ * into (0x1e000 bytes), and right after it the staging buffer of the dissolve image upload. */
+
+#define WLDCORE_SCRATCH_BUFFER            ((u32*)0x801d0000)
+#define WLDCORE_GFX_DISSOLVE_BLOCK_BUFFER ((u8*)0x801ee000)
+
 /* file */
 /* Disc reads on MAIN's shared descriptor, waited for a frame at a time while the audio queue keeps
  * running, and the image stream that loads the world map texture straight into VRAM. */

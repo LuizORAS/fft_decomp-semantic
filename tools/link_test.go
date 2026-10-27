@@ -45,8 +45,18 @@ func TestModuleLinkLayoutSplitsTheFile(t *testing.T) {
 	if strings.Join(got, "|") != strings.Join(want, "|") {
 		t.Fatalf("pieces %q", got)
 	}
-	if len(layout.absolute) != 2 || layout.absolute[0].Name != "g_test_inside" || layout.absolute[1].Name != "g_test_past" {
+	// A row inside the module's own code is an alias of its piece; one past the
+	// file, or one naming another module's object, stays absolute.
+	if aliases := layout.pieces[1].aliases; len(aliases) != 1 || aliases[0].Name != "g_test_inside" {
+		t.Fatalf("aliases of %s: %v", linkSectionName(layout.pieces[1]), aliases)
+	}
+	if len(layout.absolute) != 1 || layout.absolute[0].Name != "g_test_past" {
 		t.Fatalf("absolute %v", layout.absolute)
+	}
+	foreign := linkTestModule()
+	foreign.Data = append(foreign.Data, symbolSpec{Addr: 0x80100014, Name: "g_battle_inside"})
+	if layout, err := moduleLinkLayout(foreign); err != nil || len(layout.absolute) != 2 || layout.absolute[0].Name != "g_battle_inside" {
+		t.Fatalf("foreign row: %v %v", err, layout.absolute)
 	}
 	m := linkTestModule()
 	m.Functions[1].Addr = 0x8010000c
@@ -73,10 +83,12 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 	if zeroed := linkDataAssembly(m, layout, ""); !strings.Contains(zeroed, "\t.space 8\n") || strings.Contains(zeroed, "incbin") {
 		t.Fatalf("zeroed data assembly:\n%s", zeroed)
 	}
-	bindings := map[string]uint32{"g_test_inside": 0x8010000c, "battle_x": 0x80070000}
+	bindings := map[string]uint32{"g_test_past": 0x80100100, "battle_x": 0x80070000}
 	script := linkScript(layout, "/w/data.o", bindings, "", 0)
 	for _, line := range []string{
-		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_inside = 0x8010000c);\n",
+		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_past = 0x80100100);\n",
+		"g_test_inside = ADDR(.text_80100008) + 0x4;\n",
+		"ASSERT(g_test_inside == 0x8010000c, \"g_test_inside must be at 0x8010000c\");\n",
 		"  .text_80100008 0x80100008 : SUBALIGN(4) { *(.text_80100008) }\n",
 		"  .rodata_80100020 0x80100020 : SUBALIGN(4) { *(.rodata_80100020) }\n",
 		"  .bytes_80100018 0x80100018 : SUBALIGN(1) { *(.bytes_80100018) }\n",
@@ -88,10 +100,11 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 			t.Fatalf("script lacks %q:\n%s", line, script)
 		}
 	}
-	// Shifted, every piece and label moves; the bound names do not.
+	// Shifted, every piece, label and alias moves; the bound names do not.
 	shifted := linkScript(layout, "/w/data.o", bindings, "", 0x10010)
 	for _, line := range []string{
-		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_inside = 0x8010000c);\n",
+		"PROVIDE(battle_x = 0x80070000);\nPROVIDE(g_test_past = 0x80100100);\n",
+		"ASSERT(g_test_inside == 0x8011001c, \"g_test_inside must be at 0x8011001c\");\n",
 		"  .text_80100008 0x80110018 : SUBALIGN(4) { *(.text_80100008) }\n",
 		"  .bytes_80100018 0x80110028 : SUBALIGN(1) { *(.bytes_80100018) }\n",
 		"ASSERT(test_second == 0x80110020, \"test_second must begin at 0x80110020\");\n",

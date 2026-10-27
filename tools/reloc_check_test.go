@@ -214,7 +214,9 @@ func TestRelocCheckModuleClassifiesAndShifts(t *testing.T) {
 	}
 	m.Relocations = []relocationSpec{{Addr: 0x80010300, To: "main_second"}, {Addr: 0x80010400, To: "g_main_value", Offset: 4}}
 	m.Values = []valueSpec{{Addr: 0x80010308, Why: "test"}}
-	m.Data = append(m.Data, symbolSpec{Addr: 0x80010004, Name: "g_main_inside"})
+	// An own row inside a function moves with it; another module's name there
+	// stays absolute and is listed.
+	m.Data = append(m.Data, symbolSpec{Addr: 0x80010004, Name: "g_main_inside"}, symbolSpec{Addr: 0x80010004, Name: "g_battle_inside"})
 	path := filepath.Join(p.filesRoot, m.File)
 	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		t.Fatal(err)
@@ -238,7 +240,7 @@ func TestRelocCheckModuleClassifiesAndShifts(t *testing.T) {
 	}
 	want := []string{"orphan function main_second", "pending nothing"}
 	if len(got) != 4 || got[0] != want[0] || got[1] != want[1] || !strings.HasPrefix(got[2], "code main_second+0x") ||
-		report.findings[2].value != 0x80010084 || got[3] != "row g_main_inside in main_first .text+0x4" {
+		report.findings[2].value != 0x80010084 || got[3] != "row g_battle_inside in main_first .text+0x4" {
 		t.Fatalf("findings %q", got)
 	}
 	if err := writeRelocList(filepath.Join(p.root, "build", "reloc-check", "main.tsv"), report.findings); err != nil {
@@ -246,7 +248,7 @@ func TestRelocCheckModuleClassifiesAndShifts(t *testing.T) {
 	}
 	list, err := os.ReadFile(filepath.Join(p.root, "build", "reloc-check", "main.tsv"))
 	if err != nil || !strings.HasPrefix(string(list), "kind\taddr\tvalue\twhat\norphan\t0x80010304\t0x80010100\tfunction main_second\n") ||
-		!strings.Contains(string(list), "row\t0x80010004\t\tg_main_inside") {
+		!strings.Contains(string(list), "row\t0x80010004\t\tg_battle_inside") {
 		t.Fatalf("list:\n%s", list)
 	}
 	m.Relocations[0].To = "main_first"

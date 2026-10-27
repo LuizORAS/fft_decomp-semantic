@@ -31,14 +31,15 @@ type linkPiece struct {
 	kind        string // "text", "rodata", "bytes" or MAIN's "header"
 	function    *functionSpec
 	labels      []symbolSpec
+	aliases     []symbolSpec     // data rows inside a text or rodata piece, defined from its address
 	relocations []relocationSpec // words of a bytes piece written from a symbol
 }
 
 // linkLayout is a module's pieces in address order; the .rodata copies that
 // lie inside another function's (a literal several functions share, which
-// each object carries); and the data rows that no bytes piece holds (inside a
-// function or past the file), which the link binds to their absolute
-// addresses.
+// each object carries); and the data rows the link binds to their absolute
+// addresses: those past the file, and those inside a function that name
+// another module's object (see linkRowIsForeign).
 type linkLayout struct {
 	pieces   []linkPiece
 	shadows  []linkPiece
@@ -112,9 +113,16 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 		index := sort.Search(len(layout.pieces), func(i int) bool {
 			return layout.pieces[i].addr+uint32(layout.pieces[i].size) > symbol.Addr
 		})
-		if index < len(layout.pieces) && layout.pieces[index].addr <= symbol.Addr && layout.pieces[index].kind == "bytes" {
-			layout.pieces[index].labels = append(layout.pieces[index].labels, symbol)
-			continue
+		if index < len(layout.pieces) && layout.pieces[index].addr <= symbol.Addr {
+			piece := &layout.pieces[index]
+			switch {
+			case piece.kind == "bytes":
+				piece.labels = append(piece.labels, symbol)
+				continue
+			case (piece.kind == "text" || piece.kind == "rodata") && !linkRowIsForeign(m, symbol.Name):
+				piece.aliases = append(piece.aliases, symbol)
+				continue
+			}
 		}
 		layout.absolute = append(layout.absolute, symbol)
 	}
@@ -131,6 +139,27 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 		piece.relocations = append(piece.relocations, relocation)
 	}
 	return layout, nil
+}
+
+// A data row inside one of the module's functions or literals names a place
+// in that code: a second name for a function's entry, the end of a patch
+// template, an immediate the program rewrites, a literal another function
+// loads. The link defines it from its piece, so it moves with the code. A row
+// whose name carries another module's token (WORLD's names for OPEN's buffers
+// in the same RAM) names that module's object at a fixed address instead, and
+// stays absolute.
+func linkRowIsForeign(m *moduleSpec, name string) bool {
+	token, _, _ := strings.Cut(strings.TrimPrefix(name, "g_"), "_")
+	own := m.ID
+	switch {
+	case m.ID == "opening":
+		own = "open"
+	case strings.HasPrefix(m.ID, "event-"):
+		own = strings.TrimPrefix(m.ID, "event-")
+	case strings.HasPrefix(m.ID, "effect-"):
+		own = "effect"
+	}
+	return moduleTokens[token] && token != own
 }
 
 func linkSectionName(piece linkPiece) string {
@@ -341,7 +370,8 @@ func linkDataAssembly(m *moduleSpec, layout linkLayout, image string) string {
 // linkScript places each piece at its address (every input section carries
 // its piece's name, see linkObjectSections), binds the names the objects
 // leave undefined that this module cannot define (its links, MAIN, imports,
-// data rows outside the bytes pieces) and asserts every function and label.
+// the absolute data rows), defines each data row inside its own code from its
+// piece, and asserts every function, label and such row.
 // A module with `$gp`-relative code sets `_gp` to the label gp names. A
 // nonzero shift moves every piece and label by that many bytes (reloc-check's
 // shifted links); the bound names stay where they are.
@@ -378,6 +408,11 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 	// (objectHoldsOnlyCode), as is the data object's .text; the debug
 	// sections never load.
 	fmt.Fprintf(&script, "  /DISCARD/ : { \"%s\"(.text) *(.data) *(.bss) *(.sdata) *(.sbss) *(.reginfo) *(.pdr) *(.comment) *(.gnu.attributes) *(.MIPS.abiflags) *(.debug*) *(.mdebug*) }\n}\n", dataObject)
+	for _, piece := range layout.pieces {
+		for _, alias := range piece.aliases {
+			fmt.Fprintf(&script, "%s = ADDR(%s) + 0x%x;\n", alias.Name, linkSectionName(piece), alias.Addr-piece.addr)
+		}
+	}
 	if header := layout.pieces[0]; header.kind == "header" && len(layout.pieces) > 1 {
 		last := layout.pieces[len(layout.pieces)-1]
 		fmt.Fprintf(&script, "__exe_text_start = ADDR(%s);\n", linkSectionName(layout.pieces[1]))
@@ -387,7 +422,7 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 		if piece.kind == "text" {
 			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must begin at 0x%08x\");\n", piece.function.Name, piece.addr+shift, piece.function.Name, piece.addr+shift)
 		}
-		for _, label := range piece.labels {
+		for _, label := range append(append([]symbolSpec(nil), piece.labels...), piece.aliases...) {
 			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must be at 0x%08x\");\n", label.Name, label.Addr+shift, label.Name, label.Addr+shift)
 		}
 	}
@@ -561,7 +596,7 @@ func (p project) linkModule(resolver symbolResolver, m *moduleSpec) (linkResult,
 		defined[f.Name] = true
 	}
 	for _, piece := range layout.pieces {
-		for _, label := range piece.labels {
+		for _, label := range append(append([]symbolSpec(nil), piece.labels...), piece.aliases...) {
 			defined[label.Name] = true
 		}
 	}

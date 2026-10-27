@@ -157,9 +157,11 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
   when needed. `hash` is the first 16 hex digits of the SHA-256 of the
   original bytes; only `make checksums` writes it.
 - `data`: named addresses with no reconstruction (globals, library entry
-  points). `imports`: names from overlays that linking cannot otherwise
-  reach. `overrides`: per-function bindings. `regions`: bytes deliberately
-  left original, with the reason.
+  points). A data row inside a function names that place in the code and
+  moves with it; one named with another module's prefix is that module's
+  object at a fixed address. `imports`: names from overlays that linking
+  cannot otherwise reach. `overrides`: per-function bindings. `regions`:
+  bytes deliberately left original, with the reason.
 - `relocations`: data words that hold an address, `{addr, to}` plus
   `offset` when the word points past the start of `to` (any name the module
   resolves); `make link` writes each word from its symbol, so it follows the

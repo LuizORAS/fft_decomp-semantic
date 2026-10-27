@@ -26,7 +26,7 @@ void wldcore_system_init_world_map_state(void) {
     s32 day;
     s32 i;
 
-    g_wldcore_scratch_buffer = (u32*)0x801d0000;
+    g_wldcore_scratch_buffer = WLDCORE_SCRATCH_BUFFER;
     g_wldcore_loaded_message_block = -1;
     g_wldcore_loaded_picture_set = -1;
     g_wldcore_menu_ordering_table_offset = 1;

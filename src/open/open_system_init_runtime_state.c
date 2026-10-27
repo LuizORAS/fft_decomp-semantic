@@ -8,9 +8,9 @@
 void open_system_init_runtime_state(void) {
     g_open_system_runtime_flags = OPEN_SYSTEM_RUNTIME_FLAG_RUNNING | OPEN_SYSTEM_RUNTIME_FLAG_DISPLAY_BLANKED
         | OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN;
-    g_open_file_destination = (u8*)0x801d0000;
+    g_open_file_destination = OPEN_FILE_DESTINATION_BUFFER;
     g_open_file_current_openbk_image_id = -1;
-    g_open_gfx_opntex_data = (u32*)0x80140000;
+    g_open_gfx_opntex_data = OPEN_GFX_OPNTEX_DATA_BUFFER;
     g_open_gfx_overlay_fade.abr = 2;
     g_open_gfx_overlay_fade.ot_index = 2;
     g_open_input_previous_buttons = 0;

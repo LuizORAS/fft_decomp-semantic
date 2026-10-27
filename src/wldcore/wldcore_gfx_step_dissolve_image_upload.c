@@ -2,8 +2,6 @@
 #include "psx/libgpu.h"
 #include "psx/libgs.h"
 
-#define BLOCK_BUFFER ((u8*)0x801EE000)
-
 /*
  * Streams an image into VRAM through the 0x801EE000 staging buffer in 1 KiB
  * bands, copying 32 more bytes of each active band per step in the order
@@ -32,7 +30,7 @@ s32 wldcore_gfx_step_dissolve_image_upload(GsIMAGE* image, s32 step) {
 
     pixels = (u8*)image->pixel;
     order = g_wldcore_dissolve_band_order;
-    buffer = BLOCK_BUFFER;
+    buffer = WLDCORE_GFX_DISSOLVE_BLOCK_BUFFER;
     if (step == 0) {
         for (i = 0; i < image->pw * (image->ph << 1); i++) {
             buffer[i] = 0xff;
