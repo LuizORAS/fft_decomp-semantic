@@ -81,6 +81,7 @@ func (p project) checkConfig() error {
 	}
 	fmt.Printf("  declarations: no conflicting file-scope declarations\n")
 	fmt.Printf("  placeholders: no accesses to _unused_ or _padding_ members\n")
+	fmt.Printf("  addresses: no RAM address written as a number in code outside a header #define\n")
 	shards, err := p.checkWorkflowShards(config)
 	if err != nil {
 		return err

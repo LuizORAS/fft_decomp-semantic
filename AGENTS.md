@@ -232,7 +232,9 @@ none), and prefer the profile of its neighbors.
   `*(s16*)((u8*)x + 0x218)`. Add a missing field to its shared header with a
   provisional name. A raw offset, cast, register pin or empty asm barrier stays
   only when the clean spelling provably changes the bytes, with a one-line
-  comment saying so.
+  comment saying so. A RAM address is never a number in code: code names its
+  symbol, and a fixed area outside the module images is a `#define` in its
+  module header's memory group; `make check-config` fails on any other.
 - Ordinary C: named fields, direct assignments, conventional loops. Remove a
   redundant local unless a named temporary reads better (a long call or index
   expression, a value used more than once, a step that deserves a name).

@@ -383,6 +383,9 @@ func (p project) loadCheckedConfig() (*projectConfig, error) {
 	if err := validatePlaceholderMembers(p.root); err != nil {
 		return nil, err
 	}
+	if err := validateAddressLiterals(p.root); err != nil {
+		return nil, err
+	}
 	return config, nil
 }
 
