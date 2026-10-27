@@ -5,13 +5,13 @@
 
 /*
  * Effect-file load state machine: state 0 starts loading the ability's effect
- * file (falling back to effect 1 when its size is zero) 0x3500 bytes into the
- * event overlay area, state 1 polls the load, state 2 waits out the countdown
- * (60 frames when a secondary effect is active), finalizes the secondary
- * effect and fades the music when the effect header flag 0x10 is set, and
- * state 3 waits for the secondary effect phase to end. Returns nonzero while
- * work remains. A load state outside 0-3 leaves `result` unset: the test then
- * reads whatever the caller left in $a0.
+ * file (falling back to effect 1 when its size is zero) at the effect window's
+ * start in the companion window, state 1 polls the load, state 2 waits out the
+ * countdown (60 frames when a secondary effect is active), finalizes the
+ * secondary effect and fades the music when the effect header flag 0x10 is
+ * set, and state 3 waits for the secondary effect phase to end. Returns
+ * nonzero while work remains. A load state outside 0-3 leaves `result` unset:
+ * the test then reads whatever the caller left in $a0.
  */
 s32 battle_effect_update_file_load(void) {
     s32 result;
@@ -19,7 +19,7 @@ s32 battle_effect_update_file_load(void) {
     s32 byte_length;
     u8* destination;
 
-    destination = g_main_heap_companion_overlay_load_address + 0x3500;
+    destination = g_main_heap_companion_overlay_load_address + RAM_WINDOW_START_EFFECT_FROM_COMPANION;
     if (g_battle_ability_effect_id >= 0) {
         switch (g_battle_effect_load_state) {
         case BATTLE_EFFECT_LOAD_START:

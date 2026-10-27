@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -101,26 +102,37 @@ func TestRAMMapRejectsInvalidWindows(t *testing.T) {
 	}
 }
 
-const testRAMWordsYAML = "\nram:\n  - {addr: 0x80010300, window: companion}\n"
+const testRAMWordsYAML = "\nram:\n  - {addr: 0x80010300, size: companion}\n  - {addr: 0x80010304, start: battle}\n" +
+	"  - {addr: 0x80010308, start: companion, from: battle}\n"
 
-func TestRAMWordsTakeTheWindowSize(t *testing.T) {
+func TestRAMWordsTakeTheirValuesFromTheMap(t *testing.T) {
 	config, err := loadRAMTest(t, ramTestProject(t, testMainYAML+testRAMWordsYAML, testRAMMapYAML, nil))
 	if err != nil {
 		t.Fatal(err)
 	}
 	main, _ := config.module("main")
-	if len(main.RAMWords) != 1 || !main.RAMWords[0].found || main.RAMWords[0].value != 0x20000 {
-		t.Fatalf("ram words %+v", main.RAMWords)
+	var got []uint32
+	for _, word := range main.RAMWords {
+		if !word.found {
+			t.Fatalf("ram word %+v", word)
+		}
+		got = append(got, word.value)
+	}
+	if fmt.Sprint(got) != fmt.Sprint([]uint32{0x20000, 0x80067000, 0x158000}) {
+		t.Fatalf("ram word values %x", got)
 	}
 	if string(renderModuleConfig(main)) != testMainYAML+testRAMWordsYAML {
 		t.Fatalf("not canonical:\n%s", renderModuleConfig(main))
 	}
 	for name, edit := range map[string][3]string{
-		"unknown window":   {"window: companion}", "window: nope}", "nope is no window"},
-		"in code":          {"0x80010300, window", "0x80010000, window", "lies in"},
-		"misaligned":       {"0x80010300, window", "0x80010302, window", "not an aligned word"},
-		"outside the file": {"0x80010300, window", "0x80020000, window", "not an aligned word"},
+		"unknown window":   {"size: companion}", "size: nope}", "nope is no window"},
+		"in code":          {"0x80010300, size", "0x80010000, size", "lies in"},
+		"misaligned":       {"0x80010300, size", "0x80010302, size", "not an aligned word"},
+		"outside the file": {"0x80010300, size", "0x80020000, size", "not an aligned word"},
 		"overlaps a value": {"\nram:", "\nvalues:\n  - {addr: 0x80010300, why: a count}\n\nram:", "repeats a value"},
+		"size and start":   {"size: companion}", "size: companion, start: battle}", "takes a size or a start, not both"},
+		"neither":          {"start: battle}", "from: battle}", "needs a size or a start"},
+		"from after":       {"start: companion, from: battle}", "start: battle, from: companion}", "window companion starts after battle"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			text := testMainYAML + testRAMWordsYAML
@@ -135,10 +147,36 @@ func TestRAMWordsTakeTheWindowSize(t *testing.T) {
 	}
 }
 
+// TestRAMWordValueSharesStarts checks the starts a list of windows shares and
+// a start measured from another window's.
+func TestRAMWordValueSharesStarts(t *testing.T) {
+	ram := &ramMap{Windows: []ramWindow{
+		{Name: "low", Addr: 0x80067000, End: 0x800c0000},
+		{Name: "core", Addr: 0x80067000, End: 0x800e0000},
+		{Name: "world", Addr: 0x800e0000, End: 0x801d0000},
+	}}
+	for _, test := range []struct {
+		word    ramWordSpec
+		value   uint32
+		problem string
+	}{
+		{ramWordSpec{Start: ramWindowNames{"low", "core"}}, 0x80067000, ""},
+		{ramWordSpec{Start: ramWindowNames{"world", "core"}}, 0, "windows world and core start apart"},
+		{ramWordSpec{Start: ramWindowNames{"world"}, From: "core"}, 0x79000, ""},
+		{ramWordSpec{Start: ramWindowNames{"world", "world"}, From: "core"}, 0, "measures one window's start from another's"},
+		{ramWordSpec{Start: ramWindowNames{"world"}, From: "nope"}, 0, "nope is no window in " + ramMapPath},
+	} {
+		value, problem := ram.wordValue(test.word)
+		if value != test.value || problem != test.problem {
+			t.Fatalf("%+v: 0x%x %q", test.word, value, problem)
+		}
+	}
+}
+
 func TestRAMHeaderGivesTheSizesTheCodeUses(t *testing.T) {
 	p := ramTestProject(t, testMainYAML, testRAMMapYAML, map[string]string{
 		"src/main/main_first.c": "#define READ (RAM_WINDOW_BYTES_COMPANION / 2048)\n/* RAM_WINDOW_BYTES_BATTLE */\n" +
-			"void main_first(void) { reserve(RAM_WINDOW_BYTES_MAIN, \"RAM_WINDOW_BYTES_NOPE\"); }\n",
+			"void main_first(void) { reserve(RAM_WINDOW_BYTES_MAIN, \"RAM_WINDOW_BYTES_NOPE\"); load(RAM_WINDOW_START_COMPANION_FROM_BATTLE); }\n",
 	})
 	if err := p.configFormat(); err != nil {
 		t.Fatal(err)
@@ -152,6 +190,10 @@ typedef enum ram_window_bytes {
     RAM_WINDOW_BYTES_MAIN = 0x57000,
     RAM_WINDOW_BYTES_COMPANION = 0x20000,
 } ram_window_bytes_e;
+
+typedef enum ram_window_start {
+    RAM_WINDOW_START_COMPANION_FROM_BATTLE = 0x158000,
+} ram_window_start_e;
 
 #endif
 `
@@ -173,5 +215,9 @@ typedef enum ram_window_bytes {
 	write("src/main/main_second.c", "void main_second(void) { reserve(RAM_WINDOW_BYTES_NOPE); }\n")
 	if _, err := loadRAMTest(t, p); err == nil || !strings.Contains(err.Error(), "RAM_WINDOW_BYTES_NOPE names no window") {
 		t.Fatalf("unknown name: %v", err)
+	}
+	write("src/main/main_second.c", "void main_second(void) { load(RAM_WINDOW_START_BATTLE_FROM_COMPANION); }\n")
+	if _, err := loadRAMTest(t, p); err == nil || !strings.Contains(err.Error(), "RAM_WINDOW_START_BATTLE_FROM_COMPANION names no window") {
+		t.Fatalf("a start from a later window: %v", err)
 	}
 }

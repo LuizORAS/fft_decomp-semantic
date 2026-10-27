@@ -8,7 +8,9 @@
 // orphan: it would keep the old address once the module moves. In code, an
 // own address the shifted link left in place (a number in the source, a data
 // row bound inside a function, or a linked module's name whose window
-// overlaps the module's) is listed for the address-literal and link work.
+// overlaps the module's) is listed for the address-literal and link work; a
+// lui of the page a data row declares, which the link asserts the row stays
+// in, is listed as such.
 package main
 
 import (
@@ -40,9 +42,10 @@ var relocCheckShifts = []uint32{0x10, 0x10010}
 
 // relocFinding is one line of a module's list: a pending data word ("orphan"
 // when it points into the module's own file), an own address that code keeps
-// in place under a shift ("code", or "link" when a linked module's name is
-// bound there), or a data row bound inside a function ("row"), which the
-// link places at its absolute address.
+// in place under a shift ("code", "page" when a lui loads the page a data row
+// declares, or "link" when a linked module's name is bound there), or a data
+// row bound inside a function ("row"), which the link places at its absolute
+// address.
 type relocFinding struct {
 	kind  string
 	addr  uint32
@@ -50,12 +53,12 @@ type relocFinding struct {
 	what  string
 }
 
-// relocReport counts a module's data words in scope by classification, and
-// its disc words and the words outside scope that look like a sector table's
-// and are neither disc words nor values ("sector" findings).
+// relocReport counts a module's data words in scope by classification, its
+// disc and ram words, and the words outside scope that look like a sector
+// table's and are neither disc words nor values ("sector" findings).
 type relocReport struct {
 	words, relocations, values, pending, orphans int
-	disc, discPending                            int
+	disc, discPending, ram                       int
 	findings                                     []relocFinding
 }
 
@@ -194,11 +197,11 @@ func (n relocNames) discSector(m *moduleSpec, piece linkPiece, original []byte, 
 }
 
 // relocClassify sorts m's data words in scope (whole words of the bytes
-// pieces) into relocations, values and pending, and its disc words, and fails
-// when a relocation does not name the address its original word holds or a
-// disc word differs from what the layout gives. A word outside scope that
-// looks like a sector table's entry (discSector) and is neither a disc word
-// nor a value is a "sector" finding.
+// pieces) into relocations, values and pending, and counts its disc and ram
+// words, and fails when a relocation does not name the address its original
+// word holds or a disc or ram word differs from what the layout or the RAM
+// map gives. A word outside scope that looks like a sector table's entry
+// (discSector) and is neither a disc word nor a value is a "sector" finding.
 func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, layout linkLayout, original []byte) (relocReport, error) {
 	var report relocReport
 	relocations := make(map[uint32]relocationSpec, len(m.Relocations))
@@ -217,6 +220,10 @@ func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, lay
 			disc[word.Addr+uint32(4*index)] = value
 		}
 	}
+	ram := make(map[uint32]uint32)
+	for _, word := range m.RAMWords {
+		ram[word.Addr] = word.value
+	}
 	var wrong []string
 	for _, piece := range layout.pieces {
 		if piece.kind != "bytes" {
@@ -230,6 +237,13 @@ func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, lay
 					wrong = append(wrong, fmt.Sprintf("disc word 0x%08x holds %d, but the layout gives %d", addr, value, layoutValue))
 				}
 				report.disc++
+				continue
+			}
+			if mapValue, ok := ram[addr]; ok {
+				if mapValue != value {
+					wrong = append(wrong, fmt.Sprintf("ram word 0x%08x holds 0x%x, but the RAM map gives 0x%x", addr, value, mapValue))
+				}
+				report.ram++
 				continue
 			}
 			if !inScope && !values[addr] {
@@ -324,9 +338,10 @@ func pairedAddress(image []byte, offset, end int) (uint32, bool) {
 // far as its symbol (moved). It returns the unexplained changes and, for a
 // shift past 64 KB, the instructions that still name an address in m's own
 // file: a number in the source or one of m's data rows the link binds inside
-// code (rows), and, as "link", a linked module's name bound there (foreign),
-// which lies in m's file because the two windows overlap.
-func relocCompareShifted(m *moduleSpec, layout linkLayout, original, shifted []byte, shift uint32, moved func(string) (uint32, bool), rows, foreign map[uint32]string) ([]string, []relocFinding) {
+// code (rows); as "page", a lui of the page a data row declares (pages, by
+// page); and, as "link", a linked module's name bound there (foreign), which
+// lies in m's file because the two windows overlap.
+func relocCompareShifted(m *moduleSpec, layout linkLayout, original, shifted []byte, shift uint32, moved func(string) (uint32, bool), rows, pages, foreign map[uint32]string) ([]string, []relocFinding) {
 	relocations := make(map[uint32]relocationSpec, len(m.Relocations))
 	for _, relocation := range m.Relocations {
 		relocations[relocation.Addr] = relocation
@@ -344,7 +359,10 @@ func relocCompareShifted(m *moduleSpec, layout linkLayout, original, shifted []b
 					explained = shiftedInstructionExplained(before, after, shift)
 				} else if shift >= 0x10000 {
 					if finding, ok := fixedOwnAddress(m, piece, original, addr, before); ok {
-						if name, ok := rows[finding.value]; ok {
+						if name, ok := pages[before<<16]; ok && before>>26 == 0x0f {
+							finding.kind = "page"
+							finding.what += ", the page " + name + " declares"
+						} else if name, ok := rows[finding.value]; ok {
 							finding.what += ", bound to " + name
 						} else if name, ok := foreign[finding.value]; ok {
 							finding.kind = "link"
@@ -463,6 +481,12 @@ func (p project) relocCheckModule(resolver symbolResolver, names relocNames, m *
 			rows[symbol.Addr] = symbol.Name
 		}
 	}
+	pages := make(map[uint32]string)
+	for _, symbol := range m.Data {
+		if symbol.Page != 0 {
+			pages[symbol.Page] = symbol.Name
+		}
+	}
 	foreign := make(map[uint32]string, len(linked.bindings))
 	for name, addr := range linked.bindings {
 		if previous, ok := foreign[addr]; !ok || name < previous {
@@ -502,7 +526,7 @@ func (p project) relocCheckModule(resolver symbolResolver, names relocNames, m *
 			after, placed := symbols[name]
 			return after - before, known && placed
 		}
-		unexplained, code := relocCompareShifted(m, linked.layout, original, shifted, shift, moved, rows, foreign)
+		unexplained, code := relocCompareShifted(m, linked.layout, original, shifted, shift, moved, rows, pages, foreign)
 		if len(unexplained) > 0 {
 			return report, fmt.Errorf("%s shifted by 0x%x: %d words changed unexplained: %s", m.ID, shift, len(unexplained), strings.Join(unexplained[:min(len(unexplained), 3)], "; "))
 		}
@@ -602,6 +626,7 @@ func (p project) relocCheckCommand(args []string) error {
 		total.orphans += report.orphans
 		total.disc += report.disc
 		total.discPending += report.discPending
+		total.ram += report.ram
 		moduleKinds := map[string]int{}
 		for _, finding := range report.findings {
 			moduleKinds[finding.kind]++
@@ -613,8 +638,8 @@ func (p project) relocCheckCommand(args []string) error {
 			continue
 		}
 		line := fmt.Sprintf("ok   %s: %d words, %d relocations, %d values, %d pending (%d orphans)", m.ID, report.words, report.relocations, report.values, report.pending, report.orphans)
-		if moduleKinds["code"]+moduleKinds["link"]+moduleKinds["row"] > 0 {
-			line += fmt.Sprintf("; code: %d own addresses in place, %d through linked names, %d rows inside code", moduleKinds["code"], moduleKinds["link"], moduleKinds["row"])
+		if moduleKinds["code"]+moduleKinds["page"]+moduleKinds["link"]+moduleKinds["row"] > 0 {
+			line += fmt.Sprintf("; code: %d own addresses in place, %d declared pages, %d through linked names, %d rows inside code", moduleKinds["code"], moduleKinds["page"], moduleKinds["link"], moduleKinds["row"])
 		}
 		fmt.Fprintln(p.stdout(), line)
 	}
@@ -625,8 +650,9 @@ func (p project) relocCheckCommand(args []string) error {
 	fmt.Fprintf(p.stdout(), "reloc-check: %d modules, %d words to classify: %d relocations, %d values, %d pending (%d orphans if moved)\n",
 		checked, total.words, total.relocations, total.values, total.pending, total.orphans)
 	fmt.Fprintf(p.stdout(), "  shifts %s: %d linked with every change explained\n", strings.Join(shifts, " and "), checked)
-	fmt.Fprintf(p.stdout(), "  code: %d own addresses left in place, %d more through a linked module's names, %d data rows bound inside code\n", kinds["code"], kinds["link"], kinds["row"])
+	fmt.Fprintf(p.stdout(), "  code: %d own addresses left in place, %d loads of a declared page, %d more through a linked module's names, %d data rows bound inside code\n", kinds["code"], kinds["page"], kinds["link"], kinds["row"])
 	fmt.Fprintf(p.stdout(), "  disc: %d words written from the layout, %d more like a sector table's left\n", total.disc, total.discPending)
+	fmt.Fprintf(p.stdout(), "  ram: %d words written from the RAM map\n", total.ram)
 	fmt.Fprintln(p.stdout(), "  lists: build/reloc-check/<module>.tsv")
 	if failed > 0 {
 		return fmt.Errorf("reloc-check: %d modules failed", failed)

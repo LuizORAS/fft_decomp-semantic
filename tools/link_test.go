@@ -68,6 +68,7 @@ func TestModuleLinkLayoutSplitsTheFile(t *testing.T) {
 func TestLinkDataAssemblyAndScript(t *testing.T) {
 	m := linkTestModule()
 	m.ramEnd = 0x80100080
+	m.Data[3].Page = 0x80100000 // g_test_tail
 	layout, err := moduleLinkLayout(m)
 	if err != nil {
 		t.Fatal(err)
@@ -96,11 +97,15 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 		"  /DISCARD/ : { \"/w/data.o\"(.text) ",
 		"ASSERT(test_second == 0x80100010, \"test_second must begin at 0x80100010\");\n",
 		"ASSERT(g_test_tail == 0x80100030, \"g_test_tail must be at 0x80100030\");\n",
+		"ASSERT(((g_test_tail + 0x8000) & 0xffff0000) == 0x80100000, \"g_test_tail must stay in page 0x80100000, which code loads as a number\");\n",
 		"ASSERT(ADDR(.bytes_80100024) + SIZEOF(.bytes_80100024) <= 0x80100080, \"the image must end by its RAM window's end 0x80100080\");\n",
 	} {
 		if !strings.Contains(script, line) {
 			t.Fatalf("script lacks %q:\n%s", line, script)
 		}
+	}
+	if strings.Count(script, "must stay in page") != 1 {
+		t.Fatalf("one page assert expected:\n%s", script)
 	}
 	// Shifted, every piece, label and alias moves; the bound names do not.
 	shifted := linkScript(layout, "/w/data.o", bindings, "", 0x10010)
@@ -116,6 +121,9 @@ func TestLinkDataAssemblyAndScript(t *testing.T) {
 		if !strings.Contains(shifted, line) {
 			t.Fatalf("shifted script lacks %q:\n%s", line, shifted)
 		}
+	}
+	if strings.Contains(shifted, "must stay in page") {
+		t.Fatalf("the shifted script asserts a page:\n%s", shifted)
 	}
 }
 
@@ -155,7 +163,7 @@ func TestLinkDataAssemblyWritesDiscAndRAMWords(t *testing.T) {
 		{Addr: 0x80100028, Kind: "extent", File: "SYSTEM.CNF", values: []uint32{23, 2048}},
 		{Addr: 0x80100034, Kind: "sector", File: "MAP/MAP001.GNS", Offset: 1, values: []uint32{32}},
 	}
-	m.RAMWords = []ramWordSpec{{Addr: 0x80100038, Window: "companion", value: 0x20000, found: true}}
+	m.RAMWords = []ramWordSpec{{Addr: 0x80100038, Size: "companion", value: 0x20000, found: true}}
 	layout, err := moduleLinkLayout(m)
 	if err != nil {
 		t.Fatal(err)
@@ -166,7 +174,7 @@ func TestLinkDataAssemblyWritesDiscAndRAMWords(t *testing.T) {
 		t.Fatalf("data assembly:\n%s", data)
 	}
 	m.RAMWords[0].found = false
-	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "has no window companion in the RAM map") {
+	if _, err := moduleLinkLayout(m); err == nil || !strings.Contains(err.Error(), "ram word 0x80100038 has no value in the RAM map") {
 		t.Fatalf("a RAM word without the map: %v", err)
 	}
 	m.DiscWords[0].values = nil

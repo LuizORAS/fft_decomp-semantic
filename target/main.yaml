@@ -1073,7 +1073,7 @@ data:
   - {addr: 0x8002b8a8, name: g_psyq_gte_init_saved_ra}
   - {addr: 0x8002b8b8, name: g_psyq_gte_sqrt_table}
   - {addr: 0x8002ba4c, name: g_psyq_gte_inv_sqrt_table}
-  - {addr: 0x8002bbd8, name: g_psyq_gte_matrix_stack_saved_ra}
+  - {addr: 0x8002bbd8, name: g_psyq_gte_matrix_stack_saved_ra, page: 0x80030000}
   - {addr: 0x8002bbe4, name: g_psyq_gte_matrix_stack_offset}
   - {addr: 0x8002bbe8, name: g_psyq_gte_matrix_stack}
   - {addr: 0x8002be68, name: g_psyq_gte_matrix_stack_overflow_message}
@@ -1489,11 +1489,6 @@ regions:
   - {addr: 0x8004f1d0, end: 0x8004f210, kind: data, why: "Geomancy tile-to-ability lookup table"}
 
 relocations:
-  - {addr: 0x80010000, to: g_main_low_overlay_window}
-  - {addr: 0x80010004, to: g_main_world_overlay_window}
-  - {addr: 0x80010008, to: g_main_companion_overlay_window}
-  - {addr: 0x8001000c, to: g_main_high_overlay_window}
-  - {addr: 0x80010010, to: g_main_high_overlay_window}
   - {addr: 0x80028af0, to: __SN_ENTRY_POINT}
   - {addr: 0x80028af8, to: g_psyq_crt_constructors_ran}
   - {addr: 0x80028b00, to: g_main_gfx_now_loading_otags}
@@ -1822,3 +1817,10 @@ disc:
   - {addr: 0x80047388, extent: SOUND/MUSIC_97.SMD}
   - {addr: 0x80047390, extent: SOUND/MUSIC_98.SMD}
   - {addr: 0x80047398, extent: SOUND/MUSIC_99.SMD}
+
+ram:
+  - {addr: 0x80010000, start: [opening, wldcore, battle]}
+  - {addr: 0x80010004, start: world}
+  - {addr: 0x80010008, start: [companion, unit_screens]}
+  - {addr: 0x8001000c, start: high}
+  - {addr: 0x80010010, start: high}

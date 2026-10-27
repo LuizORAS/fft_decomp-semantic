@@ -63,8 +63,8 @@ type moduleSpec struct {
 	// DiscWords are the data words that hold a disc file's sector or size,
 	// which the link writes from the disc layout.
 	DiscWords []discWordSpec
-	// RAMWords are the data words that hold a RAM window's size, which the
-	// link writes from the RAM map.
+	// RAMWords are the data words that hold a RAM window's size or start,
+	// which the link writes from the RAM map.
 	RAMWords []ramWordSpec
 
 	path   string // file path relative to the project root
@@ -72,13 +72,17 @@ type moduleSpec struct {
 }
 
 // ramWordSpec says the data word at Addr holds the size in bytes of the RAM
-// window Window.
+// window Size, the start of the windows Start (which start together), or the
+// start of the window Start past the start of the window From.
 type ramWordSpec struct {
-	Addr   uint32
-	Window string
+	Addr  uint32
+	Size  string
+	Start ramWindowNames
+	From  string
 
-	value uint32 // the window's size, set when the configuration loads
-	found bool
+	value   uint32 // set when the configuration loads
+	problem string // why the RAM map gives no value
+	found   bool
 }
 
 // discWordSpec says the data word at Addr holds a fact of the disc file File:
@@ -118,9 +122,13 @@ type rodataSpec struct {
 	Hash string
 }
 
+// symbolSpec is a data row or an import. A data row's Page, when set, is the
+// high half (with its low half's carry) of its address that code loads as a
+// number, which the link asserts the row stays in.
 type symbolSpec struct {
 	Addr uint32
 	Name string
+	Page uint32
 }
 
 // overrideSpec binds one name to an address for one function only, ahead of
@@ -433,9 +441,8 @@ func (p project) loadProjectConfig() (*projectConfig, error) {
 			}
 			for index := range m.RAMWords {
 				word := &m.RAMWords[index]
-				if window := config.RAM.window(word.Window); window != nil {
-					word.value, word.found = window.End-window.Addr, true
-				}
+				word.value, word.problem = config.RAM.wordValue(*word)
+				word.found = word.problem == ""
 			}
 		}
 	}
@@ -485,8 +492,10 @@ type moduleFileYAML struct {
 }
 
 type ramWordYAML struct {
-	Addr   uint32 `yaml:"addr"`
-	Window string `yaml:"window"`
+	Addr  uint32         `yaml:"addr"`
+	Size  string         `yaml:"size"`
+	Start ramWindowNames `yaml:"start"`
+	From  string         `yaml:"from"`
 }
 
 type discWordYAML struct {
@@ -530,6 +539,7 @@ type rodataYAML struct {
 type symbolYAML struct {
 	Addr uint32 `yaml:"addr"`
 	Name string `yaml:"name"`
+	Page uint32 `yaml:"page"`
 }
 
 type overrideYAML struct {
@@ -620,7 +630,7 @@ func parseModuleConfig(data []byte) (*moduleSpec, error) {
 		module.DiscWords = append(module.DiscWords, word)
 	}
 	for _, item := range file.RAM {
-		module.RAMWords = append(module.RAMWords, ramWordSpec{Addr: item.Addr, Window: item.Window})
+		module.RAMWords = append(module.RAMWords, ramWordSpec{Addr: item.Addr, Size: item.Size, Start: item.Start, From: item.From})
 	}
 	return module, nil
 }
@@ -765,7 +775,11 @@ func renderModuleConfig(m *moduleSpec) []byte {
 	})
 	symbolRow := func(symbols []symbolSpec) func(int) string {
 		return func(index int) string {
-			return fmt.Sprintf("addr: 0x%08x, name: %s", symbols[index].Addr, yamlText(symbols[index].Name))
+			text := fmt.Sprintf("addr: 0x%08x, name: %s", symbols[index].Addr, yamlText(symbols[index].Name))
+			if symbols[index].Page != 0 {
+				text += fmt.Sprintf(", page: 0x%08x", symbols[index].Page)
+			}
+			return text
 		}
 	}
 	section("data", len(m.Data), symbolRow(m.Data))
@@ -803,7 +817,15 @@ func renderModuleConfig(m *moduleSpec) []byte {
 		return text
 	})
 	section("ram", len(m.RAMWords), func(index int) string {
-		return fmt.Sprintf("addr: 0x%08x, window: %s", m.RAMWords[index].Addr, yamlText(m.RAMWords[index].Window))
+		word := m.RAMWords[index]
+		if word.Size != "" {
+			return fmt.Sprintf("addr: 0x%08x, size: %s", word.Addr, yamlText(word.Size))
+		}
+		text := fmt.Sprintf("addr: 0x%08x, start: %s", word.Addr, word.Start.text())
+		if word.From != "" {
+			text += ", from: " + yamlText(word.From)
+		}
+		return text
 	})
 	return out.Bytes()
 }
@@ -1071,9 +1093,19 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 		}
 		for _, symbol := range m.Data {
 			claim(symbol.Name, "data")
+			switch page := (symbol.Addr + 0x8000) &^ 0xffff; {
+			case symbol.Page == 0:
+			case !m.contains(symbol.Addr, 1):
+				fail("%s: data %s: only a row in the module's file takes a page", label, symbol.Name)
+			case symbol.Page != page:
+				fail("%s: data %s: page 0x%08x is not 0x%08x, its address's", label, symbol.Name, symbol.Page, page)
+			}
 		}
 		for _, symbol := range m.Imports {
 			claim(symbol.Name, "import")
+			if symbol.Page != 0 {
+				fail("%s: import %s takes no page", label, symbol.Name)
+			}
 		}
 		for _, override := range m.Overrides {
 			f := m.function(override.Function)
@@ -1240,7 +1272,7 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 			}
 			classified[word.Addr] = "ram word"
 			if config.RAM != nil && !word.found {
-				fail("%s: %s is no window in %s", where, word.Window, ramMapPath)
+				fail("%s: %s", where, word.problem)
 			}
 		}
 	}

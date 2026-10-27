@@ -5377,10 +5377,15 @@ disc:
   - {addr: 0x801b63e0, extent: EFFECT/E511.BIN}
 
 ram:
-  - {addr: 0x80168f40, window: companion}
-  - {addr: 0x80168f54, window: high}
-  - {addr: 0x80168f5c, window: companion}
-  - {addr: 0x80168f60, window: high}
-  - {addr: 0x80168f6c, window: companion}
-  - {addr: 0x80168f70, window: companion}
-  - {addr: 0x80168f74, window: high}
+  - {addr: 0x80168f40, size: companion}
+  - {addr: 0x80168f54, size: high}
+  - {addr: 0x80168f5c, size: companion}
+  - {addr: 0x80168f60, size: high}
+  - {addr: 0x80168f6c, size: companion}
+  - {addr: 0x80168f70, size: companion}
+  - {addr: 0x80168f74, size: high}
+  - {addr: 0x80168f84, start: high, from: companion}
+  - {addr: 0x80168f94, start: high, from: companion}
+  - {addr: 0x80168f98, start: small, from: companion}
+  - {addr: 0x80168fa0, start: high, from: companion}
+  - {addr: 0x80168fb4, start: high, from: companion}

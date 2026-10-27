@@ -4417,10 +4417,15 @@ disc:
   - {addr: 0x80193ca8, extent: MENU/TUTO7.SCR}
 
 ram:
-  - {addr: 0x801563d0, window: companion}
-  - {addr: 0x801563e4, window: high}
-  - {addr: 0x801563ec, window: companion}
-  - {addr: 0x801563f0, window: high}
-  - {addr: 0x801563fc, window: companion}
-  - {addr: 0x80156400, window: companion}
-  - {addr: 0x80156404, window: high}
+  - {addr: 0x801563d0, size: companion}
+  - {addr: 0x801563e4, size: high}
+  - {addr: 0x801563ec, size: companion}
+  - {addr: 0x801563f0, size: high}
+  - {addr: 0x801563fc, size: companion}
+  - {addr: 0x80156400, size: companion}
+  - {addr: 0x80156404, size: high}
+  - {addr: 0x80156414, start: high, from: companion}
+  - {addr: 0x80156424, start: high, from: companion}
+  - {addr: 0x80156428, start: small, from: companion}
+  - {addr: 0x80156430, start: high, from: companion}
+  - {addr: 0x80156444, start: high, from: companion}

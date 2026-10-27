@@ -89,6 +89,7 @@ func TestRelocClassifyChecksDiscWordsAndFindsSectorTables(t *testing.T) {
 	m := linkTestModule()
 	m.DiscWords = []discWordSpec{{Addr: 0x80100024, Kind: "extent", File: "SYSTEM.CNF", values: []uint32{23, 2048}}}
 	m.Values = []valueSpec{{Addr: 0x8010003c, Why: "a count"}}
+	m.RAMWords = []ramWordSpec{{Addr: 0x8010002c, Start: ramWindowNames{"high"}, value: 0x801df000, found: true}}
 	layout, err := moduleLinkLayout(m)
 	if err != nil {
 		t.Fatal(err)
@@ -103,8 +104,9 @@ func TestRelocClassifyChecksDiscWordsAndFindsSectorTables(t *testing.T) {
 	put(0x80100028, 2048) // and its size rounded up to a sector
 	put(0x80100000, 100)  // A.BIN's extent, no row
 	put(0x80100004, 4096)
-	put(0x80100018, 103) // an empty file's sector followed by 0, alone
-	put(0x80100030, 102) // three first sectors in a row, the third a value
+	put(0x80100018, 103)        // an empty file's sector followed by 0, alone
+	put(0x8010002c, 0x801df000) // the ram word: a window's start, in scope but no relocation
+	put(0x80100030, 102)        // three first sectors in a row, the third a value
 	put(0x80100034, 102)
 	put(0x80100038, 103)
 	put(0x8010003c, 100)
@@ -118,8 +120,8 @@ func TestRelocClassifyChecksDiscWordsAndFindsSectorTables(t *testing.T) {
 	}
 	want := []string{"sector 0x80100000 first sector of A.BIN", "sector 0x80100030 first sector of B.BIN",
 		"sector 0x80100034 first sector of B.BIN", "sector 0x80100038 first sector of C.BIN"}
-	if report.disc != 2 || report.discPending != 4 || strings.Join(got, "|") != strings.Join(want, "|") {
-		t.Fatalf("disc %d, pending %d, findings %q", report.disc, report.discPending, got)
+	if report.disc != 2 || report.discPending != 4 || report.ram != 1 || report.pending != 0 || strings.Join(got, "|") != strings.Join(want, "|") {
+		t.Fatalf("disc %d, pending %d, ram %d, findings %q", report.disc, report.discPending, report.ram, got)
 	}
 	if err := relocPendingError(report); err == nil || !strings.Contains(err.Error(), "4 words like a disc sector table's neither disc word nor value") {
 		t.Fatalf("pending disc words: %v", err)
@@ -127,6 +129,11 @@ func TestRelocClassifyChecksDiscWordsAndFindsSectorTables(t *testing.T) {
 	put(0x80100028, 4096)
 	if _, err := relocClassify(symbolResolver{}, names, m, layout, original); err == nil || !strings.Contains(err.Error(), "disc word 0x80100028 holds 4096, but the layout gives 2048") {
 		t.Fatalf("a disc word off the layout: %v", err)
+	}
+	put(0x80100028, 2048)
+	put(0x8010002c, 0x801df004)
+	if _, err := relocClassify(symbolResolver{}, names, m, layout, original); err == nil || !strings.Contains(err.Error(), "ram word 0x8010002c holds 0x801df004, but the RAM map gives 0x801df000") {
+		t.Fatalf("a ram word off the map: %v", err)
 	}
 }
 
@@ -185,13 +192,13 @@ func TestRelocCompareShiftedExplainsEachChange(t *testing.T) {
 		return func(name string) (uint32, bool) { return shift, name == "test_first" }
 	}
 	image := shifted(0x10, 0x0c040008, 0x3c028010)
-	if unexplained, code := relocCompareShifted(m, layout, original, image, 0x10, moved(0x10), nil, nil); len(unexplained)+len(code) != 0 {
+	if unexplained, code := relocCompareShifted(m, layout, original, image, 0x10, moved(0x10), nil, nil, nil); len(unexplained)+len(code) != 0 {
 		t.Fatalf("shifted by 0x10: %v %v", unexplained, code)
 	}
 	put(image, 0x80100000, 0x10)         // a data word that is no relocation
 	put(image, 0x80100024, 0x80100028)   // a relocation moved too far
 	put(image, 0x80100020, 0x8010000c+4) // a .rodata word moved too far
-	unexplained, _ := relocCompareShifted(m, layout, original, image, 0x10, moved(0x10), nil, nil)
+	unexplained, _ := relocCompareShifted(m, layout, original, image, 0x10, moved(0x10), nil, nil, nil)
 	if len(unexplained) != 3 || !strings.HasPrefix(unexplained[0], "0x80100000 bytes 0x00000000 -> 0x00000010") ||
 		!strings.HasPrefix(unexplained[1], "0x80100020 rodata") || !strings.HasPrefix(unexplained[2], "0x80100024 bytes") {
 		t.Fatalf("unexplained %q", unexplained)
@@ -200,16 +207,21 @@ func TestRelocCompareShiftedExplainsEachChange(t *testing.T) {
 	// names an own address, a number in the source or a data row bound inside
 	// code, or a linked module's name bound there.
 	image = shifted(0x10010, 0x0c044008, 0x3c028010)
-	unexplained, code := relocCompareShifted(m, layout, original, image, 0x10010, moved(0x10010), nil, nil)
+	unexplained, code := relocCompareShifted(m, layout, original, image, 0x10010, moved(0x10010), nil, nil, nil)
 	if len(unexplained) != 0 || len(code) != 1 || code[0].kind != "code" || code[0].addr != 0x80100010 || code[0].value != 0x80100000 || code[0].what != "test_second+0x0" {
 		t.Fatalf("fixed lui: %v %+v", unexplained, code)
 	}
 	foreign := map[uint32]string{0x80100000: "battle_y"}
-	if _, code = relocCompareShifted(m, layout, original, image, 0x10010, moved(0x10010), map[uint32]string{0x80100000: "g_test_row"}, foreign); len(code) != 1 || code[0].kind != "code" || code[0].what != "test_second+0x0, bound to g_test_row" {
+	if _, code = relocCompareShifted(m, layout, original, image, 0x10010, moved(0x10010), map[uint32]string{0x80100000: "g_test_row"}, nil, foreign); len(code) != 1 || code[0].kind != "code" || code[0].what != "test_second+0x0, bound to g_test_row" {
 		t.Fatalf("fixed lui on a row: %+v", code)
 	}
-	if _, code = relocCompareShifted(m, layout, original, image, 0x10010, moved(0x10010), nil, foreign); len(code) != 1 || code[0].kind != "link" || code[0].what != "test_second+0x0, bound to battle_y" {
+	if _, code = relocCompareShifted(m, layout, original, image, 0x10010, moved(0x10010), nil, nil, foreign); len(code) != 1 || code[0].kind != "link" || code[0].what != "test_second+0x0, bound to battle_y" {
 		t.Fatalf("a linked module's name: %+v", code)
+	}
+	// A lui of the page a data row declares is that page, whatever the row.
+	pages := map[uint32]string{0x80100000: "g_test_a"}
+	if _, code = relocCompareShifted(m, layout, original, image, 0x10010, moved(0x10010), nil, pages, foreign); len(code) != 1 || code[0].kind != "page" || code[0].what != "test_second+0x0, the page g_test_a declares" {
+		t.Fatalf("a declared page: %+v", code)
 	}
 }
 

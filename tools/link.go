@@ -37,7 +37,7 @@ type linkPiece struct {
 
 // linkWord is a word of the bytes the link writes instead of copying it: a
 // relocation's symbol (plus offset), a disc word's number from the layout or
-// a RAM window's size from the RAM map.
+// a RAM window's size or start from the RAM map.
 type linkWord struct {
 	addr uint32
 	expr string
@@ -154,7 +154,7 @@ func moduleLinkLayout(m *moduleSpec) (linkLayout, error) {
 	}
 	for _, word := range m.RAMWords {
 		if !word.found {
-			return layout, fmt.Errorf("%s: ram word 0x%08x has no window %s in the RAM map", m.ID, word.Addr, word.Window)
+			return layout, fmt.Errorf("%s: ram word 0x%08x has no value in the RAM map", m.ID, word.Addr)
 		}
 		words = append(words, linkWord{word.Addr, fmt.Sprintf("0x%x", word.value)})
 	}
@@ -454,6 +454,13 @@ func linkScript(layout linkLayout, dataObject string, bindings map[string]uint32
 		}
 		for _, label := range append(append([]symbolSpec(nil), piece.labels...), piece.aliases...) {
 			fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"%s must be at 0x%08x\");\n", label.Name, label.Addr+shift, label.Name, label.Addr+shift)
+			// Code loads the row's page as a number, so the row must stay in
+			// it. The shifted links move every row on purpose; reloc-check
+			// lists the code that loads the page instead.
+			if label.Page != 0 && shift == 0 {
+				fmt.Fprintf(&script, "ASSERT(((%s + 0x8000) & 0xffff0000) == 0x%08x, \"%s must stay in page 0x%08x, which code loads as a number\");\n",
+					label.Name, label.Page, label.Name, label.Page)
+			}
 		}
 	}
 	if layout.ramEnd != 0 {

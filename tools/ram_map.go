@@ -1,7 +1,7 @@
 // ram_map.go loads, checks and canonically writes target/ram.yaml, the RAM
 // windows the modules load into and the states that keep several of them
-// resident at once, and generates include/fft/ram.h, the window sizes the
-// code compiles in.
+// resident at once, and generates include/fft/ram.h, the window sizes and
+// offsets the code compiles in.
 package main
 
 import (
@@ -111,6 +111,85 @@ func (ram *ramMap) window(name string) *ramWindow {
 	return nil
 }
 
+// ramWindowNames is a ram word's `start`: one window, or a list of the
+// windows that start at the same address.
+type ramWindowNames []string
+
+func (names *ramWindowNames) UnmarshalYAML(node *yaml.Node) error {
+	if node.Kind == yaml.ScalarNode {
+		*names = ramWindowNames{node.Value}
+		return nil
+	}
+	var list []string
+	if err := node.Decode(&list); err != nil {
+		return err
+	}
+	*names = list
+	return nil
+}
+
+// text spells the names as a scalar when there is one, as a list otherwise.
+func (names ramWindowNames) text() string {
+	if len(names) == 1 {
+		return yamlText(names[0])
+	}
+	quoted := make([]string, len(names))
+	for index, name := range names {
+		quoted[index] = yamlText(name)
+	}
+	return "[" + strings.Join(quoted, ", ") + "]"
+}
+
+// wordValue returns what a ram word holds: the size of window Size, the start
+// the windows Start share, or that start past window From's. It returns a
+// problem instead when a name is no window, the windows start apart, or the
+// word gives neither a size nor a start.
+func (ram *ramMap) wordValue(word ramWordSpec) (uint32, string) {
+	known := func(name string) (*ramWindow, string) {
+		if window := ram.window(name); window != nil {
+			return window, ""
+		}
+		return nil, fmt.Sprintf("%s is no window in %s", name, ramMapPath)
+	}
+	switch {
+	case word.Size != "" && (len(word.Start) > 0 || word.From != ""):
+		return 0, "takes a size or a start, not both"
+	case word.Size != "":
+		window, problem := known(word.Size)
+		if window == nil {
+			return 0, problem
+		}
+		return window.End - window.Addr, ""
+	case len(word.Start) == 0:
+		return 0, "needs a size or a start"
+	case word.From != "" && len(word.Start) > 1:
+		return 0, "measures one window's start from another's"
+	}
+	var start *ramWindow
+	for _, name := range word.Start {
+		window, problem := known(name)
+		switch {
+		case window == nil:
+			return 0, problem
+		case start == nil:
+			start = window
+		case window.Addr != start.Addr:
+			return 0, fmt.Sprintf("windows %s and %s start apart", start.Name, window.Name)
+		}
+	}
+	if word.From == "" {
+		return start.Addr, ""
+	}
+	from, problem := known(word.From)
+	switch {
+	case from == nil:
+		return 0, problem
+	case from.Addr > start.Addr:
+		return 0, fmt.Sprintf("window %s starts after %s", from.Name, start.Name)
+	}
+	return start.Addr - from.Addr, ""
+}
+
 // moduleWindows maps each module id to its window, with the names that select
 // no module.
 func (ram *ramMap) moduleWindows(config *projectConfig) (map[string]*ramWindow, []string) {
@@ -202,23 +281,34 @@ func validateRAMMap(ram *ramMap, config *projectConfig, fail func(string, ...any
 // ramHeaderPath is the header of the RAM map's facts the code compiles in.
 const ramHeaderPath = "include/fft/ram.h"
 
-const ramWindowBytesPrefix = "RAM_WINDOW_BYTES_"
+// ramHeaderPrefix starts every name ram.h gives.
+const ramHeaderPrefix = "RAM_WINDOW_"
 
-// ramHeader writes the header for the names the code uses:
-// RAM_WINDOW_BYTES_<WINDOW> is the window's size in bytes, in window order.
-// It returns nil when the code uses no name, and the names that spell no
-// window.
+// ramHeader writes the header for the names the code uses, in window order:
+// RAM_WINDOW_BYTES_<WINDOW> is the window's size in bytes and
+// RAM_WINDOW_START_<WINDOW>_FROM_<OTHER> its start past the start of a window
+// that starts at or before it. It returns nil when the code uses no name, and
+// the names that spell no window.
 func ramHeader(ram *ramMap, names map[string]bool) ([]byte, []string) {
 	if len(names) == 0 {
 		return nil, nil
 	}
-	var sizes []string
+	var sizes, starts []string
 	known := make(map[string]bool)
 	for _, window := range ram.Windows {
-		name := ramWindowBytesPrefix + strings.ToUpper(window.Name)
+		name := ramHeaderPrefix + "BYTES_" + strings.ToUpper(window.Name)
 		if names[name] {
 			sizes = append(sizes, fmt.Sprintf("    %s = 0x%x,\n", name, window.End-window.Addr))
 			known[name] = true
+		}
+	}
+	for _, window := range ram.Windows {
+		for _, from := range ram.Windows {
+			name := ramHeaderPrefix + "START_" + strings.ToUpper(window.Name) + "_FROM_" + strings.ToUpper(from.Name)
+			if names[name] && from.Name != window.Name && from.Addr <= window.Addr {
+				starts = append(starts, fmt.Sprintf("    %s = 0x%x,\n", name, window.Addr-from.Addr))
+				known[name] = true
+			}
 		}
 	}
 	var unknown []string
@@ -232,14 +322,18 @@ func ramHeader(ram *ramMap, names map[string]bool) ([]byte, []string) {
 	out.WriteString(`#ifndef RAM_H
 #define RAM_H
 
-/* The RAM windows the code sizes reads and reservations by, generated from target/ram.yaml by
+/* The RAM window sizes and offsets the code compiles in, generated from target/ram.yaml by
  * ` + "`make config-fmt`" + `: edit the map, not this file. */
 
 /* ram */
-/* The bytes from a window's start to where the next thing resident with it starts. */
+/* The bytes from a window's start to where the next thing resident with it starts, and from one
+ * window's start to another's. */
 `)
 	if len(sizes) > 0 {
 		out.WriteString("\ntypedef enum ram_window_bytes {\n" + strings.Join(sizes, "") + "} ram_window_bytes_e;\n")
+	}
+	if len(starts) > 0 {
+		out.WriteString("\ntypedef enum ram_window_start {\n" + strings.Join(starts, "") + "} ram_window_start_e;\n")
 	}
 	out.WriteString("\n#endif\n")
 	return out.Bytes(), unknown
@@ -248,7 +342,7 @@ func ramHeader(ram *ramMap, names map[string]bool) ([]byte, []string) {
 // validateRAMHeader fails when the header differs from what the map gives for
 // the names the code uses, or when a name spells no window.
 func (p project) validateRAMHeader(config *projectConfig, fail func(string, ...any)) error {
-	names, err := codeNamesWithPrefix(p.root, ramWindowBytesPrefix, ramHeaderPath)
+	names, err := codeNamesWithPrefix(p.root, ramHeaderPrefix, ramHeaderPath)
 	if err != nil {
 		return err
 	}
@@ -271,7 +365,7 @@ func (p project) writeRAMHeader(config *projectConfig) (bool, error) {
 	if config.RAM == nil {
 		return false, nil
 	}
-	names, err := codeNamesWithPrefix(p.root, ramWindowBytesPrefix, ramHeaderPath)
+	names, err := codeNamesWithPrefix(p.root, ramHeaderPrefix, ramHeaderPath)
 	if err != nil {
 		return false, err
 	}

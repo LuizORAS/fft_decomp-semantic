@@ -343,6 +343,40 @@ func TestProjectConfigValidatesRelocationsAndValues(t *testing.T) {
 	}
 }
 
+func TestProjectConfigValidatesDataPages(t *testing.T) {
+	const row = "  - {addr: 0x80010100, name: g_main_value}\n"
+	for name, testCase := range map[string]struct {
+		row, want string
+	}{
+		"valid":            {"  - {addr: 0x80010100, name: g_main_value, page: 0x80010000}\n", ""},
+		"another page":     {"  - {addr: 0x80010100, name: g_main_value, page: 0x80020000}\n", "data g_main_value: page 0x80020000 is not 0x80010000, its address's"},
+		"outside the file": {row + "  - {addr: 0x80028000, name: g_main_far, page: 0x80030000}\n", "data g_main_far: only a row in the module's file takes a page"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			p := validTestProject(t)
+			path := filepath.Join(p.root, "target", "main.yaml")
+			if err := os.WriteFile(path, []byte(strings.Replace(testMainYAML, row, testCase.row, 1)), 0o644); err != nil {
+				t.Fatal(err)
+			}
+			config, err := p.loadProjectConfig()
+			if err != nil {
+				t.Fatal(err)
+			}
+			err = p.validateProjectConfig(config)
+			if testCase.want == "" {
+				main, _ := config.module("main")
+				if err != nil || !strings.Contains(string(renderModuleConfig(main)), testCase.row) {
+					t.Fatalf("valid page: %v\n%s", err, renderModuleConfig(main))
+				}
+				return
+			}
+			if err == nil || !strings.Contains(err.Error(), testCase.want) {
+				t.Fatalf("error = %v, want %q", err, testCase.want)
+			}
+		})
+	}
+}
+
 func TestProjectConfigValidatesRegionsSourcesAndAssembly(t *testing.T) {
 	for name, testCase := range map[string]struct {
 		edit func(string) string

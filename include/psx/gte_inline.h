@@ -456,8 +456,9 @@
 #define PSYQ_GTE_MASK_BRANCH_BEGIN(angle) __asm__ volatile(".set\tnoreorder\n\tbgez %0, 1f" : : "r"(angle))
 #define PSYQ_GTE_MASK_BRANCH_END(angle)   __asm__ volatile("1:\n\t.set\treorder" : : "r"(angle))
 
-/* The stack RA symbol is at0x8002bbd8, so its signed-low-16-bit page is0x80030000.
- * A symbolic two-instruction address/store cannot fill the original branch delay. */
+/* The page of g_psyq_gte_matrix_stack_saved_ra (0x8002bbd8), whose low half is signed. A symbolic
+ * two-instruction address and store cannot fill the original branch delay, so the page is a
+ * number, and the link asserts the global stays in it (its `page` in target/main.yaml). */
 #define PSYQ_GTE_MATRIX_STACK_RA_PAGE 0x80030000U
 /* The library uses its own global-RA convention for diagnostics, not O32. */
 #define PSYQ_GTE_GLOBAL_PRINTF(callee, message)                                                                        \
@@ -472,7 +473,7 @@
 /* An isolated control-register read needs the original load-latency wait. */
 #define PSYQ_GTE_CFC2_NOP(reg, value) __asm__ volatile("cfc2 %0, $" PSYQ_GTE_STRINGIFY(reg) "; nop" : "=r"(value))
 
-/* The shared call/store tail begins20bytes after the short-input entry. */
+/* The shared call/store tail begins 20 bytes after the short-input entry. */
 #define PSYQ_GTE_VECTOR_NORMAL_SS_TAIL_OFFSET 20
 /* This terminal ABI transfer saves architectural RA in a3 and branches to the
  * short-output continuation, with t0-t2 and destination a1 already live.
