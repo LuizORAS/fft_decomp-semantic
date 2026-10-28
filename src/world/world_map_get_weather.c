@@ -1,8 +1,8 @@
+#include "fft/script.h"
 #include "fft/world.h"
 #include "psx/types.h"
 
-enum { WORLD_WEATHER_WORD_INDEX = 0x23 };
-
+/* Return the weather script variable (EVENT_SCRIPT_VAR_WEATHER). No retail code calls it. */
 s32 world_map_get_weather(void) {
-    return g_world_script_variables[WORLD_WEATHER_WORD_INDEX];
+    return g_script_variables[EVENT_SCRIPT_VAR_WEATHER];
 }

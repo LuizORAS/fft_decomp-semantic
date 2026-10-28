@@ -1,12 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
+#include "fft/battle_status.h"
+#include "fft/battle_unit.h"
 
-/*
- * Select active units for the AI ability search.
- *
- * Rebuild all per-unit flags and return whether any unit was selected.
- * target_id == 0xff excludes the acting unit. Confusion bypasses decision
- * flag 0x80, but does not bypass untargetability. Unknown modes allow either side.
- */
+/* Mark the units the ability search takes for mode and return 1 when there is one. A unit qualifies
+ * when it is targetable and worth targeting (BATTLE_AI_DECISION_WORTH_TARGETING) or Confused, and is
+ * not the acting unit when target_id is 0xff. The modes take any unit, enemies, allies, the unit
+ * target_id, or (mode 4, which no caller passes) a unit dead, petrified, Critical or under Death
+ * Sentence. */
 s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
     s32 any_active = 0;
     s32 i;
@@ -19,12 +19,13 @@ s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
         ai->targetability.live.unit_active[i] = 0;
         if (decision->targeting_flags_2 & BATTLE_AI_TARGET_UNTARGETABLE)
             continue;
-        if (!(g_battle_unit_stats[i].status_sets.current[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
-            && !(decision->flags & 0x80))
+        if (!(g_battle_unit_stats[i].status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_CONFUSION)]
+                & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CONFUSION))
+            && !(decision->flags & BATTLE_AI_DECISION_WORTH_TARGETING))
             continue;
         if (i == ai->acting_unit_id && target_id == 0xff)
             continue;
-        /* Target dispatch uses a signed comparison, including unknown modes. */
+        /* Target dispatch uses a signed comparison, including values outside the enum. */
         switch ((s32)mode) {
         case BATTLE_AI_UNIT_FILTER_SPECIFIC:
             if (i != target_id)
@@ -45,7 +46,8 @@ s32 battle_ai_select_active_units(battle_ai_unit_filter_e mode, s32 target_id) {
                     & (BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_DEAD)
                         | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_PETRIFY)
                         | BATTLE_STATUS_PACKED_MASK(BATTLE_STATUS_ID_CRITICAL)))
-                && !(unit->status_sets.current[4] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
+                && !(unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DEATH_SENTENCE)]
+                    & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DEATH_SENTENCE)))
                 continue;
             break;
         }

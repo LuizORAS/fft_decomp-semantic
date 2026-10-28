@@ -1,0 +1,11 @@
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
+#include "psx/types.h"
+
+/* Formula 0x44, Difference: HP damage equal to the target's current MP; no evade or hit roll. */
+void battle_formula_damage_hp_target_current_mp(void) {
+    u16 mp = g_battle_action_target->mp;
+    battle_action_data_t* action = g_battle_action_target_data;
+    action->attack_type = BATTLE_ACTION_TYPE_HP_DAMAGE;
+    action->hp_damage = mp;
+}

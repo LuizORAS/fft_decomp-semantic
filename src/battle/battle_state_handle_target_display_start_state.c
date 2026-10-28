@@ -1,17 +1,20 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
 #include "psx/types.h"
 
+/* TARGET_DISPLAY_START: once the message has been answered and the camera has stopped, enter
+ * TARGET_DISPLAY. */
 void battle_state_handle_target_display_start_state(void) {
-    s32 id;
+    s32 command;
 
-    battle_state_handle_free_cursor_input();
-    battle_menu_draw_selection_data(main_gfx_get_otag(), g_controller_input_raw);
-    id = *battle_menu_get_selected_ability_address();
-    if ((id >= 7) && ((id < 9) || (id == 0xFF))) {
+    battle_state_update_units();
+    battle_menu_update_menus_and_event_speed(main_gfx_get_otag(), g_main_input_current_buttons);
+    command = battle_menu_get_selected_command_address()->kind;
+    if ((command >= 7) && ((command < 9) || (command == 0xFF))) {
         g_battle_action_post_action = 1;
     }
-    if ((g_battle_current_vector.vx | g_battle_current_vector.vy | g_battle_current_vector.vz) == 0) {
-        if (g_battle_camera_rotation_action == 0) {
+    if ((g_battle_camera_step_vector.vx | g_battle_camera_step_vector.vy | g_battle_camera_step_vector.vz) == 0) {
+        if (g_battle_camera_rotation_action == BATTLE_CAMERA_ROTATION_NONE) {
             if (g_battle_action_post_action != 0) {
                 battle_state_enter_target_display();
             }

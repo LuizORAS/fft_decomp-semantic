@@ -1,10 +1,12 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
+#include "fft/menu.h"
 
-void bunit_gfx_set_draw_color(const u8* color) {
+/* Copy the three RGB bytes at `color` into the draw color (g_menu_gfx_sprite_color); a null `color` changes nothing.
+ */
+void bunit_gfx_set_draw_color(const rgb24_t* color) {
     if (color != 0) {
-        g_bunit_gfx_sprite_color[0] = color[0];
-        g_bunit_gfx_sprite_color[1] = color[1];
-        g_bunit_gfx_sprite_color[2] = color[2];
+        g_menu_gfx_sprite_color.r = color->r;
+        g_menu_gfx_sprite_color.g = color->g;
+        g_menu_gfx_sprite_color.b = color->b;
     }
 }

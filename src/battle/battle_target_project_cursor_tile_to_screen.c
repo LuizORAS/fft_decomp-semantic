@@ -1,9 +1,12 @@
 #include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
 /* Project the cursor tile to the screen.
  *
- * The tile centre (x * 28 + 14, surface height, y * 28 + 14) is raised by the
+ * The tile center (x * 28 + 14, surface height, y * 28 + 14) is raised by the
  * tile's depth, offset by the modify-by-5 or -by-1 conversion depending on
  * surface bit 0x40, and transformed by the battle camera. The projected X and
  * Y are kept in g_battle_cursor_screen_x/g_battle_cursor_screen_y for battle_camera_update_cursor_tile_vector. */
@@ -14,14 +17,16 @@ void battle_target_project_cursor_tile_to_screen(VECTOR* projected, SVECTOR* pos
     battle_gfx_update_unit_palette_animation();
     SetRotMatrix(&g_battle_camera_matrix);
     SetTransMatrix(&g_battle_camera_matrix);
-    main_util_set_svector(position, g_battle_cursor_x * 28 + 14, 0, g_battle_cursor_y * 28 + 14);
-    position->vy = battle_map_calculate_slope_height(&position->vx, g_battle_cursor_z);
-    tile = battle_map_get_tile_data_pointer((s16)(position->vx / 28), (s16)(position->vz / 28), g_battle_cursor_z);
-    position->vy -= (tile->depth_half_height >> MAP_TILE_DEPTH_SHIFT) * 12;
-    if (tile->surface.value & MAP_TILE_SURFACE_FLAG_6) {
-        battle_camera_convert_screen_coords_modify_by_5(&position->vx, &raised->vx);
+    main_util_set_svector(position, g_battle_cursor_x * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2), 0,
+        g_battle_cursor_y * BATTLE_MAP_TILE_SIZE + (BATTLE_MAP_TILE_SIZE / 2));
+    position->vy = battle_map_calculate_slope_height(position, (u8)g_battle_cursor_z);
+    tile = battle_map_get_tile_data_pointer(
+        (position->vx / BATTLE_MAP_TILE_SIZE), (position->vz / BATTLE_MAP_TILE_SIZE), g_battle_cursor_z);
+    position->vy -= tile->depth_half_height.depth * 12;
+    if (tile->surface.depth_bias) {
+        battle_camera_get_tile_sort_point_biased(position, raised);
     } else {
-        battle_camera_convert_screen_coords_modify_by_1(&position->vx, &raised->vx);
+        battle_camera_get_tile_sort_point_unbiased(position, raised);
     }
     RotTrans(raised, projected, &flag);
     g_battle_cursor_screen_x = projected->vx;

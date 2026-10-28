@@ -13,7 +13,7 @@ func TestCommandDispatchRejectsUnknownSelections(t *testing.T) {
 		want string
 	}{
 		{name: "build", run: func() error { return p.buildCommand([]string{"unknown"}) }, want: "unknown module"},
-		{name: "validate", run: func() error { return p.validateCommand([]string{"--module=unknown"}) }, want: "unknown module"},
+		{name: "check", run: func() error { return p.checkCommand([]string{"--module=unknown"}) }, want: "unknown module"},
 		{name: "diff", run: func() error { return p.diffCommand([]string{"unknown"}) }, want: "no function"},
 		{name: "permute", run: func() error { return p.permuteCommand([]string{"--module=unknown", "battle_helper"}) }, want: "unknown module"},
 		{name: "symbols", run: func() error { return p.symbolsCommand([]string{"sort"}) }, want: "unknown symbols action"},

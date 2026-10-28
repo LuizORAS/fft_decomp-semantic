@@ -71,7 +71,10 @@ func scanFileScopeDeclarations(source string) ([]scannedDeclaration, map[string]
 	var declarations []scannedDeclaration
 	tags := map[string]string{}
 	for index := 0; index < len(tokens); {
-		next, statement, definition, err := declarationStatement(tokens, index)
+		next, statement, definition, err := oldStyleDefinition(tokens, index)
+		if err == nil && statement == nil {
+			next, statement, definition, err = declarationStatement(tokens, index)
+		}
 		if err != nil {
 			return nil, nil, fmt.Errorf("line %d: %w", lineOf(source, tokens[index].start), err)
 		}
@@ -89,6 +92,117 @@ func scanFileScopeDeclarations(source string) ([]scannedDeclaration, map[string]
 		}
 	}
 	return declarations, tags, nil
+}
+
+// oldStylePromotions are the default argument promotions. A caller of an
+// old-style definition passes the promoted value and the callee narrows it.
+var oldStylePromotions = map[string]string{"s8": "s32", "u8": "s32", "s16": "s32", "u16": "s32", "float": "double"}
+
+// oldStyleDefinition recognizes `T f(a, b) T1 a; T2 b; {` and returns it as
+// the prototype compatible with it: every parameter with its declared type
+// after the default argument promotions, an undeclared one as int. Any other
+// statement returns no tokens.
+func oldStyleDefinition(tokens []cToken, start int) (int, []cToken, bool, error) {
+	if tokens[start].kind == cIdent && macroInvocationName.MatchString(tokens[start].text) {
+		return 0, nil, false, nil
+	}
+	open := start
+	for open < len(tokens) && tokens[open].text != "(" {
+		if tokens[open].text == ";" || tokens[open].text == "{" || tokens[open].text == "=" {
+			return 0, nil, false, nil
+		}
+		open++
+	}
+	if open == len(tokens) {
+		return 0, nil, false, nil
+	}
+	close := matchingToken(tokens, open)
+	if close < 0 || close+1 >= len(tokens) || tokens[close+1].kind != cIdent || (close-open)%2 != 0 {
+		return 0, nil, false, nil
+	}
+	switch tokens[close+1].text {
+	case "asm", "__asm", "__asm__", "__attribute__":
+		return 0, nil, false, nil
+	}
+	var names []string
+	for index := open + 1; index < close; index++ {
+		token := tokens[index]
+		if (index-open)%2 == 0 {
+			if token.text != "," {
+				return 0, nil, false, nil
+			}
+			continue
+		}
+		if token.kind != cIdent || declarationBaseWords[token.text] || declarationQualifiers[token.text] {
+			return 0, nil, false, nil
+		}
+		names = append(names, token.text)
+	}
+	if len(names) == 0 {
+		return 0, nil, false, nil
+	}
+	listed := map[string]bool{}
+	for _, name := range names {
+		listed[name] = true
+	}
+	declared := map[string][]cToken{}
+	cursor := close + 1
+	for cursor < len(tokens) && tokens[cursor].text != "{" {
+		end := cursor
+		for end < len(tokens) && tokens[end].text != ";" {
+			if tokens[end].text == "{" || tokens[end].text == "=" {
+				return 0, nil, false, errors.New("cannot parse old-style parameter declaration")
+			}
+			end++
+		}
+		if end == len(tokens) {
+			return 0, nil, false, errors.New("old-style parameter declaration is not terminated")
+		}
+		parts := splitTopLevel(tokens[cursor:end], ",")
+		specifier, begin, _ := parseDeclarationSpecifier(parts[0])
+		if specifier == "" || begin >= len(parts[0]) {
+			return 0, nil, false, errors.New("cannot parse old-style parameter declaration")
+		}
+		for index, part := range parts {
+			declarator := part
+			if index == 0 {
+				declarator = part[begin:]
+			}
+			name := boundIdentifier(declarator)
+			if name < 0 || !listed[declarator[name].text] {
+				return 0, nil, false, errors.New("old-style declaration is not a parameter")
+			}
+			promoted := specifier
+			if wide, ok := oldStylePromotions[specifier]; ok && len(declarator) == 1 {
+				promoted = wide
+			}
+			var parameter []cToken
+			for _, word := range strings.Fields(promoted) {
+				parameter = append(parameter, cToken{kind: cIdent, text: word})
+			}
+			declared[declarator[name].text] = append(parameter, declarator...)
+		}
+		cursor = end + 1
+	}
+	if cursor >= len(tokens) {
+		return 0, nil, false, errors.New("old-style definition has no body")
+	}
+	end := matchingToken(tokens, cursor)
+	if end < 0 {
+		return 0, nil, false, errors.New("unterminated brace")
+	}
+	statement := append([]cToken{}, tokens[start:open+1]...)
+	for index, name := range names {
+		if index > 0 {
+			statement = append(statement, cToken{kind: cPunct, text: ","})
+		}
+		parameter, ok := declared[name]
+		if !ok {
+			parameter = []cToken{{kind: cIdent, text: "s32"}, {kind: cIdent, text: name}}
+		}
+		statement = append(statement, parameter...)
+	}
+	return end + 1, append(statement, tokens[close]), true, nil
 }
 
 // declarationStatement consumes one file-scope statement starting at start.

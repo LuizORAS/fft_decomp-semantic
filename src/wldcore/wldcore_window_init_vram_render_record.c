@@ -4,22 +4,22 @@
  *
  * Caller flags replace bits 0x18; texture coordinates use doubled 4bpp units.
  */
-void wldcore_window_init_vram_render_record(
-    s32 index, wldcore_xy16_t position, wldcore_xy16_t dimensions, wldcore_point32_t clut, s32 flags) {
-    wldcore_window_render_bounds16_t* bounds;
-    wldcore_window_entry_52_rgb_t* rgb;
+void wldcore_window_init_vram_render_record(s32 index, RECT bounds, open_point32_t clut, s32 flags) {
+    RECT* record_bounds;
+    CVECTOR* rgb;
 
-    g_wldcore_window_render_records[index].flags = (g_wldcore_window_render_records[index].flags & ~0x18) | flags;
-    *(wldcore_point32_t*)&g_wldcore_window_render_records[index].clut_x = clut;
-    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, (s16)position.x, (s16)position.y) & 0xFFFF;
-    bounds = (wldcore_window_render_bounds16_t*)&g_wldcore_window_render_records[index].x;
-    bounds->position.x = (position.x & 0x3F) * 2;
-    bounds->position.y = (u8)position.y;
-    bounds->dimensions.x = (s16)dimensions.x * 2;
-    bounds->dimensions.y = dimensions.y;
-    rgb = (wldcore_window_entry_52_rgb_t*)&g_wldcore_window_render_records[index].red;
-    rgb->red = 0x80;
-    rgb->green = 0x80;
-    rgb->blue = 0x80;
+    g_wldcore_window_render_records[index].flags
+        = (g_wldcore_window_render_records[index].flags
+              & ~(WLDCORE_DISPLAY_OBJECT_BLANK | WLDCORE_DISPLAY_OBJECT_HIDDEN))
+        | flags;
+    g_wldcore_window_render_records[index].clut = clut;
+    g_wldcore_window_render_records[index].tpage = GetTPage(0, 0, bounds.x, bounds.y);
+    record_bounds = &g_wldcore_window_render_records[index].bounds;
+    record_bounds->x = (bounds.x & 0x3F) * 2;
+    record_bounds->y = bounds.y & 0xFF;
+    record_bounds->w = bounds.w * 2;
+    record_bounds->h = bounds.h;
+    rgb = &g_wldcore_window_render_records[index].color;
+    rgb->b = rgb->g = rgb->r = 0x80;
     g_wldcore_window_render_records[index].anim_counter = 0;
 }

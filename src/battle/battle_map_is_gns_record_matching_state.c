@@ -1,6 +1,9 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
-s32 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state) {
+/* Return 1 when the requested map state stands in the relation to a GNS row's state that the row's
+ * comparison byte asks for: equal (1), requested less than the row's (2) or requested greater (3). Any
+ * other comparison never matches. Every file row of the retail GNS files uses 1. */
+s16 battle_map_is_gns_record_matching_state(s32 comparison, s16 record_state, s16 requested_state) {
     s32 matches;
 
     comparison &= 0xff;

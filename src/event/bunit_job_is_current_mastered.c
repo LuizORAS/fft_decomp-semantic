@@ -1,6 +1,9 @@
 #include "fft/event_bunit.h"
 #include "psx/types.h"
 
-s32 bunit_job_is_current_mastered(void) {
+/* Menu row callback of BUNIT's ability list (bunit_ability_run_list_menu):
+ * the mastered flag that bunit_job_calculate_current_mastered cached
+ * for the job chosen in the job list. The row is not read. */
+s32 bunit_job_is_current_mastered(s32 unused_row) {
     return g_bunit_job_current_mastered;
 }

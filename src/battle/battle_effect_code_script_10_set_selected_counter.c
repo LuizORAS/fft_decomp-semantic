@@ -1,12 +1,14 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-s32 battle_effect_code_script_10_set_selected_counter(effect_record_t* ctx) {
-    u8* cur;
-    u32 slot;
+/* Opcode 10: set the counter selected by the top two bits of the
+ * instruction's second byte to the second 16-bit value. */
+effect_script_result_e battle_effect_code_script_10_set_selected_counter(battle_effect_record_t* record) {
+    effect_script_parameters_t parameters;
+    const effect_script_instruction_t* instruction;
 
-    cur = (u8*)(ctx->pc + (s32)ctx->script);
-    slot = (u32)cur[1] >> 6;
-    ctx->counters[slot] = *(u16*)(cur + 2);
-    ctx->pc += 4;
+    instruction = effect_get_current_script_instruction(record);
+    parameters = instruction->header.parameters;
+    record->counters[parameters.counter.slot] = instruction->immediate.value;
+    record->pc += 4;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

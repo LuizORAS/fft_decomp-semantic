@@ -1,6 +1,8 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
+/* Turn the stored HP damage into MP healing. */
 void battle_formula_convert_hp_damage_to_mp_recovery(void) {
     battle_action_data_t* action;
     u16 hp_damage;

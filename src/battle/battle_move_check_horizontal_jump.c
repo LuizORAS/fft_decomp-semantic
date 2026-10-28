@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_move.h"
+#include "fft/battle_target.h"
 
 /* Return 1 when the acting unit cannot jump across tile_index at height.
  *
@@ -32,44 +34,45 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
     records = g_battle_move_records_ptr;
     state->jump_unit_size = g_battle_move_config_ptr->unit_size;
     for (layer = 0; layer < 4; layer++) {
-        index = (layer / 2) * 256 + tile_index;
+        index = (layer / 2) * MAP_TILES_PER_LAYER + tile_index;
         tile = &g_battle_map_tile_data[index];
         if (layer & 1) {
-            if ((frontier[index] & 0xc) != 4) {
+            if ((frontier[index] & (FRONTIER_FLAG_UNIT_ON_TILE | FRONTIER_FLAG_STAND_ON_UNIT))
+                != FRONTIER_FLAG_UNIT_ON_TILE) {
                 continue;
             }
             state->work_height = g_battle_target_panels[index].unit_record_index;
-            if (!(records[state->work_height].unit_id_flags & 0x40)) {
+            if (!(records[state->work_height].unit_id_flags & BATTLE_MOVE_RECORD_FLAG_OTHER_TEAM)) {
                 continue;
             }
             low = records[state->work_height].standing_height;
             high = low + 3;
-            if (height < (u8)high && (u8)high < height + state->jump_unit_size) {
+            if (height < high && high < height + state->jump_unit_size) {
                 return 1;
             }
             high = records[state->work_height].top_height;
         } else {
-            if (frontier[index] & 0x80) {
-                if (frontier[index] & 4) {
+            if (frontier[index] & FRONTIER_FLAG_BLOCKED) {
+                if (frontier[index] & FRONTIER_FLAG_UNIT_ON_TILE) {
                     return 1;
                 }
                 continue;
             }
             state->work_height = tile->height * 2;
-            state->jump_half_height = tile->depth_half_height & 0x1f;
+            state->jump_half_height = tile->depth_half_height.half_height;
             state->jump_slope = tile->slope_type;
             height_a = state->work_height + state->jump_half_height * ((state->jump_slope >> shift_a) & 3);
             height_b = state->work_height + state->jump_half_height * ((state->jump_slope >> shift_b) & 3);
             if ((u8)height_a > (u8)height_b) {
-                high = height_b - (tile->ceiling_depth_and_marks & 0x1f) * 2;
-                depth = (tile->depth_half_height >> 5) * 2;
+                high = height_b - (tile->ceiling_depth_and_marks.ceiling_depth) * 2;
+                depth = (tile->depth_half_height.depth) * 2;
                 state->work_height = high;
                 low = state->work_height;
                 high = height_a + depth;
             } else {
-                high = height_b + (tile->depth_half_height >> 5) * 2;
+                high = height_b + (tile->depth_half_height.depth) * 2;
                 low = height_a;
-                low -= (tile->ceiling_depth_and_marks & 0x1f) * 2;
+                low -= (tile->ceiling_depth_and_marks.ceiling_depth) * 2;
             }
         }
         if ((u8)low < (u8)lowest) {
@@ -78,10 +81,10 @@ s32 battle_move_check_horizontal_jump(s32 tile_index, u8 shift_a, u8 shift_b, u8
         if (height < (u8)low && (u8)low < height + state->jump_unit_size) {
             return 1;
         }
-        if (height < (u8)high && (u8)high < height + state->jump_unit_size) {
+        if (height < high && high < height + state->jump_unit_size) {
             return 1;
         }
-        if ((u8)low <= height && height + state->jump_unit_size <= (u8)high) {
+        if ((u8)low <= height && height + state->jump_unit_size <= high) {
             return 1;
         }
     }

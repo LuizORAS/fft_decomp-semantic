@@ -1,24 +1,18 @@
 #include "fft/open.h"
 
-/* Recolour the birthday menu's render records for the confirmation prompt:
- * dim the date cursor, grey the label, and mark both windows as step 2.
- *
- * The controller record is re-read before every store, so it is addressed
- * through a volatile alias.
+/* Dim the date entry behind the confirmation prompt: the date cursor switches to animation 10 in palette 7,
+ * the label drops to half brightness (0x40), and the title and date windows take palette 2.
+ * open_birthday_restore_date_menu undoes it.
  *
  * The target reserves a 24-byte frame it never touches (the stack adjustment
  * is even scheduled into the last load-delay slot), so the original body
  * declared an unused aggregate local of 17..24 bytes. */
-void open_birthday_build_confirmation_menu(const open_birthday_date_state_t* menu) {
-    volatile const open_birthday_date_state_t* state = menu;
+void open_birthday_build_confirmation_menu(open_birthday_date_state_t* state) {
     s32 unused_scratch[6];
-    s32 cursor;
 
-    g_open_gfx_render_records_36[state->cursor_record_36].anim_id = 10;
-
-    cursor = state->cursor_record_36;
-    g_open_gfx_render_records_36[cursor].frame_timer = 0;
-    g_open_gfx_render_records_36[cursor].frame_index = 0;
+    g_open_gfx_render_records_36[state->cursor_record_36].sequence = 10;
+    g_open_gfx_render_records_36[state->cursor_record_36].frame_index
+        = g_open_gfx_render_records_36[state->cursor_record_36].anim_counter = 0;
 
     g_open_gfx_render_records_36[state->label_record].color.r = 0x40;
     g_open_gfx_render_records_36[state->label_record].color.g = 0x40;

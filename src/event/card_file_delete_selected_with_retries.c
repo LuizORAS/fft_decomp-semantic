@@ -2,9 +2,12 @@
 #include "psx/libapi.h"
 #include "psx/types.h"
 
+/* Erase `filename` on the selected memory card slot, trying up to ten times
+ * and waiting for the card before each try. Returns erase's nonzero result
+ * on success and 0 on failure. */
 s32 card_file_delete_selected_with_retries(const char* filename) {
     char path[256];
-    /* The retail O0 frame reserves one word between the path and result. */
+    /* The retail O0 frame reserves one 32-bit value between the path and result. */
     s32 path_padding;
     s32 result;
     s32 i;

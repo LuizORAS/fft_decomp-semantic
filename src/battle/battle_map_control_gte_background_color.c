@@ -1,9 +1,17 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 
-s32* battle_map_control_gte_background_color(s32 command, s32 value_1, s32 value_2, s32 value_3) {
-    /* Matching limitation: commands 11/12 and the default path return this
-     * uninitialized local. The target has no defined result on those paths;
-     * this C expression remains undefined even when callers ignore it. */
+/* Set, read, blank or restore the GTE back color (SetBackColor: the color the GTE adds to every
+ * lit polygon), kept in g_battle_map_back_color_red, _green and _blue. The map's lighting resource sets
+ * it; the ambient color fades write the same 32-bit values through battle_map_light_state_command.
+ *
+ * SET stores the three components and loads them into the GTE, and returns the address of the stored red
+ * value; while the back color is disabled it does neither and returns 0. GET returns that address.
+ * DISABLE loads black and blocks SET; RESTORE reloads the stored color and lifts the block.
+ *
+ * DISABLE, RESTORE and a command with no case return the unset `result`. Every caller issues SET and
+ * ignores the result. */
+s32* battle_map_control_gte_background_color(s32 command, s32 red, s32 green, s32 blue) {
+    /* Left unset on the DISABLE, RESTORE and default paths. */
     s32* result;
 
     switch (command) {
@@ -14,10 +22,10 @@ s32* battle_map_control_gte_background_color(s32 command, s32 value_1, s32 value
             return 0;
         }
         stored_values = &g_battle_map_back_color_red;
-        *stored_values = value_1;
-        g_battle_map_back_color_green = value_2;
-        g_battle_map_back_color_blue = value_3;
-        SetBackColor(value_1, value_2, value_3);
+        *stored_values = red;
+        g_battle_map_back_color_green = green;
+        g_battle_map_back_color_blue = blue;
+        SetBackColor(red, green, blue);
         return stored_values;
     }
     case BATTLE_BACKGROUND_COLOR_GET:

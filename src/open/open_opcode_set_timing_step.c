@@ -1,7 +1,11 @@
 #include "fft/open.h"
 #include "psx/types.h"
 
-void open_opcode_set_timing_step(const s16* command) {
+/* Opcode 2: set the text scroll speed to command[1] (1/256 pixel per frame,
+ * negative for upward) and zero the fraction and the scrolled-distance counter.
+ * Four bytes. */
+void open_opcode_set_timing_step(s16* entry) {
+    const s16* command = entry;
     s32 value = command[1];
     s32 next = g_open_script_byte_offset + 4;
 

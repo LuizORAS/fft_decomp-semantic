@@ -1,20 +1,19 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-/* L1 + R1 + Select + Start restarts the game. */
-#define TUTORIAL_RESET_BUTTONS 0x90C
-
-s32 world_input_read_tutorial_or_controller(void) {
+/* Return the tutorial's scripted 16-bit button mask while a tutorial runs, pad 0
+ * otherwise. The soft-reset combination resets the game. */
+s32 world_input_read_tutorial_or_controller(s32 unused_0) {
     u32 input;
 
-    if (g_world_script_tutorial_id != 0) {
-        input = g_world_script_tutorial_shift_command_bit;
+    if (g_world_tutorial_id != 0) {
+        input = g_world_tutorial_pressed_button;
     } else {
         input = PadRead(0);
     }
-    if (input == TUTORIAL_RESET_BUTTONS) {
-        world_noop_801325d4();
-        world_game_reset();
+    if (input == MAIN_INPUT_RESET_BUTTONS) {
+        world_card_close_stub();
+        world_input_reset_game();
     }
     return input;
 }

@@ -1,14 +1,18 @@
 #include "fft/event_equip.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
+/* Start the item numeric panel thread when `enable` is set and the thread is
+ * idle, ask it to stop otherwise, and record the state in
+ * g_equip_item_numeric_thread_enabled and the numeric panel style. */
 void equip_panel_toggle_item_numeric_thread(s32 enable) {
     if (enable != 0) {
-        if (battle_thread_is_running(0xB) == 0) {
-            battle_thread_start(0xB, equip_editor_run_numeric_thread);
-            battle_thread_set_parameters(0xB, (s32)&g_equip_item_numeric_panel_params, 0, 0);
+        if (thread_is_running(EQUIP_THREAD_SLOT_ITEM_NUMERIC) == 0) {
+            thread_start(EQUIP_THREAD_SLOT_ITEM_NUMERIC, equip_editor_run_numeric_thread);
+            thread_set_parameters(EQUIP_THREAD_SLOT_ITEM_NUMERIC, (s32)&g_equip_item_numeric_panel_params, 0, 0);
         }
     } else {
-        equip_thread_request_stop(0xB);
+        equip_thread_request_stop(EQUIP_THREAD_SLOT_ITEM_NUMERIC);
     }
     g_equip_item_numeric_thread_enabled = enable;
     g_equip_numeric_panel_style = enable;

@@ -1,6 +1,6 @@
 // build.go compiles configured functions and verifies them: against the
 // original module images (`build`), against the configured hashes without
-// the disc (`validate`), and records those hashes from the original bytes
+// the disc (`check`), and records those hashes from the original bytes
 // (`checksums`).
 package main
 
@@ -383,6 +383,9 @@ func (p project) loadCheckedConfig() (*projectConfig, error) {
 	if err := validatePlaceholderMembers(p.root); err != nil {
 		return nil, err
 	}
+	if err := validateAddressLiterals(p.root); err != nil {
+		return nil, err
+	}
 	return config, nil
 }
 
@@ -465,36 +468,36 @@ func (p project) buildDisc() error {
 		}
 		built[config.Modules[index].ID] = result.output
 	}
-	buildDir := filepath.Join(p.root, "build", "disc")
+	return p.writeDisc(config, built, filepath.Join(p.root, "build", "disc"), true)
+}
+
+// writeDisc runs mkpsxiso on the project target/disc.yaml describes, with
+// each module in built (id to rebuilt file) in place of its extracted file,
+// writes the disc under buildDir and checks every rebuilt module at its LBA
+// and, for the identical disc (exact), the disc's SHA-256.
+func (p project) writeDisc(config *projectConfig, built map[string]string, buildDir string, exact bool) error {
+	if !p.validExtraction() {
+		return errNotExtracted
+	}
 	if err := os.MkdirAll(buildDir, 0o755); err != nil {
 		return err
 	}
-	projectXML, err := os.ReadFile(p.xmlPath)
-	if err != nil {
-		return errNotExtracted
+	outputs := make(map[string]string, len(built))
+	for id, output := range built {
+		outputs[id] = filepath.ToSlash(output)
 	}
-	filesRoot := xmlAttribute(filepath.ToSlash(p.filesRoot))
-	projectText := strings.ReplaceAll(string(projectXML), `source="files/`, `source="`+filesRoot+`/`)
-	for _, m := range config.Modules {
-		output, ok := built[m.ID]
-		if !ok {
-			continue
-		}
-		from := `source="` + filesRoot + `/` + m.File + `"`
-		to := `source="` + xmlAttribute(filepath.ToSlash(output)) + `"`
-		updated := strings.Replace(projectText, from, to, 1)
-		if updated == projectText {
-			return fmt.Errorf("could not redirect %s in disc project", m.File)
-		}
-		projectText = updated
-	}
-	projectText = strings.Replace(projectText, `file="files/license_data.dat"`, `file="`+filesRoot+`/license_data.dat"`, 1)
 	buildXML := filepath.Join(buildDir, "disc.xml")
-	if err := os.WriteFile(buildXML, []byte(projectText), 0o644); err != nil {
+	if err := os.WriteFile(buildXML, config.Disc.mkpsxisoProject(config, filepath.ToSlash(p.filesRoot), outputs), 0o644); err != nil {
 		return err
 	}
 	output := filepath.Join(buildDir, targetOutput+".bin")
 	cue := filepath.Join(buildDir, targetOutput+".cue")
+	// mkpsxiso writes into an existing image in place, and a blank Form 2
+	// sector clears only its first 2048 data bytes: the rest of an earlier
+	// disc's sector would stay. Each disc starts from a new file.
+	if err := os.Remove(output); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
 	if err := runInDir(p.root, "mkpsxiso", "-q", "-y", "-o", output, "-c", cue, buildXML); err != nil {
 		return err
 	}
@@ -520,24 +523,32 @@ func (p project) buildDisc() error {
 	if err != nil {
 		return err
 	}
-	if discSHA256 != targetInputSHA256 {
+	switch {
+	case !exact:
+		fmt.Printf("disc image: sha256 %s (a test disc, not the original)\n", discSHA256)
+	case discSHA256 != targetInputSHA256:
 		return fmt.Errorf("rebuilt disc SHA-256 mismatch: got %s, expected %s", discSHA256, targetInputSHA256)
+	default:
+		fmt.Printf("disc image exact: sha256 %s\n", discSHA256)
 	}
-	fmt.Printf("disc image exact: sha256 %s\n", discSHA256)
-	fmt.Printf("built disc: build/disc/%s.cue\n", targetOutput)
+	relative, err := filepath.Rel(p.root, cue)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("built disc: %s\n", filepath.ToSlash(relative))
 	return nil
 }
 
-// validateCommand compiles functions and compares their bytes with the
+// checkCommand compiles functions and compares their bytes with the
 // configured hashes. It never reads the disc or the extracted files.
-func (p project) validateCommand(args []string) error {
-	flags := flag.NewFlagSet("validate", flag.ContinueOnError)
-	moduleName := flags.String("module", "", "modules to validate (ids, short names, event or effect)")
+func (p project) checkCommand(args []string) error {
+	flags := flag.NewFlagSet("check", flag.ContinueOnError)
+	moduleName := flags.String("module", "", "modules to check (ids, short names, event or effect)")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
 	if flags.NArg() != 0 {
-		return errors.New("usage: tools validate [--module=MODULES]")
+		return errors.New("usage: tools check [--module=MODULES]")
 	}
 	config, err := p.loadCheckedConfig()
 	if err != nil {
@@ -553,7 +564,7 @@ func (p project) validateCommand(args []string) error {
 	if err != nil {
 		return err
 	}
-	p.progress = newCompileProgress("validate", modules)
+	p.progress = newCompileProgress("check", modules)
 	jobs, err := toolJobs()
 	if err != nil {
 		return err
@@ -611,9 +622,9 @@ func (p project) validateCommand(args []string) error {
 		for _, problem := range problems {
 			fmt.Fprintf(os.Stderr, "MISMATCH %s\n", problem)
 		}
-		return fmt.Errorf("validate: %d of %d functions differ from their configured hashes", len(problems), functions)
+		return fmt.Errorf("check: %d of %d functions differ from their configured hashes", len(problems), functions)
 	}
-	fmt.Printf("validate: %d functions in %d modules match their hashes (%d bytes)\n", functions, len(modules), bytesChecked)
+	fmt.Printf("check: %d functions in %d modules match their hashes (%d bytes)\n", functions, len(modules), bytesChecked)
 	return nil
 }
 

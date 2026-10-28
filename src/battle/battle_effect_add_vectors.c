@@ -1,7 +1,9 @@
-#include "psx/types.h"
+#include "fft/battle_effect.h"
 
-void battle_effect_add_vectors(const s32* first, const s32* second, s32* out) {
-    out[0] = first[0] + second[0];
-    out[1] = first[1] + second[1];
-    out[2] = first[2] + second[2];
+/* Add two vectors of three 32-bit values into out. The effect camera's position and zoom commands and
+ * battle_camera_update_effect_tracks use it. */
+void battle_effect_add_vectors(const VECTOR* first, const VECTOR* second, VECTOR* out) {
+    out->vx = first->vx + second->vx;
+    out->vy = first->vy + second->vy;
+    out->vz = first->vz + second->vz;
 }

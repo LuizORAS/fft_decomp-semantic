@@ -1,43 +1,35 @@
-/* Item-list menu thread for the formation item screen: builds the item
- * category list on entry, steps the cursor, and refreshes the stat preview.
- *
- * The empty asm before the category reload is load-bearing twice over. Its
- * memory clobber keeps the target's reload of the category byte after the
- * store: the store and the reload name two symbols at one address, so alias
- * analysis sees no dependence and the scheduler would hoist the load above
- * the store (naming one symbol for both instead lets cse forward the stored
- * value, where the target reloads). Its "r"(four) operand materialises the
- * `!= 4` compare constant before the store pair, as the target does.
- */
 #include "fft/world.h"
 #include "psx/pad.h"
 
+/* The formation item screen's list (MENU_ITEM_LIST_STATE_BROWSE): on entry it builds the current
+ * category's item list and the row callbacks; each frame it shows the cursor item's description and
+ * stat preview. Left and right switch among the five categories, Circle starts rearranging
+ * (MENU_ITEM_LIST_STATE_REARRANGE), Triangle lists the units that equip the item when any does
+ * (MENU_ITEM_LIST_STATE_EQUIPPED_BY), and Cross closes the list (MENU_ITEM_LIST_STATE_CLOSE). */
 s32 world_item_run_category_menu(void) {
     s16 x;
     s16 y;
     s32 input;
-    u8 category;
     s32 selected;
     s32 description;
 
-    if (*(s8*)&g_world_item_category_menu_initialized == 0) {
+    if (g_world_item_category_menu_initialized == 0) {
         g_world_item_category_menu_initialized = 1;
         world_script_set_vsync_mode_and_event_speed(2);
-        category = g_world_item_menu_category;
         g_world_item_category_previewed_cursor = -1;
-        /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(g_world_formation_selected_unit_index,
-            category + 1, g_world_item_category_view != 4 ? (s8)(category + 1) : 7, g_world_menu_entry_ids, 0);
-        world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
-        g_world_menu_script_callbacks[0] = world_menu_get_entry_item_count_2;
-        g_world_menu_script_callbacks[1] = world_menu_get_entry_item_count;
-        g_world_menu_aux_callback = (s32 (*)(void))world_item_build_type_icon_source;
-        g_world_menu_script_callbacks[3] = (s32 (*)(s32))world_menu_get_entry_item_icon_source;
-        g_world_menu_script_callbacks[4] = (s32 (*)(s32))world_menu_get_display_value_1;
-        g_world_menu_script_callbacks[5] = (s32 (*)(s32))world_menu_get_display_value_2;
-        g_world_menu_script_callbacks[6] = (s32 (*)(s32))world_menu_get_value_1;
-        g_world_menu_script_callbacks[7] = (s32 (*)(s32))world_menu_get_value_2;
+        world_item_build_category_list(g_world_formation_selected_unit_index, g_world_item_menu_category + 1,
+            g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : ITEM_LIST_FILTER_OTHER,
+            g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
+        world_menu_get_selection_record(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
+        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
+        g_world_menu_script_callbacks[0].value = world_menu_get_entry_item_equipped_count;
+        g_world_menu_script_callbacks[1].value = world_menu_get_entry_item_count;
+        g_world_menu_script_callbacks[2].icon = world_item_build_type_icon_source;
+        g_world_menu_script_callbacks[3].icon = world_menu_get_entry_item_icon_source;
+        g_world_menu_script_callbacks[4].value = world_menu_get_selected_unit_hp_bonus_or_dashes;
+        g_world_menu_script_callbacks[5].value = world_menu_get_selected_unit_mp_bonus_or_dashes;
+        g_world_menu_script_callbacks[6].value = world_menu_get_selected_unit_hp_bonus;
+        g_world_menu_script_callbacks[7].value = world_menu_get_selected_unit_mp_bonus;
     }
     world_menu_toggle_preview_stats_window(1);
     if (g_world_menu_option_count != 0) {
@@ -48,43 +40,40 @@ s32 world_item_run_category_menu(void) {
     input = g_world_input_primary_repeat;
     g_world_menu_description_text_id = description;
     if (input & PSX_PAD_CROSS) {
-        world_gfx_set_sprite_slot(g_world_item_menu_category, g_world_menu_cursor_position, g_world_menu_scroll_offset,
-            (u16*)g_world_menu_entry_ids);
+        world_menu_set_selection_record(g_world_item_menu_category, g_world_menu_cursor_position,
+            g_world_menu_scroll_offset, g_world_menu_entry_ids);
         g_world_item_category_menu_initialized = 0;
-        return -1;
+        return MENU_ITEM_LIST_STATE_CLOSE;
     }
-    selected = world_menu_step_cursor_with_sound_2(5, 7, input, 6);
+    selected = world_menu_update_horizontal_selection_and_mark_change(
+        5, WORLD_MENU_CURSOR_ITEM_TAB, input, MAIN_SFX_PAGE_SWITCH);
     if (selected != g_world_item_menu_category) {
-        s32 four = 4;
+        world_menu_set_selection_record(g_world_item_menu_category, g_world_menu_cursor_position,
+            g_world_menu_scroll_offset, g_world_menu_entry_ids);
 
-        world_gfx_set_sprite_slot(g_world_item_menu_category, g_world_menu_cursor_position, g_world_menu_scroll_offset,
-            (u16*)g_world_menu_entry_ids);
-
-        g_world_item_category_view = selected;
-        __asm__ volatile("" : : "r"(four) : "memory");
-        category = g_world_item_menu_category;
-        /* The definition's u16/s8/u8 parameter conversions would change this call's codegen. */
-        ((void (*)(s32, s32, s8, s16*, s32))world_item_build_category_list)(g_world_formation_selected_unit_index,
-            category + 1, g_world_item_category_view != four ? (s8)(category + 1) : 7, g_world_menu_entry_ids, 0);
+        g_world_item_menu_category = selected;
+        world_item_build_category_list(g_world_formation_selected_unit_index, g_world_item_menu_category + 1,
+            g_world_item_menu_category != 4 ? g_world_item_menu_category + 1 : ITEM_LIST_FILTER_OTHER,
+            g_world_menu_entry_ids, ITEM_LIST_MODE_ALL);
         g_world_item_category_previewed_cursor = -1;
-        world_gfx_get_sprite_slot(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
-        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_world_text_item_names);
+        world_menu_get_selection_record(g_world_item_menu_category, &x, &y, g_world_menu_entry_ids);
+        world_menu_init_scrollable_list(g_world_menu_entry_ids, x, y, g_text_section_pointers[TEXT_SECTION_ITEM_NAMES]);
         world_menu_set_window_scale_step(10);
     } else if (g_world_input_primary_repeat & PSX_PAD_CIRCLE) {
         if (g_world_menu_option_count != 0) {
             g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
-            world_gfx_set_sprite_slot(
-                selected, g_world_menu_cursor_position, g_world_menu_scroll_offset, (u16*)g_world_menu_entry_ids);
-            return 1;
+            world_menu_set_selection_record(
+                selected, g_world_menu_cursor_position, g_world_menu_scroll_offset, g_world_menu_entry_ids);
+            return MENU_ITEM_LIST_STATE_REARRANGE;
         }
         g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
     } else if (g_world_input_primary_repeat & PSX_PAD_TRIANGLE) {
         g_world_menu_sound_effect_id = MAIN_SFX_CONFIRM;
-        if (world_count_item_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) != 0) {
+        if (world_item_count_equipped_by_party(g_world_menu_entry_ids[g_world_menu_cursor_position]) != 0) {
             g_world_item_category_menu_initialized = 0;
-            world_gfx_set_sprite_slot(g_world_item_menu_category, g_world_menu_cursor_position,
-                g_world_menu_scroll_offset, (u16*)g_world_menu_entry_ids);
-            return 6;
+            world_menu_set_selection_record(g_world_item_menu_category, g_world_menu_cursor_position,
+                g_world_menu_scroll_offset, g_world_menu_entry_ids);
+            return MENU_ITEM_LIST_STATE_EQUIPPED_BY;
         }
         g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
     }
@@ -96,9 +85,9 @@ s32 world_item_run_category_menu(void) {
         }
         g_world_item_category_previewed_cursor = g_world_menu_cursor_position;
         world_item_populate_stat_preview(
-            (s16)selected, &g_world_selected_unit_stat_summary, &g_world_item_preview_stat_detail, 0);
-        g_world_formation_panel_windows[0].enabled = 1;
-        g_world_formation_panel_windows[7].enabled = 1;
+            selected, &g_world_selected_unit_stat_summary, &g_world_item_preview_stat_detail, 0);
+        g_world_status_display_thread_params.redraw_request = 1;
+        g_world_preview_stats_thread_params.redraw_request = 1;
     }
-    return 0;
+    return MENU_ITEM_LIST_STATE_BROWSE;
 }

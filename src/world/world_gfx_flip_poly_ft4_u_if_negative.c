@@ -3,17 +3,10 @@
 #include "psx/types.h"
 
 /* Mirror a POLY_FT4 texture horizontally when direction is negative: u0/u1
- * and u2/u3 trade places, each shifted by one texel.
- *
- * The per-role variables and the three empty asms (zero-instruction scheduling
- * boundaries) are what reproduce the target's load/store order. */
+ * and u2/u3 trade places, each shifted by one texel. */
 void world_gfx_flip_poly_ft4_u_if_negative(POLY_FT4* poly, s32 direction) {
     s32 step;
-    u8 u0;
-    u8 u1;
-    u8 u2;
-    u8 u3;
-    u8 swapped;
+    u8 u;
 
     if (direction >= 0) {
         return;
@@ -23,19 +16,10 @@ void world_gfx_flip_poly_ft4_u_if_negative(POLY_FT4* poly, s32 direction) {
     } else {
         step = 1;
     }
-    u0 = poly->u0;
-    __asm__ volatile("");
-    u1 = poly->u1;
-    u2 = poly->u2;
-    __asm__ volatile("");
-    swapped = u0 + step;
-    poly->u1 = swapped;
-    __asm__ volatile("");
-    swapped = u2 + step;
-    u3 = poly->u3;
-    u1 += step;
-    poly->u0 = u1;
-    poly->u3 = swapped;
-    u3 += step;
-    poly->u2 = u3;
+    u = poly->u0 + step;
+    poly->u0 = poly->u1 + step;
+    poly->u1 = u;
+    u = poly->u2 + step;
+    poly->u2 = poly->u3 + step;
+    poly->u3 = u;
 }

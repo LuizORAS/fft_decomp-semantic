@@ -1,14 +1,10 @@
 #include "fft/world.h"
 
-void world_menu_set_sprite_color(u8* src) {
-    CVECTOR* destination;
-
+/* Set the display scripts' draw color from an r, g, b byte triplet; NULL leaves it unchanged. */
+void world_menu_set_sprite_color(const rgb24_t* src) {
     if (src != 0) {
-        destination = &g_world_menu_sprite_color;
-        /* Keep one base register for the three component stores. */
-        __asm__("" : "=r"(destination) : "0"(destination));
-        destination->r = src[0];
-        destination->g = src[1];
-        destination->b = src[2];
+        g_world_menu_sprite_color.r = src->r;
+        g_world_menu_sprite_color.g = src->g;
+        g_world_menu_sprite_color.b = src->b;
     }
 }

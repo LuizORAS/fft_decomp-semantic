@@ -1,7 +1,10 @@
 #include "fft/main.h"
 
+/* Add to the unit's equippable item types those its Equip support abilities grant
+ * (Equip Armor covers helmets and armor), and the ribbon, bag and perfume types
+ * for a female unit. */
 void main_unit_set_equippable_items(battle_stats_t* unit) {
-    s32 support = unit->support_abilities[0];
+    s32 support = unit->ability_flags.support[0];
 
     if (support & BATTLE_SUPPORT_SET_1_EQUIP_ARMOR) {
         unit->equipment_categories[2] |= BATTLE_EQUIPMENT_SET_3_HELM | BATTLE_EQUIPMENT_SET_3_ARMOR;
@@ -29,7 +32,7 @@ void main_unit_set_equippable_items(battle_stats_t* unit) {
     }
     support = unit->unit_flags;
     if (support & UNIT_FLAG_FEMALE) {
-        unit->equipment_categories[2] |= BATTLE_EQUIPMENT_SET_3_HAIR_ORNAMENT | BATTLE_EQUIPMENT_SET_3_BAG;
+        unit->equipment_categories[2] |= BATTLE_EQUIPMENT_SET_3_RIBBON | BATTLE_EQUIPMENT_SET_3_BAG;
         unit->equipment_categories[3] |= BATTLE_EQUIPMENT_SET_4_PERFUME;
     }
 }

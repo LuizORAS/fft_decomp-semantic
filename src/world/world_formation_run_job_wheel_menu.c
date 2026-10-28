@@ -2,6 +2,25 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
+/* Handler of the formation's job wheel menus (JOB_WHEEL and its ENTER, LEAVE, CLOSING, OPENING and
+ * JOB_CHANGE states in g_world_formation_menu_handlers); world_formation_run_unit_grid_menu also calls
+ * it once when Change Job is picked.
+ *
+ * The first call binds the job descriptions, stops the two detail panels and
+ * installs the wheel's menu-script callbacks. Menu value
+ * WORLD_FORMATION_MENU_JOB_WHEEL_ENTER slides the unit grid out and opens
+ * the wheel; WORLD_FORMATION_MENU_JOB_WHEEL_LEAVE closes it and brings the
+ * grid back. On the wheel itself:
+ *  - Left/Right start a spin of 36 progress units (2 a frame with fewer than
+ *    four jobs, 3 otherwise) that moves the cursor one job and wraps;
+ *  - Circle on an available job starts the job-change animation
+ *    (world_formation_step_job_change_animation), after which the job is changed,
+ *    with replacement equipment chosen when the "max equip at job change"
+ *    option field is 0, and the job list rebuilt; on an unavailable job other
+ *    than the unit's own it shows that job's text with the error sound;
+ *  - Select shows the job's text, Square toggles the unit banner (L1/R1
+ *    cycle units while it is hidden) and Cross leaves.
+ * With fewer than two jobs the wheel is not drawn and Circle is refused. */
 void world_formation_run_job_wheel_menu(void) {
     u8 unused[0x28];
     s32 i;
@@ -9,111 +28,111 @@ void world_formation_run_job_wheel_menu(void) {
     u32 pad;
     u32 buttons;
     u16 job;
-    s32 angle;
+    s16 angle;
 
-    if (*(s8*)&g_world_job_wheel_initialized == 0) {
+    if (g_world_job_wheel_initialized == 0) {
         g_world_job_wheel_spin_progress = 0;
-        world_gfx_bind_data_pointer(5);
+        world_text_bind_section_data(WORLD_TEXT_DATA_JOB_DESCRIPTIONS);
         g_world_job_wheel_saved_browse_enabled = g_world_formation_unit_browse_enabled;
         g_world_formation_unit_browse_enabled = 0;
-        world_menu_stop_unit_status_banner_thread(9);
-        world_menu_stop_unit_status_banner_thread(0xC);
+        world_menu_request_thread_stop(THREAD_SCREEN_SLOT_CHARACTER_STATUS);
+        world_menu_request_thread_stop(THREAD_SCREEN_SLOT_NUMERIC_EDITOR);
         world_menu_init_scrollable_list_core(0, 0, 0);
-        g_world_menu_script_callbacks[0] = (s32 (*)(s32))world_formation_get_job_wheel_cursor_job_level;
-        g_world_menu_script_callbacks[1] = (s32 (*)(s32))world_formation_is_job_wheel_selection_available;
+        g_world_menu_script_callbacks[0].value = world_formation_get_job_wheel_cursor_job_level;
+        g_world_menu_script_callbacks[1].value = world_formation_is_job_wheel_selection_available;
         g_world_job_wheel_job_selected = 0;
         g_world_job_change_confirmed = 0;
         g_world_job_wheel_initialized = 1;
         g_world_job_wheel_unit_index = g_world_formation_selected_unit_index;
     }
     i = g_world_formation_current_menu;
-    if (i == 0xE) {
-        /* The target uses v0 without the u8 return's mask. */
-        if (((s32 (*)(s32))world_formation_step_grid_transition)(2) == 0) {
-            world_formation_update_job_wheel_state();
+    if (i == WORLD_FORMATION_MENU_JOB_WHEEL_ENTER) {
+        if (world_formation_step_grid_transition(2) == 0) {
+            world_formation_switch_job_wheel_unit();
             world_formation_build_job_wheel_job_name();
-            g_world_formation_current_menu = 0x15;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL_OPENING;
             world_formation_build_job_wheel_availability();
         }
         return;
     }
-    if (i == 0xF) {
+    if (i == WORLD_FORMATION_MENU_JOB_WHEEL_LEAVE) {
         if (g_world_job_wheel_job_selected != 0) {
             world_formation_step_job_wheel_close_animation();
             world_formation_draw_unit_sprite(
                 g_world_formation_selected_unit_index, &g_world_job_wheel_unit_sprite_position, 0, 0x32);
-            if (g_world_formation_current_menu == 0x15) {
+            if (g_world_formation_current_menu == WORLD_FORMATION_MENU_JOB_WHEEL_OPENING) {
                 g_world_job_wheel_job_selected = 0;
                 g_world_formation_current_menu = i;
             }
         } else if (world_formation_step_grid_return_transition(2) == 0) {
-            g_world_formation_current_menu = 0;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_UNIT_GRID;
             g_world_job_wheel_initialized = 0;
         }
         return;
     }
-    if (g_world_job_change_anim_state != 0) {
+    if (g_world_job_change_anim_state != WORLD_JOB_CHANGE_ANIM_DONE) {
         g_world_job_change_anim_state
-            = world_formation_process_job_change(((s16*)g_world_job_wheel_jobs)[g_world_job_wheel_cursor_index]);
-        if (g_world_job_change_anim_state == 0) {
+            = world_formation_step_job_change_animation(g_world_job_wheel_jobs[g_world_job_wheel_cursor_index]);
+        if (g_world_job_change_anim_state == WORLD_JOB_CHANGE_ANIM_DONE) {
             i = g_main_game_options.value & GAME_OPTIONS_MAX_EQUIP_AT_JOB_CHANGE_MASK;
             world_formation_change_unit_job(
                 g_world_formation_selected_unit_index, g_world_job_wheel_jobs[g_world_job_wheel_cursor_index], i == 0);
             world_formation_stage_selected_unit();
-            world_job_build_unit_list(g_world_formation_selected_unit_index, (s16*)g_world_job_wheel_jobs, 2);
+            world_job_build_unit_list(g_world_formation_selected_unit_index, g_world_job_wheel_jobs,
+                WORLD_JOB_LIST_MODE_INCLUDE_OTHER_UNIT_UNLOCKS);
             g_world_formation_unit_banner_enabled = g_world_formation_saved_banner_enabled;
             world_formation_layout_job_wheel_portrait();
-            g_world_formation_current_menu = 3;
+            g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL;
         }
-        if (g_world_job_change_anim_state == 1) {
-            g_world_job_change_flash_colors[0][0]
-                = g_world_job_change_flash_colors[0][0] < 0xFE ? g_world_job_change_flash_colors[0][0] + 1 : 0xFF;
-            g_world_job_change_flash_colors[0][1] = g_world_job_change_flash_colors[0][0] == 0xFF
-                ? g_world_job_change_flash_colors[0][1] + 1
-                : g_world_job_change_flash_colors[0][1] - 1;
-            g_world_job_change_flash_colors[0][2] = g_world_job_change_flash_colors[0][0] == 0xFF
-                ? g_world_job_change_flash_colors[0][2] + 1
-                : g_world_job_change_flash_colors[0][2] - 1;
-            g_world_job_change_flash_colors[1][1]
-                = g_world_job_change_flash_colors[1][1] < 0xFE ? g_world_job_change_flash_colors[1][1] + 1 : 0xFF;
-            g_world_job_change_flash_colors[1][0] = g_world_job_change_flash_colors[1][1] == 0xFF
-                ? g_world_job_change_flash_colors[1][0] + 1
-                : g_world_job_change_flash_colors[1][0] - 1;
-            g_world_job_change_flash_colors[1][2] = g_world_job_change_flash_colors[1][1] == 0xFF
-                ? g_world_job_change_flash_colors[1][2] + 1
-                : g_world_job_change_flash_colors[1][2] - 1;
-            g_world_job_change_flash_colors[2][2]
-                = g_world_job_change_flash_colors[2][2] < 0xFE ? g_world_job_change_flash_colors[2][2] + 1 : 0xFF;
-            g_world_job_change_flash_colors[2][0] = g_world_job_change_flash_colors[2][2] == 0xFF
-                ? g_world_job_change_flash_colors[2][0] + 1
-                : g_world_job_change_flash_colors[2][0] - 1;
-            g_world_job_change_flash_colors[2][1] = g_world_job_change_flash_colors[2][2] == 0xFF
-                ? g_world_job_change_flash_colors[2][1] + 1
-                : g_world_job_change_flash_colors[2][1] - 1;
-            g_world_job_change_flash_colors[3][0]
-                = g_world_job_change_flash_colors[3][0] < 0xFE ? g_world_job_change_flash_colors[3][0] + 1 : 0xFF;
-            g_world_job_change_flash_colors[3][1]
-                = g_world_job_change_flash_colors[3][1] < 0xFE ? g_world_job_change_flash_colors[3][1] + 1 : 0xFF;
-            g_world_job_change_flash_colors[3][2] = g_world_job_change_flash_colors[3][0] == 0xFF
-                ? g_world_job_change_flash_colors[3][2] + 1
-                : g_world_job_change_flash_colors[3][2] - 1;
-        } else if (g_world_job_change_anim_state == 2) {
+        if (g_world_job_change_anim_state == WORLD_JOB_CHANGE_ANIM_DISSOLVE) {
+            g_world_job_change_flash_colors[0].r
+                = g_world_job_change_flash_colors[0].r < 0xFE ? g_world_job_change_flash_colors[0].r + 1 : 0xFF;
+            g_world_job_change_flash_colors[0].g = g_world_job_change_flash_colors[0].r == 0xFF
+                ? g_world_job_change_flash_colors[0].g + 1
+                : g_world_job_change_flash_colors[0].g - 1;
+            g_world_job_change_flash_colors[0].b = g_world_job_change_flash_colors[0].r == 0xFF
+                ? g_world_job_change_flash_colors[0].b + 1
+                : g_world_job_change_flash_colors[0].b - 1;
+            g_world_job_change_flash_colors[1].g
+                = g_world_job_change_flash_colors[1].g < 0xFE ? g_world_job_change_flash_colors[1].g + 1 : 0xFF;
+            g_world_job_change_flash_colors[1].r = g_world_job_change_flash_colors[1].g == 0xFF
+                ? g_world_job_change_flash_colors[1].r + 1
+                : g_world_job_change_flash_colors[1].r - 1;
+            g_world_job_change_flash_colors[1].b = g_world_job_change_flash_colors[1].g == 0xFF
+                ? g_world_job_change_flash_colors[1].b + 1
+                : g_world_job_change_flash_colors[1].b - 1;
+            g_world_job_change_flash_colors[2].b
+                = g_world_job_change_flash_colors[2].b < 0xFE ? g_world_job_change_flash_colors[2].b + 1 : 0xFF;
+            g_world_job_change_flash_colors[2].r = g_world_job_change_flash_colors[2].b == 0xFF
+                ? g_world_job_change_flash_colors[2].r + 1
+                : g_world_job_change_flash_colors[2].r - 1;
+            g_world_job_change_flash_colors[2].g = g_world_job_change_flash_colors[2].b == 0xFF
+                ? g_world_job_change_flash_colors[2].g + 1
+                : g_world_job_change_flash_colors[2].g - 1;
+            g_world_job_change_flash_colors[3].r
+                = g_world_job_change_flash_colors[3].r < 0xFE ? g_world_job_change_flash_colors[3].r + 1 : 0xFF;
+            g_world_job_change_flash_colors[3].g
+                = g_world_job_change_flash_colors[3].g < 0xFE ? g_world_job_change_flash_colors[3].g + 1 : 0xFF;
+            g_world_job_change_flash_colors[3].b = g_world_job_change_flash_colors[3].r == 0xFF
+                ? g_world_job_change_flash_colors[3].b + 1
+                : g_world_job_change_flash_colors[3].b - 1;
+        } else if (g_world_job_change_anim_state == WORLD_JOB_CHANGE_ANIM_CLOSING) {
             for (i = 0; i < 4; i++) {
-                g_world_job_change_flash_colors[i][0] = g_world_job_change_flash_colors[i][0] < 0x80
-                    ? g_world_job_change_flash_colors[i][0] + 1
-                    : g_world_job_change_flash_colors[i][0] - 1;
-                g_world_job_change_flash_colors[i][1] = g_world_job_change_flash_colors[i][1] >= 0x80
-                    ? g_world_job_change_flash_colors[i][1] - 1
-                    : g_world_job_change_flash_colors[i][1] + 1;
-                g_world_job_change_flash_colors[i][2] = g_world_job_change_flash_colors[i][2] >= 0x80
-                    ? g_world_job_change_flash_colors[i][2] - 1
-                    : g_world_job_change_flash_colors[i][2] + 1;
+                g_world_job_change_flash_colors[i].r = g_world_job_change_flash_colors[i].r < 0x80
+                    ? g_world_job_change_flash_colors[i].r + 1
+                    : g_world_job_change_flash_colors[i].r - 1;
+                g_world_job_change_flash_colors[i].g = g_world_job_change_flash_colors[i].g >= 0x80
+                    ? g_world_job_change_flash_colors[i].g - 1
+                    : g_world_job_change_flash_colors[i].g + 1;
+                g_world_job_change_flash_colors[i].b = g_world_job_change_flash_colors[i].b >= 0x80
+                    ? g_world_job_change_flash_colors[i].b - 1
+                    : g_world_job_change_flash_colors[i].b + 1;
             }
         }
-        world_gfx_append_poly_gt4_to_otag((world_gfx_textured_rect_source_t*)&g_world_job_wheel_portrait_quad,
-            g_world_job_change_flash_colors[0], 0, 0x33);
-        world_gfx_append_poly_gt4_to_otag((world_gfx_textured_rect_source_t*)&g_world_job_wheel_new_portrait_quad,
-            g_world_job_change_flash_colors[0], 0, 0x33);
+        world_gfx_enqueue_gouraud_textured_quad(
+            &g_world_job_wheel_portrait_quad, g_world_job_change_flash_colors, 0, 0x33);
+        world_gfx_enqueue_gouraud_textured_quad(
+            &g_world_job_wheel_new_portrait_quad, g_world_job_change_flash_colors, 0, 0x33);
         world_formation_draw_job_wheel_sprites(0, ONE, ONE);
     } else {
         banner = g_world_formation_unit_banner_enabled;
@@ -132,28 +151,29 @@ void world_formation_run_job_wheel_menu(void) {
             g_world_formation_saved_banner_enabled = g_world_formation_unit_banner_enabled;
         }
         if (g_world_formation_selected_unit_index != g_world_job_wheel_unit_index) {
-            world_formation_update_job_wheel_state();
+            world_formation_switch_job_wheel_unit();
         }
         if (g_world_formation_unit_banner_enabled == 0) {
-            world_formation_cycle_selected_unit((s16)g_world_input_secondary_repeat);
+            world_formation_cycle_selected_unit(g_world_input_secondary_repeat);
         }
         world_formation_draw_unit_sprite(
             g_world_formation_selected_unit_index, &g_world_job_wheel_unit_sprite_position, 0, 0x32);
-        if (g_world_formation_current_menu == 0x14) {
+        if (g_world_formation_current_menu == WORLD_FORMATION_MENU_JOB_WHEEL_CLOSING) {
             world_formation_step_job_wheel_close_animation();
-        } else if (g_world_formation_current_menu == 0x15) {
+        } else if (g_world_formation_current_menu == WORLD_FORMATION_MENU_JOB_WHEEL_OPENING) {
             world_formation_step_job_wheel_open_animation();
         } else {
             job = g_world_job_wheel_jobs[g_world_job_wheel_cursor_index];
             if (g_world_job_wheel_spin_progress == 0) {
                 pad = g_world_input_primary_repeat;
                 if (pad & PSX_PAD_CROSS) {
-                    i = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->roster_slot;
-                    world_formation_build_record_list(0, g_world_formation_unit_pointers, 0);
+                    i = g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->identity.roster_slot;
+                    world_formation_build_record_list(
+                        0, g_world_formation_unit_pointers, WORLD_FORMATION_RECORD_LIST_ALL);
                     g_world_formation_selected_unit_index = world_formation_find_index_by_roster_slot(i);
                     g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
                     g_world_job_wheel_job_selected = 1;
-                    g_world_formation_current_menu = 0xF;
+                    g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_WHEEL_LEAVE;
                     g_world_formation_unit_browse_enabled = g_world_job_wheel_saved_browse_enabled;
                 } else if (g_world_job_wheel_job_count < 2) {
                     if (pad & PSX_PAD_CIRCLE) {
@@ -171,22 +191,23 @@ void world_formation_run_job_wheel_menu(void) {
                         g_world_menu_sound_effect_id = MAIN_SFX_CURSOR_MOVE;
                     }
                     if (g_world_input_secondary_repeat & PSX_PAD_CIRCLE) {
-                        if (!(job & 0x4000)) {
+                        if (!(job & WORLD_JOB_LIST_ENTRY_UNAVAILABLE)) {
                             g_world_job_change_confirmed = 1;
                             for (i = 0; i < 4; i++) {
-                                g_world_job_change_flash_colors[i][0] = g_world_job_change_flash_colors[i][1]
-                                    = g_world_job_change_flash_colors[i][2] = 0x80;
+                                g_world_job_change_flash_colors[i].r = g_world_job_change_flash_colors[i].g
+                                    = g_world_job_change_flash_colors[i].b = 0x80;
                             }
-                            g_world_job_change_anim_state = 1;
+                            g_world_job_change_anim_state = WORLD_JOB_CHANGE_ANIM_DISSOLVE;
                             g_world_formation_saved_banner_enabled = g_world_formation_unit_banner_enabled;
                             g_world_formation_unit_banner_enabled = 0;
                             g_world_formation_unit_cycle_mode = 0;
-                            g_world_formation_current_menu = 0x18;
-                        } else if ((job & 0x3FF)
-                            != g_world_formation_unit_pointers[g_world_formation_selected_unit_index]->job_id) {
-                            /* The definition's s16 conversions would change this call's codegen. */
+                            g_world_formation_current_menu = WORLD_FORMATION_MENU_JOB_CHANGE;
+                        } else if ((job & WORLD_JOB_LIST_ENTRY_ID_MASK)
+                            != g_world_formation_unit_pointers[g_world_formation_selected_unit_index]
+                                ->identity.job_id) {
                             world_text_show_message_and_play_sound(
-                                ((s32 (*)(s32))world_job_get_text_index)(job & 0x3FF) + 0xE800, 0x30);
+                                world_job_get_text_index(job & WORLD_JOB_LIST_ENTRY_ID_MASK) + 0xE800,
+                                MAIN_SFX_ERROR_MESSAGE);
                             g_world_status_display_thread_params.style = 1;
                         } else {
                             g_world_menu_sound_effect_id = MAIN_SFX_INVALID;
@@ -194,10 +215,9 @@ void world_formation_run_job_wheel_menu(void) {
                     }
                     if (g_world_input_secondary_repeat & PSX_PAD_SELECT) {
                         if (g_world_job_wheel_job_count >= 2) {
-                            /* The definition's s16 conversions would change this call's codegen. */
-                            i = ((s32 (*)(s32))world_job_get_text_index)(job & 0x3FF);
+                            i = world_job_get_text_index(job & WORLD_JOB_LIST_ENTRY_ID_MASK);
                             if (i >= 0) {
-                                world_text_show_message_and_play_sound(i + 0xE800, 0x12);
+                                world_text_show_message_and_play_sound(i + 0xE800, MAIN_SFX_WINDOW_OPEN);
                                 g_world_status_display_thread_params.style = 1;
                             }
                         }
@@ -223,17 +243,18 @@ void world_formation_run_job_wheel_menu(void) {
                 }
             }
             if (g_world_job_wheel_job_count >= 2) {
+                /* The shift preserves the order of the spin-state loads. */
                 angle = ((g_world_job_wheel_spin_direction << 12) * g_world_job_wheel_spin_progress
                             / g_world_job_wheel_job_count)
-                    / 36;
-                world_formation_draw_job_wheel_sprites((s16)(angle % ONE), ONE, ONE);
+                    / 36 % ONE;
+                world_formation_draw_job_wheel_sprites(angle, ONE, ONE);
             }
-            if (g_world_thread_task_active == 0) {
+            if (g_menu_input_lock_mode == 0) {
                 g_world_status_display_thread_params.style = 0;
             }
         }
     }
     world_gfx_enqueue_textured_quad(
         &g_world_job_wheel_name_rect, 0x30, 0x30, 0, 0, g_world_menu_window_tpage, g_world_menu_window_clut, 0x33);
-    world_menu_run_script_with_palette_mode(g_world_job_wheel_script, 0, g_world_thread_task_active);
+    world_menu_run_script_with_palette_mode(&g_world_job_wheel_script, 0, g_menu_input_lock_mode);
 }

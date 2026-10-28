@@ -1,18 +1,31 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_event.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
+#include "fft/battle_script.h"
+#include "fft/battle_unit.h"
+#include "fft/main.h"
+#include "fft/script.h"
+#include "fft/sound.h"
 #include "psx/types.h"
 
 #ifndef NULL
 #    define NULL 0
 #endif
 
-typedef struct battle_script_weather_environment {
-    u8 environment_id;
-    u8 _unused_01;
-} battle_script_weather_environment_t;
-
-extern battle_script_weather_environment_t g_battle_event_weather_commands[];
-
-/* Advances asynchronous battle-script, map, effect, and graphics requests. */
+/* Carry out, on the main loop, what the event instructions asked for during this frame's threads
+ * (battle_script_run_event_frame resets the requests every frame):
+ * - the units' facings and pending animations;
+ * - the map jump-out, the change-map jump-out and the jump-in;
+ * - 3D object and field object (texture animation) changes, and the flags their wait instructions poll;
+ * - the mesh refresh, the map reload and append loads, and the destruction wait
+ *   (battle_script_set_specialized_map_destroyed);
+ * - the weather (its snow variant on a snowy map) and the time of day;
+ * - the staged effect, on the caster or on a unit, and the unit graphics load;
+ * - EVTCHR slot loads, saves and clears, unit graphics copied to a reserved VRAM slot and its release;
+ * - the sound effect, and the music: the switch between the scenario's two tracks, a slot unloaded, a
+ *   new track and a volume transition. */
 void battle_script_process_pending_requests(void) {
     s16 destruction_state;
     s16 effect_id;
@@ -34,6 +47,7 @@ void battle_script_process_pending_requests(void) {
     u16 music_track_id;
     u32 volume_transition;
     s32 pending = 0;
+    effect_start_target_data_t battle_effect_target;
 
     battle_unit_update_facing_and_pending_animations();
     jump_out_map_id = g_battle_event_pending_map_jump_out_id;
@@ -49,7 +63,7 @@ void battle_script_process_pending_requests(void) {
         battle_state_start_change_map_jump_in(jump_in_duration);
     }
     if (g_battle_3d_object_use_request != 0) {
-        battle_map_command_set_3d_object_state(g_battle_event_map_command_80_arg1, g_battle_event_map_command_80_arg2);
+        battle_map_command_set_3d_object_state(g_battle_event_3d_object_id, g_battle_event_3d_object_state);
         g_battle_3d_object_wait_status = 1;
     }
     if (g_battle_field_object_use_request != 0) {
@@ -58,39 +72,40 @@ void battle_script_process_pending_requests(void) {
         g_battle_field_object_wait_status = 1;
     }
     if (g_battle_3d_object_wait_status != 0) {
-        g_battle_3d_object_wait_status = battle_map_command_get_3d_object_state(g_battle_event_map_command_80_arg1);
+        g_battle_3d_object_wait_status = battle_map_command_get_3d_object_state(g_battle_event_3d_object_id);
     }
     if (g_battle_field_object_wait_status != 0) {
         g_battle_field_object_wait_status
             = battle_map_command_get_texture_animation_active(g_battle_event_map_command_83_arg1);
     }
-    if (g_battle_map_refresh_pending != 0) {
-        g_battle_map_refresh_pending = battle_map_load_mesh_variant(3);
+    if (g_map_refresh_pending != 0) {
+        g_map_refresh_pending = battle_map_load_mesh_variant(3);
     }
     reload_state = g_battle_map_reload_state;
     if (reload_state == 1) {
-        if (battle_map_load_data_stage_0x75() == 0) {
-            g_battle_map_reload_state = (u16)(g_battle_map_reload_state + 1);
+        if (battle_map_start_data_load() == 0) {
+            g_battle_map_reload_state = g_battle_map_reload_state + 1;
         }
     } else if (reload_state == 2) {
-        if (battle_map_load_data_stage_0x76() == 0) {
-            g_battle_map_reload_state = (u16)(g_battle_map_reload_state + 1);
+        if (battle_map_poll_data_load() == 0) {
+            g_battle_map_reload_state = g_battle_map_reload_state + 1;
         }
     }
     append_state = g_battle_map_append_state;
     if ((append_state == 1) && (g_battle_map_destruction_wait_state == 0)) {
-        battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x99);
-        g_battle_map_append_state = (u16)(g_battle_map_append_state + 1);
+        battle_map_load_data(script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), MAP_LOAD_COMMAND_START_HELD);
+        g_battle_map_append_state = g_battle_map_append_state + 1;
     } else if ((append_state == 2)
-        && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x9C) == 0x9B)) {
-        g_battle_map_append_state = (u16)(g_battle_map_append_state + 1);
+        && (battle_map_load_data(script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), MAP_LOAD_COMMAND_POLL_HELD)
+            == MAP_LOAD_RESULT_HELD)) {
+        g_battle_map_append_state = g_battle_map_append_state + 1;
     }
     destruction_state = g_battle_map_destruction_wait_state;
     if (destruction_state == 2) {
-        g_battle_map_destruction_wait_state = (s16)(destruction_state + 1);
+        g_battle_map_destruction_wait_state = destruction_state + 1;
         battle_map_dispatch_map_data_command(MAP_DATA_COMMAND_RELEASE_GNS_HOLD, 1, 1, 1);
     } else if ((destruction_state == 3)
-        && (battle_map_load_data(battle_script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), 0x76) == 0)) {
+        && (battle_map_load_data(script_get_variable(EVENT_SCRIPT_VAR_CURRENT_MAP), MAP_LOAD_COMMAND_POLL) == 0)) {
         g_battle_map_destruction_wait_state = 0;
     }
     weather_request = g_battle_event_weather_request;
@@ -100,24 +115,26 @@ void battle_script_process_pending_requests(void) {
             g_battle_event_weather_request = -1;
         } else {
             g_battle_event_weather_request = weather_id;
-            if (g_battle_map_weather_flags & 1) {
-                g_battle_event_weather_request = (s16)(weather_id + 5);
+            if (g_battle_map_weather_flags & BATTLE_MAP_WEATHER_FLAG_SNOW) {
+                g_battle_event_weather_request = weather_id + 5;
             }
-            battle_map_set_weather_texture_overlay(
+            battle_map_run_weather_command(
                 g_battle_event_weather_commands[g_battle_event_weather_request].environment_id);
         }
     }
     time_of_day = g_battle_event_pending_map_state;
     if (time_of_day != -1) {
-        battle_script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, time_of_day);
-        battle_map_set_weather_texture_overlay(0x8BU);
+        script_set_variable(EVENT_SCRIPT_VAR_TIME_OF_DAY, time_of_day);
+        battle_map_run_weather_command(MAP_WEATHER_COMMAND_APPLY_SCRIPT_WEATHER);
     }
     effect_id = g_battle_event_pending_effect_id;
     if (effect_id != -1) {
-        if (g_battle_event_effect_target_mode == 2) {
-            battle_effect_start_new(effect_id, 2, (u8*)(u32)g_battle_event_effect_target_misc_id);
+        if (g_battle_event_effect_target_mode == BATTLE_EFFECT_START_ON_CASTER) {
+            battle_effect_target.runtime_id = g_battle_event_effect_target_runtime_id;
+            battle_effect_start_new(effect_id, BATTLE_EFFECT_START_ON_CASTER, battle_effect_target);
         } else {
-            battle_effect_start_new(effect_id, 0, (u8*)(u32)g_battle_event_effect_target_misc_id);
+            battle_effect_target.runtime_id = g_battle_event_effect_target_runtime_id;
+            battle_effect_start_new(effect_id, BATTLE_EFFECT_START_ON_UNIT, battle_effect_target);
         }
     }
     if (g_battle_unit_graphics_load_pending != 0) {
@@ -142,39 +159,39 @@ void battle_script_process_pending_requests(void) {
         }
         unit_vram_copy = g_battle_event_pending_unit_vram_copy;
         if (unit_vram_copy >= 0) {
-            battle_gfx_load_misc_unit_into_evtchr_slot((u32)(unit_vram_copy & 0xFF00) >> 8, unit_vram_copy & 0xFF);
+            battle_gfx_load_unit_attack_image_into_evtchr_slot((unit_vram_copy & 0xFF00) >> 8, unit_vram_copy & 0xFF);
         }
         release_slot = g_battle_event_pending_reserved_vram_release_slot;
         if (release_slot >= 0) {
             battle_gfx_release_reserved_vram_slot(release_slot);
         }
-        sfx_id = g_sound_effect_id_to_play;
+        sfx_id = g_sound_pending_sfx_id;
         if (sfx_id != -1) {
             main_sound_play_sfx(sfx_id);
         }
-        if (g_battle_music_switch_request >= 0) {
-            main_sound_stop_forced_music();
-            g_battle_current_music_track_index = (u16)(g_battle_current_music_track_index ^ 1);
-            if (g_battle_current_music_track_index == 0) {
-                music_track_id = g_battle_music_track_1_id;
+        if (g_battle_sound_music_switch_request >= 0) {
+            main_sound_stop_current_music();
+            g_battle_sound_music_track_index = g_battle_sound_music_track_index ^ 1;
+            if (g_battle_sound_music_track_index == 0) {
+                music_track_id = g_battle_sound_music_track_1_id;
             } else {
-                music_track_id = g_battle_music_track_2_id;
+                music_track_id = g_battle_sound_music_track_2_id;
             }
             if (music_track_id != 0) {
-                main_sound_switch_music_track(g_battle_current_music_track_index + 1,
-                    battle_script_scale_music_volume(g_battle_event_music_switch_volume),
+                main_sound_switch_music_track(g_battle_sound_music_track_index + 1,
+                    script_scale_music_volume(g_battle_event_music_switch_volume),
                     g_battle_event_music_switch_fade * 4);
             }
         }
-        if (g_battle_music_unload_slot_request >= 0) {
-            main_sound_stop_forced_music();
-            main_sound_unload_scenario_mus(g_battle_music_unload_slot_request);
+        if (g_battle_sound_music_unload_slot_request >= 0) {
+            main_sound_stop_current_music();
+            main_sound_unload_scenario_mus(g_battle_sound_music_unload_slot_request);
         }
-        if (g_battle_music_set_track_request != -1) {
+        if (g_battle_sound_music_set_track_request != -1) {
             main_sound_unload_current_scenario_music();
-            main_sound_set_current_music_track(g_battle_music_set_track_request);
+            main_sound_set_current_music_track(g_battle_sound_music_set_track_request);
         }
-        volume_transition = g_battle_music_volume_transition_request;
+        volume_transition = g_battle_sound_music_volume_transition_request;
         if (volume_transition != -1U) {
             main_sound_set_current_music_target(volume_transition & 0xFFFF, (volume_transition >> 0xE) & 0x3FFC);
         }

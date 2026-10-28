@@ -1,27 +1,31 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
+#include "fft/battle_target.h"
 #include "psx/types.h"
 
+/* Mark the in-range tiles, on both layers, on the line from (x, y), that tile included, in
+ * direction dir (BATTLE_TARGET_LINE_EAST +x, _WEST -x, _NORTH +y, _SOUTH -y; any other value
+ * marks nothing), up to 32 tiles or the map edge. */
 void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
     s32 i;
     s32 dx;
     s32 dy;
     s32 map_width;
-    targeting_panel_entry_t* panel;
+    battle_target_panel_t* panel;
 
     switch (dir) {
-    case 0:
+    case BATTLE_TARGET_LINE_EAST:
         dx = 1;
         dy = 0;
         break;
-    case 2:
+    case BATTLE_TARGET_LINE_WEST:
         dx = -1;
         dy = 0;
         break;
-    case 6:
+    case BATTLE_TARGET_LINE_NORTH:
         dx = 0;
         dy = 1;
         break;
-    case 4:
+    case BATTLE_TARGET_LINE_SOUTH:
         dx = 0;
         dy = -1;
         break;
@@ -41,19 +45,19 @@ void battle_target_calculate_linear_attack_tiles(s32 dir, s32 x, s32 y) {
         if (y < 0) {
             return;
         }
-        if (y >= (s32)g_battle_map_max_y) {
+        if (y >= g_battle_map_max_y) {
             return;
         }
         dir = y * map_width + x;
-        panel = &g_battle_target_panel_data[dir];
-        if ((u8)panel->a != 0) {
-            panel->b = 1;
+        panel = &g_battle_target_panels[dir];
+        if (panel->remaining_range != 0) {
+            panel->mark = 1;
         }
         dir += 0x100;
-        panel = &g_battle_target_panel_data[dir];
+        panel = &g_battle_target_panels[dir];
         y += dy;
-        if ((u8)panel->a != 0) {
-            panel->b = 1;
+        if (panel->remaining_range != 0) {
+            panel->mark = 1;
         }
         i += 1;
         x += dx;

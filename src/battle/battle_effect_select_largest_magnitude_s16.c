@@ -1,15 +1,13 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
 /* Return the original component with the largest signed-16 magnitude.
  *
- * Strict comparisons make earlier arguments win ties. The zero-trip scope
- * retains the retail register allocation without emitting control flow. */
+ * Strict comparisons make earlier arguments win ties. */
 s16 battle_effect_select_largest_magnitude_s16(s16 first, s16 second, s16 third) {
     s16 first_magnitude;
     s16 second_magnitude;
     s16 third_magnitude;
     s16 result;
-    s32 third_is_larger;
 
     first_magnitude = first < 0 ? -first : first;
     second_magnitude = second < 0 ? -second : second;
@@ -17,15 +15,14 @@ s16 battle_effect_select_largest_magnitude_s16(s16 first, s16 second, s16 third)
 
     if (first_magnitude < second_magnitude) {
         result = second;
-        third_is_larger = second_magnitude < third_magnitude;
+        if (second_magnitude < third_magnitude) {
+            result = third;
+        }
     } else {
         result = first;
-        third_is_larger = first_magnitude < third_magnitude;
-    }
-    if (third_is_larger) {
-        do {
+        if (first_magnitude < third_magnitude) {
             result = third;
-        } while (0);
+        }
     }
     return result;
 }

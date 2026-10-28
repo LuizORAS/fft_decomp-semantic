@@ -1,19 +1,18 @@
-#include "fft/battle.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/*
- * Collects the item abilities the unit can use into out_item_ids, terminated
- * by 0xff, and returns 0x100 plus the number of entries (0 when the unit or
- * the skillset is wrong, or the menu is empty).
+/* Collect the items the unit's Item skillset lets it use: each learned item ability (0x170-0x17d)
+ * gives its item id (g_main_item_ability_item_ids) into out_item_ids, terminated by 0xff. Returns
+ * 0x100 plus the count, or 0 when the unit is missing, the skillset is not Item or nothing is learned.
  *
  * Loading the ability id into `item_index` before subtracting ABILITY_ID_ITEM_FIRST
  * keeps the table index in its own s16 pseudo, so GCC emits the target's fresh
- * `addiu v1,-0x170` on the sign-extended halfword instead of reusing the
+ * `addiu v1,-0x170` on the sign-extended 16-bit value instead of reusing the
  * masked `id + 0xfe90` sum the range test already holds (the two differ only
  * above bit 15); spelled as one expression it is one instruction short. The
  * `+ 0x10000` in the range test forces that sum into a register, matching the
- * target's hoisted `li t0,0xfe90`.
- */
+ * target's hoisted `li t0,0xfe90`. */
 s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) {
     battle_stats_t* unit;
     u16 abilities[0x14];
@@ -33,17 +32,17 @@ s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) 
         return 0;
     }
     if (skillset != SKILLSET_ID_ITEM) {
-        *out_item_ids = 0xff;
+        *out_item_ids = ITEM_ID_NONE;
         return 0;
     }
     count = battle_menu_get_unit_skillset_ability_data(
         unit_id, SKILLSET_ID_ITEM, (s16*)abilities, mp_costs, ability_ct, 0, ability_flags, turns);
     if (count == 0) {
-        *out_item_ids = 0xff;
+        *out_item_ids = ITEM_ID_NONE;
         return 0;
     }
     for (i = 0; i < count; i++) {
-        if ((u16)(abilities[i] - ABILITY_ID_ITEM_FIRST + 0x10000) < 14) {
+        if (abilities[i] >= ABILITY_ID_ITEM_FIRST && abilities[i] < ABILITY_ID_THROW_FIRST) {
             table = g_main_item_ability_item_ids;
             item_index = abilities[i];
             item_index = item_index - ABILITY_ID_ITEM_FIRST;
@@ -52,6 +51,6 @@ s32 battle_menu_load_item_abilities(s32 unit_id, u8 skillset, u8* out_item_ids) 
             out_item_ids++;
         }
     }
-    *out_item_ids = 0xff;
+    *out_item_ids = ITEM_ID_NONE;
     return found + 0x100;
 }

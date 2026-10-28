@@ -11,11 +11,11 @@ s32 world_unit_get_zodiac_for_date(s32 month, s32 day) {
     s32 i;
 
     for (i = 0; i < WORLD_ZODIAC_DATE_LIMIT_COUNT; i++) {
-        if (month < g_world_zodiac_date_limits[i].month) {
+        if (month < g_world_zodiac_date_limits[i].date.month) {
             break;
         }
-        if (month == g_world_zodiac_date_limits[i].month) {
-            if (g_world_zodiac_date_limits[i].day >= day) {
+        if (month == g_world_zodiac_date_limits[i].date.month) {
+            if (g_world_zodiac_date_limits[i].date.day >= day) {
                 break;
             }
         }

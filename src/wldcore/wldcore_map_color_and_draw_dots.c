@@ -1,83 +1,69 @@
+#include "fft/script.h"
 #include "fft/wldcore.h"
 #include "psx/types.h"
 
-typedef union wldcore_map_dot_source_word {
-    volatile s32 w;
-    volatile u8 b[4];
-} wldcore_map_dot_source_word_t;
-
-typedef struct wldcore_map_dot_source {
-    wldcore_map_dot_source_word_t a;
-    volatile s32 y;
-} wldcore_map_dot_source_t;
-
-extern wldcore_map_dot_source_t* g_wldcore_map_dot_sources;
-
-/* Flags-only view of g_wldcore_map_dots (0x800d3ca8). The hidden-flag update is a
- * volatile access in the target: reorg does not pull the loop-tail `dot++`
- * into the preceding branch delay slot across it, which the target leaves as
- * a nop. */
-typedef struct wldcore_map_dot_hidden_view {
-    u8 _unused_00[0x10];
-    volatile s32 flags;
-    u8 _unused_14[0x20];
-} wldcore_map_dot_hidden_view_t;
-
-extern wldcore_map_dot_hidden_view_t g_wldcore_map_dots_view[];
-
+/* Build the 43 location dots and queue them for drawing. Each takes its kind, sub-kind and map
+ * position from g_wldcore_map_dot_sources; kinds 0 and 1 (the castles and towns) use the first dot
+ * sequence and kind 2 (the other places) the second. A location whose color variable
+ * (EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST + id) is set takes palette 0xc (the first 24 locations) or
+ * 0x10 (the fields), the blue and green dots; 0 keeps the sprite's own red, where a story event
+ * waits. A location whose visibility variable is 0 is hidden. Resets the pulse and projects the
+ * dots. */
 void wldcore_map_color_and_draw_dots(void) {
     wldcore_map_dot_source_t* src;
     wldcore_map_dot_t* dots;
     wldcore_map_dot_t* dot;
     s32* flags_base;
-    u8* color;
+    CVECTOR* color;
     s32 y;
-    s32 is_castle;
+    s32 is_site;
     s32 queue_index;
     s32 i;
 
     dots = g_wldcore_map_dots;
-    /* Queue entries are built from the flags column base; &dots[i].flags does not match. */
-    flags_base = &dots->flags;
+    /* Queue entries are built from the flags column base; &dots[i].render.flags does not match. */
+    flags_base = &dots->render.flags;
     dot = dots;
     src = g_wldcore_map_dot_sources;
     g_wldcore_map_dot_pulse_direction = 0;
     g_wldcore_map_dot_pulse_phase = 0;
     g_wldcore_map_dot_count = 0;
-    for (i = 0; i < 0x2b; i++) {
-        g_wldcore_map_dots[i].kind = src[i].a.b[2];
-        g_wldcore_map_dots[i].sub_kind = src[i].a.b[3];
-        g_wldcore_map_dots[i].position.vx = src[i].a.w;
+    for (i = 0; i < WORLD_LOCATION_COUNT; i++) {
+        g_wldcore_map_dots[i].kind = (u8)(src[i].position_and_kind >> 16);
+        g_wldcore_map_dots[i].sub_kind = (u8)(src[i].position_and_kind >> 24);
+        /* The x coordinate occupies the packed 32-bit value's low 16 bits. */
+        g_wldcore_map_dots[i].position.vx = src[i].position_and_kind;
         y = src[i].y;
-        g_wldcore_map_dots[i].flags = 1;
-        g_wldcore_map_dots[i].priority = 0xf;
-        color = g_wldcore_map_dots[i].rgb;
+        g_wldcore_map_dots[i].render.flags = WLDCORE_DISPLAY_OBJECT_ANIMATED;
+        g_wldcore_map_dots[i].render.priority = 0xf;
+        /* Direct nested access biases the base to render; retail addresses the color column. */
+        color = (CVECTOR*)((u8*)&g_wldcore_map_dots[i] + offsetof(wldcore_map_dot_t, render.color));
         g_wldcore_map_dots[i].position.vz = 0;
         g_wldcore_map_dots[i].position.vy = y;
-        color[0] = 0x80;
-        color[1] = 0x80;
-        color[2] = 0x80;
-        is_castle = g_wldcore_map_dots[i].kind == 2;
-        g_wldcore_map_dots[i].sprite_id = is_castle + 0x6a;
-        if (world_script_get_variable(i + 0x267) != 0) {
-            if (i < 0x18) {
-                g_wldcore_map_dots[i].palette = 0xc;
+        color->r = 0x80;
+        color->g = 0x80;
+        color->b = 0x80;
+        is_site = g_wldcore_map_dots[i].kind == 2;
+        g_wldcore_map_dots[i].render.sequence = is_site + WLDCORE_ANIM_SEQUENCE_MAP_DOT;
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_COLOR_FIRST) != 0) {
+            if (i < WORLD_LOCATION_FIELD_FIRST) {
+                g_wldcore_map_dots[i].render.palette = 0xc;
             } else {
-                g_wldcore_map_dots[i].palette = 0x10;
+                g_wldcore_map_dots[i].render.palette = 0x10;
             }
         } else {
-            g_wldcore_map_dots[i].palette = 0;
+            g_wldcore_map_dots[i].render.palette = 0;
         }
-        dot->anim_counter = 0;
-        g_wldcore_map_dots[i].frame_index = 0;
-        if (world_script_get_variable(i + 0x200) == 0) {
-            g_wldcore_map_dots_view[i].flags |= 0x10;
+        dot->render.anim_counter = 0;
+        g_wldcore_map_dots[i].render.frame_index = 0;
+        if (script_get_variable(i + EVENT_SCRIPT_VAR_LOCATION_VISIBLE_FIRST) == 0) {
+            g_wldcore_map_dots[i].render.flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
         }
         dot++;
         queue_index = g_wldcore_window_render_object_count;
-        g_wldcore_window_render_object_queue[queue_index] = (u32*)(i * sizeof(wldcore_map_dot_t) + (s32)flags_base);
+        g_wldcore_window_render_object_queue[queue_index] = (void*)(i * sizeof(wldcore_map_dot_t) + (s32)flags_base);
         g_wldcore_window_render_object_count = queue_index + 1;
     }
-    g_wldcore_map_dot_count = 0x2b;
+    g_wldcore_map_dot_count = WORLD_LOCATION_COUNT;
     wldcore_map_project_and_cull_dots();
 }

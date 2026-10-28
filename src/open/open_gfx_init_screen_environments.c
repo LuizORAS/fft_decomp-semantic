@@ -2,6 +2,18 @@
 #include "psx/libgpu.h"
 #include "psx/libgte.h"
 
+/* Build the two draw/display environment pairs for the current screen mode.
+ *
+ * The screen is 320x240 with OPEN_SYSTEM_RUNTIME_FLAG_WIDE_SCREEN and 256x240
+ * without it. Buffer 0 draws at y 0 and displays y 240, buffer 1 the reverse. The
+ * drawing offset puts the origin at the center of the screen, the background
+ * clear is off, and the overlay fade's rectangle covers the screen in those
+ * coordinates. OPEN_SYSTEM_RUNTIME_FLAG_RGB24 selects the 24-bit display the
+ * movies use. Only the 320-pixel branch sets dfe.
+ *
+ * With clear_first the display is blanked first, the VRAM under both buffers is
+ * cleared (half as wide again in 24-bit mode) and the active buffer's
+ * environments are applied; without it only the records are filled. */
 void open_gfx_init_screen_environments(s32 clear_first) {
     RECT rect;
     s32 put_envs;
@@ -74,8 +86,8 @@ void open_gfx_init_screen_environments(s32 clear_first) {
     }
     put_envs = clear_first;
     if (put_envs != 0) {
-        PutDrawEnv(&g_open_gfx_screen_environments[g_active_graphics_buffer_index].draw);
-        PutDispEnv(&g_open_gfx_screen_environments[g_active_graphics_buffer_index].disp);
+        PutDrawEnv(&g_open_gfx_screen_environments[g_main_gfx_active_buffer_index].draw);
+        PutDispEnv(&g_open_gfx_screen_environments[g_main_gfx_active_buffer_index].disp);
         SetGeomOffset(0, 0);
     }
 }

@@ -1,43 +1,40 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
 
-/*
- * Check action restrictions and consume MP outside preview mode.
- *
- * Return 0 when allowed, or a rejection code. Only ordinary-menu,
- * non-Mime abilities consume MP; the effective cost is recorded first.
- * Preview skips only subtraction; earlier bookkeeping still runs.
- */
+/* Check whether the unit can use its command's ability, and pay the MP. In a primary action the unit
+ * first stops Charging, Jumping and Defending (it keeps Performing). Returns 0 when allowed, or the
+ * refusal: 6 + battle_unit_get_action_block's result when it cannot act (Don't Act counts as 1); 5
+ * for a Frog using anything but Attack, Frog Attack and the Frog spell, or a Charge; 2 when Silence
+ * stops a silence-affected ability from the ordinary or monster menu; 3 without the MP. Only an
+ * ordinary-menu ability of a unit that is not a Mime costs MP, halved (rounding down) by Half of MP;
+ * the cost goes to g_battle_action_current_ability.mp_cost before the test, and a preview does not subtract it. */
 s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
-    u16 ability_id;
+    s16 ability_id;
     u8 menu;
     s32 result;
-    u32 cost;
+    u8 cost;
     s16 mp;
-    s16 signed_ability;
     ability_secondary_data_t* ability;
 
-    ability_id = unit->last_ability_id;
-    menu = g_main_action_menu_types_by_skillset[unit->last_skillset_id];
-    g_current_ability.mp_cost = 0;
+    ability_id = unit->action_command.ability_id;
+    menu = g_main_action_menu_types_by_skillset[unit->action_command.skillset_id];
+    g_battle_action_current_ability.mp_cost = 0;
     if (g_battle_action_context == BATTLE_ACTION_CONTEXT_PRIMARY)
-        main_status_set_action_state(unit, 0xff);
-    result = battle_formula_can_unit_evade(unit);
+        main_status_set_action_state(unit, MAIN_UNIT_ACTION_STATE_KEEP_PERFORMING);
+    result = battle_unit_get_action_block(unit);
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_DONT_ACT)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_DONT_ACT))
-        result = 1;
+        result = BATTLE_UNIT_ACTION_BLOCK_DISABLED;
     if (result)
         return result + 6;
     if (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_FROG)]
         & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG)) {
-        signed_ability = ability_id;
-        if (signed_ability != 0 && signed_ability != ABILITY_ID_FROG_ATTACK
-            && signed_ability != ABILITY_ID_BLACK_MAGIC_FROG)
+        if (ability_id != 0 && ability_id != ABILITY_ID_FROG_ATTACK && ability_id != ABILITY_ID_BLACK_MAGIC_FROG)
             return 5;
         if (menu == ACTION_MENU_TYPE_CHARGE)
             return 5;
     }
-    if (ability_id < ABILITY_ID_ITEM_FIRST) {
-        ability = &g_main_ability_range_data[(s16)ability_id];
+    if (ability_id >= 0 && ability_id < ABILITY_ID_ITEM_FIRST) {
+        ability = &g_main_ability_range_data[ability_id];
         if ((menu == ACTION_MENU_TYPE_DEFAULT || menu == ACTION_MENU_TYPE_MONSTER)
             && (ability->flags_3 & ABILITY_SECONDARY_FLAG_3_AFFECTED_BY_SILENCE)
             && (unit->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_SILENCE)]
@@ -45,13 +42,13 @@ s32 battle_action_check_and_consume_mp(battle_stats_t* unit) {
             return 2;
         if (menu == ACTION_MENU_TYPE_DEFAULT && unit->job_id != JOB_ID_MIME) {
             cost = ability->mp_cost;
-            if (unit->support_abilities[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
+            if (unit->ability_flags.support[1] & BATTLE_SUPPORT_SET_2_HALF_MP)
                 cost >>= 1;
-            g_current_ability.mp_cost = cost;
+            g_battle_action_current_ability.mp_cost = cost;
             /* A signed member view retains the target store-before-load order;
              * casting the unsigned value hoists the MP load and loses a nop. */
-            mp = *(s16*)&unit->mp;
-            if (mp < (s32)cost)
+            mp = unit->mp;
+            if (mp < cost)
                 return 3;
             if (g_battle_action_state != BATTLE_ACTION_STATE_PREVIEW)
                 unit->mp = mp - cost;

@@ -2,9 +2,9 @@
 #include "psx/libgte.h"
 #include "psx/types.h"
 
-/* Builds the map camera matrix and projects the 13x17 grid of tile corners,
- * storing each screen position and setting flag 0x100 on corners that fall
- * outside the visible window; empty tiles (flag 0x200) keep their flags. */
+/* Build the map camera matrix (the rotation, the origin as its translation, the scale) and project
+ * the 13 x 17 tile corners, storing each screen position. A corner outside x -160..128 or
+ * y -152..120 is marked WLDCORE_MAP_TILE_OFF_SCREEN; empty tiles keep their flags. */
 void wldcore_map_project_and_cull_tiles(void) {
     MATRIX matrix;
     SVECTOR position;
@@ -12,15 +12,18 @@ void wldcore_map_project_and_cull_tiles(void) {
     long flag;
     s32 i;
     wldcore_projected_entry_t* entry;
-    u8* rotation;
+    wldcore_map_projection_view_t* view;
+    SVECTOR* rotation;
     s32 flags;
     s32 updated;
     s32 coordinate;
 
-    rotation = g_wldcore_map_projection_rotation_bytes;
+    /* Retail keeps the camera base at rotation; the record base changes its argument instructions. */
+    rotation = &g_wldcore_map_projection_rotation;
+    view = (wldcore_map_projection_view_t*)((u8*)rotation - offsetof(wldcore_map_projection_view_t, rotation));
     RotMatrix(rotation, &matrix);
-    TransMatrix(&matrix, rotation - 0x20);
-    ScaleMatrix(&matrix, rotation - 0x10);
+    TransMatrix(&matrix, &view->origin);
+    ScaleMatrix(&matrix, &view->scale);
     SetRotMatrix(&matrix);
     SetTransMatrix(&matrix);
 
@@ -36,11 +39,11 @@ void wldcore_map_project_and_cull_tiles(void) {
         g_wldcore_map_projected_tiles[i].screen_x = projected.vx;
         g_wldcore_map_projected_tiles[i].screen_y = projected.vy;
         flags = entry->flags;
-        if (!(flags & 0x200)) {
-            if ((u32)(projected.vx + 0xa0) >= 0x121 || (u32)(projected.vy + 0x98) >= 0x111) {
-                updated = flags | 0x100;
+        if (!(flags & WLDCORE_MAP_TILE_EMPTY)) {
+            if (projected.vx < -0xa0 || projected.vx > 0x80 || projected.vy < -0x98 || projected.vy > 0x78) {
+                updated = flags | WLDCORE_MAP_TILE_OFF_SCREEN;
             } else {
-                updated = flags & ~0x100;
+                updated = flags & ~WLDCORE_MAP_TILE_OFF_SCREEN;
             }
             entry->flags = updated;
         }

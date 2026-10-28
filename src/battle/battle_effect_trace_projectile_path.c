@@ -1,4 +1,5 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "psx/libgpu.h"
 #include "psx/types.h"
 
 /*
@@ -9,7 +10,8 @@
  * an obstacle stopped it. The `step` variable keeps the target's register
  * divide; a literal 0x2000 folds to a shift.
  */
-s32 battle_effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* distance, void* obstacles) {
+s32 battle_effect_trace_projectile_path(
+    VECTOR* delta, SVECTOR* origin, s32* distance, battle_effect_obstacle_unit_list_t* obstacles) {
     VECTOR position;
     VECTOR previous;
     s32 step;
@@ -39,12 +41,9 @@ s32 battle_effect_trace_projectile_path(VECTOR* delta, SVECTOR* origin, s32* dis
             break;
         }
     }
-    g_battle_effect_trajectory_step.vx = position.vx - previous.vx;
-    g_battle_effect_trajectory_step.vy = position.vy - previous.vy;
-    g_battle_effect_trajectory_step.vz = position.vz - previous.vz;
-    g_battle_effect_trajectory_position.vx = position.vx;
-    g_battle_effect_trajectory_position.vy = position.vy;
-    g_battle_effect_trajectory_position.vz = position.vz;
+    setVector(&g_battle_effect_trajectory_step, position.vx - previous.vx, position.vy - previous.vy,
+        position.vz - previous.vz);
+    copyVector(&g_battle_effect_trajectory_position, &position);
     if (hit != 0) {
         g_battle_effect_trajectory_step_count = i / 4;
         return 0;

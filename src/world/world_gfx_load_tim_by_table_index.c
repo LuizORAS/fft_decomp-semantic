@@ -1,6 +1,0 @@
-#include "fft/world.h"
-#include "psx/types.h"
-
-u32* world_gfx_load_tim_by_table_index(s32 index) {
-    return main_file_get_bin_as_tim(g_world_gfx_tim_file_table[index * 2], g_world_gfx_tim_file_table[(index * 2) + 1]);
-}

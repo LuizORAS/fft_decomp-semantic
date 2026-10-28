@@ -1,13 +1,16 @@
 #include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
-/*
- * Apply the current ability's status set to the target action.
- *
- * All-or-nothing copies the full set, random chooses one status, separate
- * rolls each status independently, and cancel writes the removal set. Preview
- * and AI evaluation force probabilistic modes through the all-or-nothing path.
- */
+/* Add the ability's status set to the target's result: formula 0x38 itself, with no evade check or
+ * hit roll (Heal, Shadow Stitch, Stop Bracelet, Grand Cross, Lick and 17 more), and the status step
+ * of most formulas. All or Nothing adds the whole set; Random adds one of its statuses; Separate
+ * keeps each status on a 0-99 roll below 24 and quarters the shown accuracy; Cancel adds the set to
+ * the statuses to remove. Outside execution Random and Separate act as All or Nothing, so estimates
+ * show the whole set. When nothing is left to add or remove (battle_status_modify_inflictions) the
+ * action is a forced failure; otherwise it is a status change, and Invitation also marks a team
+ * change. */
 void battle_formula_apply_status_to_action(void) {
     s32 status_ids[BATTLE_STATUS_COUNT];
     s32 type;
@@ -16,12 +19,12 @@ void battle_formula_apply_status_to_action(void) {
     s32 selected_status;
     s32 byte;
     s32 mask;
-    s32 any;
+    u8 any;
     battle_action_data_t* action;
 
-    type = g_current_ability.status_infliction.type;
+    type = g_battle_action_current_ability.status_infliction.type;
     if (type & BATTLE_STATUS_INFLICTION_TYPE_SEPARATE) {
-        *(s16*)&g_battle_action_target_data->attack_accuracy /= 4;
+        g_battle_action_target_data->attack_accuracy /= 4;
     }
     if (type & (BATTLE_STATUS_INFLICTION_TYPE_SEPARATE | BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE)) {
         if (g_battle_action_state != BATTLE_ACTION_STATE_EXECUTE) {
@@ -32,15 +35,15 @@ void battle_formula_apply_status_to_action(void) {
     if (type & BATTLE_STATUS_INFLICTION_TYPE_ALL_OR_NOTHING) {
         status = 0;
         do {
-            g_battle_action_target_data->status_infliction[status]
-                |= g_current_ability.status_infliction.statuses[status];
+            g_battle_action_target_data->status_changes.infliction[status]
+                |= g_battle_action_current_ability.status_infliction.statuses[status];
             status++;
         } while (status < BATTLE_STATUS_BYTE_COUNT);
     } else if (type & BATTLE_STATUS_INFLICTION_TYPE_RANDOM_ONE) {
         count = 0;
         status = 0;
         do {
-            if (g_current_ability.status_infliction.statuses[status / 8] & (0x80 >> (status & 7))) {
+            if (g_battle_action_current_ability.status_infliction.statuses[status / 8] & (0x80 >> (status & 7))) {
                 status_ids[count] = status;
                 count++;
             }
@@ -48,14 +51,14 @@ void battle_formula_apply_status_to_action(void) {
         } while (status < BATTLE_STATUS_COUNT);
 
         selected_status = status_ids[(battle_formula_get_random_0_7fff() * count) / 32768];
-        g_battle_action_target_data->status_infliction[selected_status / 8] |= 0x80 >> (selected_status & 7);
+        g_battle_action_target_data->status_changes.infliction[selected_status / 8] |= 0x80 >> (selected_status & 7);
     } else if (type & BATTLE_STATUS_INFLICTION_TYPE_SEPARATE) {
         status = 0;
         do {
             byte = status / 8;
-            if (g_current_ability.status_infliction.statuses[byte] & (mask = 0x80 >> (status & 7))) {
+            if (g_battle_action_current_ability.status_infliction.statuses[byte] & (mask = 0x80 >> (status & 7))) {
                 if (main_util_roll_pass_fail(100, 24) != 0 || g_battle_action_state == BATTLE_ACTION_STATE_PREVIEW) {
-                    g_current_ability.status_infliction.statuses[byte] ^= mask;
+                    g_battle_action_current_ability.status_infliction.statuses[byte] ^= mask;
                 }
             }
             status++;
@@ -63,14 +66,15 @@ void battle_formula_apply_status_to_action(void) {
 
         status = 0;
         do {
-            g_battle_action_target_data->status_infliction[status]
-                |= g_current_ability.status_infliction.statuses[status];
+            g_battle_action_target_data->status_changes.infliction[status]
+                |= g_battle_action_current_ability.status_infliction.statuses[status];
             status++;
         } while (status < BATTLE_STATUS_BYTE_COUNT);
     } else if (type & BATTLE_STATUS_INFLICTION_TYPE_CANCEL) {
         status = 0;
         do {
-            g_battle_action_target_data->status_removal[status] |= g_current_ability.status_infliction.statuses[status];
+            g_battle_action_target_data->status_changes.removal[status]
+                |= g_battle_action_current_ability.status_infliction.statuses[status];
             status++;
         } while (status < BATTLE_STATUS_BYTE_COUNT);
     }
@@ -79,17 +83,18 @@ void battle_formula_apply_status_to_action(void) {
     status = 0;
     action = g_battle_action_target_data;
     do {
-        any |= action->status_infliction[status] | action->status_removal[status];
+        any |= action->status_changes.infliction[status] | action->status_changes.removal[status];
         status++;
     } while (status < BATTLE_STATUS_BYTE_COUNT);
 
-    if ((u8)any == 0 || battle_status_modify_inflictions(0) == 0) {
+    if (any == 0 || battle_status_modify_inflictions(0) == 0) {
         battle_formula_force_attack_miss();
         return;
     }
 
     g_battle_action_target_data->attack_type |= BATTLE_ACTION_TYPE_STATUS_CHANGE;
-    if (g_battle_action_target_data->status_infliction[1] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)) {
+    if (g_battle_action_target_data->status_changes.infliction[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_INVITE)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_INVITE)) {
         g_battle_action_target_data->special_effect |= BATTLE_ACTION_SPECIAL_EFFECT_TEAM_CHANGE;
     }
 }

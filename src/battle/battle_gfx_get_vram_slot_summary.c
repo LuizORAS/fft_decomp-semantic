@@ -1,10 +1,4 @@
-#include "fft/battle.h"
-
-/* Per-slot summary written by battle_gfx_get_vram_slot_summary. */
-typedef struct battle_gfx_vram_slot_summary {
-    u8 spritesheet_id; /* 0xff free, 0xfe saved, 0xfd no unit, else owner's sheet */
-    u8 evtchr_state;   /* 0xff none, 0xfe saved, 0xfd loaded */
-} battle_gfx_vram_slot_summary_t;
+#include "fft/battle_gfx.h"
 
 /*
  * Describe both battle VRAM slots: the owning unit's spritesheet (or the
@@ -20,21 +14,21 @@ s32 battle_gfx_get_vram_slot_summary(battle_gfx_vram_slot_summary_t* summary) {
 
     for (i = 0; i < 2; i++) {
         owner = g_battle_gfx_vram_slots[i].owner;
-        if (owner == 0xff) {
+        if (owner == BATTLE_GFX_VRAM_SLOT_OWNER_NONE) {
             summary[i].spritesheet_id = 0xff;
-        } else if (owner == 0xfe) {
+        } else if (owner == BATTLE_GFX_VRAM_SLOT_OWNER_EVTCHR) {
             summary[i].spritesheet_id = 0xfe;
-        } else if (owner & 0x80) {
-            summary[i].spritesheet_id = g_battle_gfx_spritesheet_slots[battle_unit_get_misc_data_by_misc_id(
-                                                                           (u16)g_battle_gfx_vram_slots[i].owner & 0x7f)
-                                                                           ->spritesheet_vram_slot]
-                                            .spritesheet_id;
+        } else if (owner & BATTLE_GFX_VRAM_SLOT_OWNER_ATTACK_IMAGE) {
+            summary[i].spritesheet_id
+                = g_battle_gfx_spritesheet_slots[battle_unit_get_by_runtime_id(g_battle_gfx_vram_slots[i].owner & 0x7f)
+                                                     ->spritesheet_vram_slot]
+                      .spritesheet_id;
         } else {
             summary[i].spritesheet_id = 0xfd;
         }
-        marker = g_battle_gfx_vram_slots[i].evtchr_load_marker;
-        if (marker != 0xfe) {
-            if (marker == 0) {
+        marker = g_battle_gfx_vram_slots[i].image_buffer_state;
+        if (marker != BATTLE_GFX_VRAM_SLOT_BUFFER_EVTCHR) {
+            if (marker == BATTLE_GFX_VRAM_SLOT_BUFFER_FREE) {
                 summary[i].evtchr_state = 0xff;
                 continue;
             }

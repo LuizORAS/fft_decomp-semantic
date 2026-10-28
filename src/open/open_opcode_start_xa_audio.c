@@ -1,35 +1,31 @@
 #include "fft/open.h"
 
-void open_opcode_start_xa_audio(const u8* command) {
-    u32* control = &g_open_script_state.dispatch.flags;
-    u32 state = *control;
+/* Opcode 7: start channel command[1] of ENDING.XA and wait until the start
+ * sequence of open_script_update_xa_audio has finished. The CD volume is dropped
+ * to 0 first. The opcode is skipped when XA audio is already playing, starting or
+ * stopping. Four bytes. */
+void open_opcode_start_xa_audio(s16* command) {
+    u32 flags = g_open_script_state.dispatch.flags;
 
-    if (state & 4) {
-        if (state & 0x20) {
-            *control = state ^ 2;
+    if (flags & OPEN_SCRIPT_DISPATCH_WAITING) {
+        if (flags & OPEN_SCRIPT_DISPATCH_XA_STARTING) {
+            g_open_script_state.dispatch.flags = flags ^ OPEN_SCRIPT_DISPATCH_CONTINUE;
             return;
         }
-        {
-            s32 script_offset = g_open_script_state.dispatch.byte_offset;
-
-            *control = state ^ 4;
-            g_open_script_state.dispatch.byte_offset = script_offset + 4;
-            return;
-        }
-    }
-    if (state & 0x38) {
-        s32 script_offset = g_open_script_state.dispatch.byte_offset;
-
-        g_open_script_state.dispatch.byte_offset = script_offset + 4;
+        g_open_script_state.dispatch.flags = flags ^ OPEN_SCRIPT_DISPATCH_WAITING;
+        g_open_script_state.dispatch.cursor.byte_offset += 4;
         return;
     }
-
-    {
-        s32 parameter = *(const s16*)(command + 2);
-
-        g_open_script_state.control_state = 0;
-        *control = (state & ~0x3a) | 0x24;
-        g_open_script_state.control_parameter = parameter;
-        open_sound_set_type_and_volume(0, 1);
+    if (flags
+        & (OPEN_SCRIPT_DISPATCH_XA_PLAYING | OPEN_SCRIPT_DISPATCH_XA_STOPPING | OPEN_SCRIPT_DISPATCH_XA_STARTING)) {
+        g_open_script_state.dispatch.cursor.byte_offset += 4;
+        return;
     }
+    g_open_script_state.control_parameter = command[1];
+    g_open_script_state.control_state = 0;
+    g_open_script_state.dispatch.flags = (flags
+                                             & ~(OPEN_SCRIPT_DISPATCH_CONTINUE | OPEN_SCRIPT_DISPATCH_XA_PLAYING
+                                                 | OPEN_SCRIPT_DISPATCH_XA_STOPPING | OPEN_SCRIPT_DISPATCH_XA_STARTING))
+        | (OPEN_SCRIPT_DISPATCH_WAITING | OPEN_SCRIPT_DISPATCH_XA_STARTING);
+    open_sound_set_cd_mix_and_volume(0, 1);
 }

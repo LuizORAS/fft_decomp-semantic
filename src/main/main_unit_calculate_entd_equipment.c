@@ -1,8 +1,21 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
-void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* entd) {
-    battle_stats_t* unit = unit_arg;
+/* Fill a battle unit's seven equipment slots from its ENTD record, rolling a
+ * random item for each slot the record marks ENTD_VALUE_RANDOM.
+ *
+ * A monster takes main_unit_store_monster_equipment instead. The random right
+ * hand tries, in order, a Two Hands weapon, a Two Swords weapon, then the type of
+ * each Equip weapon support the unit has (sword, katana, crossbow, spear, axe,
+ * gun), then any weapon. The left hand is emptied when the right-hand weapon
+ * needs both hands or the unit has Two Hands; otherwise it rolls a Two Swords
+ * weapon, then a shield if the unit can equip one. Either hand's item goes to
+ * that hand's weapon or shield slot by its kind. Head and body prefer a helmet or
+ * armor when the support test passes, then any headgear or body armor. A roll
+ * that finds nothing leaves the slot empty, and item 0 is stored as ITEM_ID_NONE.
+ *
+ * The body-armor preference tests Equip Shield, not Equip Armor. */
+void main_unit_calculate_entd_equipment(battle_stats_t* unit, entd_unit_t* entd) {
     u8 item;
     u8 flags;
     s32 i;
@@ -14,47 +27,47 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* e
 
     /* Right hand */
     item = entd->equipment[ENTD_EQUIPMENT_SLOT_RIGHT_HAND];
-    flags = unit->support_abilities[2];
-    if (item == ENTD_EQUIPMENT_RANDOM) {
+    flags = unit->ability_flags.support[2];
+    if (item == ENTD_VALUE_RANDOM) {
         if (flags & BATTLE_SUPPORT_SET_3_TWO_HANDS) {
             item = main_unit_calculate_random_equipment(
                 unit, ITEM_TYPE_FLAG_WEAPON, WEAPON_FLAG_TWO_HANDS_COMPATIBLE, ITEM_TYPE_FILTER_ANY);
         }
-        if (item == ENTD_EQUIPMENT_RANDOM && (flags & BATTLE_SUPPORT_SET_3_TWO_SWORDS)) {
+        if (item == ENTD_VALUE_RANDOM && (flags & BATTLE_SUPPORT_SET_3_TWO_SWORDS)) {
             item = main_unit_calculate_random_equipment(
                 unit, ITEM_TYPE_FLAG_WEAPON, WEAPON_FLAG_TWO_SWORDS_COMPATIBLE, ITEM_TYPE_FILTER_ANY);
         }
     }
-    flags = unit->support_abilities[0];
-    if (item == ENTD_EQUIPMENT_RANDOM) {
+    flags = unit->ability_flags.support[0];
+    if (item == ENTD_VALUE_RANDOM) {
         if (flags & BATTLE_SUPPORT_SET_1_EQUIP_SWORD) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_SWORD);
         }
-        if (item == ENTD_EQUIPMENT_RANDOM) {
+        if (item == ENTD_VALUE_RANDOM) {
             if (flags & BATTLE_SUPPORT_SET_1_EQUIP_KATANA) {
                 item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_KATANA);
             }
-            if (item == ENTD_EQUIPMENT_RANDOM) {
+            if (item == ENTD_VALUE_RANDOM) {
                 if (flags & BATTLE_SUPPORT_SET_1_EQUIP_CROSSBOW) {
                     item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_CROSSBOW);
                 }
-                if (item == ENTD_EQUIPMENT_RANDOM) {
+                if (item == ENTD_VALUE_RANDOM) {
                     if (flags & BATTLE_SUPPORT_SET_1_EQUIP_SPEAR) {
-                        item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_POLEARM);
+                        item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_SPEAR);
                     }
-                    if (item == ENTD_EQUIPMENT_RANDOM) {
+                    if (item == ENTD_VALUE_RANDOM) {
                         if (flags & BATTLE_SUPPORT_SET_1_EQUIP_AXE) {
                             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_AXE);
                         }
-                        if (item == ENTD_EQUIPMENT_RANDOM) {
+                        if (item == ENTD_VALUE_RANDOM) {
                             if (flags & BATTLE_SUPPORT_SET_1_EQUIP_GUN) {
                                 item = main_unit_calculate_random_equipment(
                                     unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_GUN);
                             }
-                            if (item == ENTD_EQUIPMENT_RANDOM) {
+                            if (item == ENTD_VALUE_RANDOM) {
                                 item = main_unit_calculate_random_equipment(
                                     unit, ITEM_TYPE_FLAG_WEAPON, 0, ITEM_TYPE_FILTER_ANY);
-                                if (item == ENTD_EQUIPMENT_RANDOM) {
+                                if (item == ENTD_VALUE_RANDOM) {
                                     item = ITEM_ID_NONE;
                                 }
                             }
@@ -79,16 +92,16 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* e
                                          .secondary_data_id]
                     .flags
                 & WEAPON_FLAG_FORCED_TWO_HANDS)
-            || (unit->support_abilities[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS))) {
+            || (unit->ability_flags.support[2] & BATTLE_SUPPORT_SET_3_TWO_HANDS))) {
         item = ITEM_ID_NONE;
     }
-    flags = unit->support_abilities[2];
-    if (item == ENTD_EQUIPMENT_RANDOM && (flags & BATTLE_SUPPORT_SET_3_TWO_SWORDS)) {
+    flags = unit->ability_flags.support[2];
+    if (item == ENTD_VALUE_RANDOM && (flags & BATTLE_SUPPORT_SET_3_TWO_SWORDS)) {
         item = main_unit_calculate_random_equipment(
             unit, ITEM_TYPE_FLAG_WEAPON, WEAPON_FLAG_TWO_SWORDS_COMPATIBLE, ITEM_TYPE_FILTER_ANY);
     }
     flags = unit->equipment_categories[EQUIPPABLE_ITEM_TYPE_BYTE_INDEX(ITEM_TYPE_SHIELD)];
-    if (item == ENTD_EQUIPMENT_RANDOM) {
+    if (item == ENTD_VALUE_RANDOM) {
         if (flags & EQUIPPABLE_ITEM_TYPE_BYTE_MASK(ITEM_TYPE_SHIELD)) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_SHIELD, 0, ITEM_TYPE_FILTER_ANY);
         } else {
@@ -105,14 +118,14 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* e
 
     /* Head */
     item = entd->equipment[ENTD_EQUIPMENT_SLOT_HEAD];
-    flags = unit->support_abilities[0];
-    if (item == ENTD_EQUIPMENT_RANDOM) {
+    flags = unit->ability_flags.support[0];
+    if (item == ENTD_VALUE_RANDOM) {
         if (flags & BATTLE_SUPPORT_SET_1_EQUIP_ARMOR) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_HEADGEAR, 0, ITEM_TYPE_HELMET);
         }
-        if (item == ENTD_EQUIPMENT_RANDOM) {
+        if (item == ENTD_VALUE_RANDOM) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_HEADGEAR, 0, ITEM_TYPE_FILTER_ANY);
-            if (item == ENTD_EQUIPMENT_RANDOM) {
+            if (item == ENTD_VALUE_RANDOM) {
                 item = ITEM_ID_NONE;
             }
         }
@@ -121,15 +134,15 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* e
 
     /* Body */
     item = entd->equipment[ENTD_EQUIPMENT_SLOT_BODY];
-    if (item == ENTD_EQUIPMENT_RANDOM) {
+    if (item == ENTD_VALUE_RANDOM) {
         /* The target reuses Equip Shield here while requesting random Armor;
          * preserve this native equipment-generation quirk. */
         if (flags & BATTLE_SUPPORT_SET_1_EQUIP_SHIELD) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_BODY_ARMOR, 0, ITEM_TYPE_ARMOR);
         }
-        if (item == ENTD_EQUIPMENT_RANDOM) {
+        if (item == ENTD_VALUE_RANDOM) {
             item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_BODY_ARMOR, 0, ITEM_TYPE_FILTER_ANY);
-            if (item == ENTD_EQUIPMENT_RANDOM) {
+            if (item == ENTD_VALUE_RANDOM) {
                 item = ITEM_ID_NONE;
             }
         }
@@ -138,9 +151,9 @@ void main_unit_calculate_entd_equipment(battle_stats_t* unit_arg, entd_unit_t* e
 
     /* Accessory */
     item = entd->equipment[ENTD_EQUIPMENT_SLOT_ACCESSORY];
-    if (item == ENTD_EQUIPMENT_RANDOM) {
+    if (item == ENTD_VALUE_RANDOM) {
         item = main_unit_calculate_random_equipment(unit, ITEM_TYPE_FLAG_ACCESSORY, 0, ITEM_TYPE_FILTER_ANY);
-        if (item == ENTD_EQUIPMENT_RANDOM) {
+        if (item == ENTD_VALUE_RANDOM) {
             item = ITEM_ID_NONE;
         }
     }

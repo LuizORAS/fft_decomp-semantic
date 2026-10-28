@@ -1,8 +1,21 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
+#include "fft/script.h"
 #include "fft/world.h"
+#include "psx/libgte.h"
 #include "psx/types.h"
 
-s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
+/*
+ * Picks the camera yaw for a shot of two units: of the four candidate yaws
+ * in g_world_camera_diagonal_yaws, the one nearest the current yaw whose bit
+ * is clear in the flat camera-block masks of both units' tiles.
+ *
+ * Returns the camera-yaw script variable moved by the shorter signed arc to
+ * that candidate (angles are 4096 to the turn). With all four candidates
+ * blocked nothing replaces the initial distance and the result is the
+ * variable plus 0x8000.
+ */
+s16 world_camera_pick_nearest_unblocked_yaw(s32 runtime_id_a, s32 runtime_id_b) {
     s32 yaw;
     s32 mask;
     s32 raw;
@@ -17,43 +30,33 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
     s32 wrapped;
     s32 dist;
 
-    yaw = world_camera_wrap_yaw_angle() & 0xFFF;
-    world_unit_get_map_coords_from_misc_id(misc_id_a, g_world_text_speaker_screen_coords);
-    mask = battle_map_get_tile_data_value(0xB, g_world_text_speaker_screen_coords[0],
-               g_world_text_speaker_screen_coords[2], g_world_text_speaker_screen_coords[1])
-        & 0xFF;
-    world_unit_get_map_coords_from_misc_id(misc_id_b, g_world_text_speaker_screen_coords);
+    yaw = camera_wrap_yaw_angle() & 0xFFF;
+    world_unit_get_map_coords_by_runtime_id(runtime_id_a, &g_world_text_speaker_screen_coords);
+    /* The raw result is assigned before it is masked: combine then knows
+     * nothing about the mask's high bits and the loop test keeps its sll 16. */
+    mask = battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK, g_world_text_speaker_screen_coords.vx,
+        g_world_text_speaker_screen_coords.vz, g_world_text_speaker_screen_coords.vy);
+    mask &= 0xFF;
+    world_unit_get_map_coords_by_runtime_id(runtime_id_b, &g_world_text_speaker_screen_coords);
     mask = (mask
-               | battle_map_get_tile_data_value(0xB, g_world_text_speaker_screen_coords[0],
-                   g_world_text_speaker_screen_coords[2], g_world_text_speaker_screen_coords[1]))
+               | battle_map_get_tile_data_value(MAP_TILE_DATA_FLAT_CAMERA_BLOCK_MASK,
+                   g_world_text_speaker_screen_coords.vx, g_world_text_speaker_screen_coords.vz,
+                   g_world_text_speaker_screen_coords.vy))
         & 0xF;
-    /* The retail loop tests the masked bit with a halfword sign extension
-     * (sll 16); GCC folds it away once it can see the mask fits in 4 bits.
-     * The tied empty asm hides the known-zero bits without emitting code. */
-    __asm__("" : "=r"(mask) : "0"(mask));
     bit = 1;
     best = 0x8000;
     sign = 1;
     for (i = 0; i < 4; i++) {
         if ((s16)(bit & mask) == 0) {
-            delta = g_world_camera_candidate_yaws[i] - yaw;
+            delta = g_world_camera_diagonal_yaws[i] - yaw;
             raw = delta;
             if (delta > 0) {
-                wrapped = delta - 0x1000;
+                wrapped = delta - ONE;
             } else {
-                wrapped = delta + 0x1000;
+                wrapped = delta + ONE;
             }
-            if (delta < 0) {
-                delta = -delta;
-            }
-            if (wrapped < 0) {
-                wrapped = -wrapped;
-            }
-            /* At the head of the join block: reorg would otherwise steal the
-             * first join instruction into the preceding bgez delay slot and
-             * retarget the branch past it. The target leaves that slot empty.
-             * An asm is not a delay-slot candidate; this emits no instruction. */
-            __asm__ volatile("");
+            delta = abs(delta);
+            wrapped = abs(wrapped);
             if (wrapped < delta) {
                 dist = wrapped;
             } else {
@@ -76,5 +79,5 @@ s16 world_camera_pick_nearest_unblocked_yaw(s32 misc_id_a, s32 misc_id_b) {
         }
         bit <<= 1;
     }
-    return (u16)g_world_event_words[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
+    return g_script_variables[EVENT_SCRIPT_VAR_CAMERA_YAW] + sign * best;
 }

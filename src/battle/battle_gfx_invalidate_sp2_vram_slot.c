@@ -1,25 +1,20 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
 
-typedef struct battle_gfx_misc_data_header {
-    u8 _unused_00[4];
-    u8 entd_id;
-} battle_gfx_misc_data_header_t;
-
-void battle_gfx_invalidate_sp2_vram_slot(battle_gfx_misc_data_header_t* unit) {
+/* Free the EVTCHR slots whose page holds the unit's SP2 image. */
+void battle_gfx_invalidate_sp2_vram_slot(battle_unit_t* unit) {
     u32 invalid;
-    u8* slot;
+    battle_gfx_vram_slot_t* slot;
     s32 count;
 
     count = 0;
-    invalid = 0xff;
-    slot = (u8*)g_battle_gfx_vram_slots;
-    do {
-        u32 descriptor = *(u32*)slot;
+    invalid = BATTLE_GFX_VRAM_SLOT_OWNER_NONE;
+    slot = g_battle_gfx_vram_slots;
+    for (; count < 2; count++, slot++) {
+        u32 descriptor = slot->owner;
 
-        count++;
-        if (((descriptor & 0x1f) == unit->entd_id) && ((descriptor & 0x40) != 0)) {
-            *(u32*)slot = invalid;
+        if (((descriptor & BATTLE_GFX_VRAM_SLOT_OWNER_ID_MASK) == unit->runtime_id)
+            && ((descriptor & BATTLE_GFX_VRAM_SLOT_OWNER_SP2) != 0)) {
+            slot->owner = invalid;
         }
-        slot += 0x7564;
-    } while (count < 2);
+    }
 }

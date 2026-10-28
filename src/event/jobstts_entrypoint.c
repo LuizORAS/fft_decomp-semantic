@@ -1,11 +1,12 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 #include "psx/types.h"
 
 /* Per-frame JOBSTTS entry: initialize on first call, run the active page,
  * and return the ordering table to draw (0 once the screen closes). */
-s32 jobstts_entrypoint(s32 unit) {
-    s32 result;
+u32* jobstts_entrypoint(s32 unit, void* unused_otag) {
+    u32* result;
 
     if (g_jobstts_initialized == 0) {
         g_jobstts_gfx_otag_length = 0x40;
@@ -26,12 +27,12 @@ s32 jobstts_entrypoint(s32 unit) {
         g_jobstts_gfx_line_g3_capacity = 0;
         g_jobstts_gfx_line_g4_capacity = 0;
         g_jobstts_gfx_tile_capacity = 0;
-        g_jobstts_gfx_tile_16_capacity = 0;
-        g_jobstts_gfx_tile_8_capacity = 0;
         g_jobstts_gfx_tile_1_capacity = 0;
+        g_jobstts_gfx_tile_8_capacity = 0;
+        g_jobstts_gfx_tile_16_capacity = 0;
         g_jobstts_gfx_sprite_capacity = 0;
-        g_jobstts_gfx_sprite_16_capacity = 0;
         g_jobstts_gfx_sprite_8_capacity = 0;
+        g_jobstts_gfx_sprite_16_capacity = 0;
         jobstts_gfx_init_contexts(g_jobstts_gfx_contexts, g_jobstts_gfx_otag_buffer, 0, 0, 0,
             g_jobstts_gfx_poly_ft4_buffer, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             g_jobstts_gfx_draw_move_buffer, g_jobstts_gfx_draw_area_buffer);
@@ -40,35 +41,34 @@ s32 jobstts_entrypoint(s32 unit) {
         jobstts_menu_clear_selection_records();
         g_jobstts_initialized = 1;
     }
-    /* The target passes a second argument the callee does not take. */
-    ((void (*)(s32, s32))jobstts_gfx_swap_context_and_clear_otag)(0, -1);
-    result = (s32)g_jobstts_gfx_context->otag;
-    g_jobstts_previous_event_mode = g_event_mode;
+    jobstts_gfx_swap_context_and_clear_otag(0, -1);
+    result = g_jobstts_gfx_context->otag;
+    g_jobstts_previous_event_mode = g_menu_input_lock_mode;
     jobstts_input_update_with_message_state();
-    if (g_jobstts_input_primary_repeat & PSX_PAD_SELECT) {
+    if (g_menu_input_primary_repeat & PSX_PAD_SELECT) {
         jobstts_text_start_help_thread(3);
     }
-    if (g_jobstts_previous_event_mode != 0 && g_event_mode == 0) {
-        battle_text_restore_pointer_table();
+    if (g_jobstts_previous_event_mode != 0 && g_menu_input_lock_mode == 0) {
+        battle_text_restore_section_pointers();
     }
-    jobstts_text_set_palette_and_metrics(g_event_mode);
-    if (g_jobstts_active_page == 0) {
+    menu_set_palette_mode(g_menu_input_lock_mode);
+    if (g_jobstts_active_page == MENU_JOB_LIST_STEP_JOBS) {
         g_jobstts_active_page = jobstts_menu_update_job_list();
-        if (g_jobstts_input_primary_repeat & PSX_PAD_CROSS) {
+        if (g_menu_input_primary_repeat & PSX_PAD_CROSS) {
             result = 0;
             g_jobstts_sound_queued_effect_id = MAIN_SFX_CANCEL;
             g_jobstts_initialized = 0;
         }
-    } else if (g_jobstts_active_page == 1) {
-        g_jobstts_active_page = jobstts_update_ability_list_menu();
+    } else if (g_jobstts_active_page == MENU_JOB_LIST_STEP_ABILITIES) {
+        g_jobstts_active_page = jobstts_ability_run_list_menu();
     } else {
         result = 0;
         g_jobstts_sound_queued_effect_id = MAIN_SFX_CANCEL;
         g_jobstts_initialized = 0;
     }
-    if (g_jobstts_sound_queued_effect_id != 0) {
+    if (g_jobstts_sound_queued_effect_id != MAIN_SFX_NONE) {
         main_sound_play_sfx(g_jobstts_sound_queued_effect_id);
-        g_jobstts_sound_queued_effect_id = 0;
+        g_jobstts_sound_queued_effect_id = MAIN_SFX_NONE;
     }
     return result;
 }

@@ -1,14 +1,16 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
+/* WORLD's version of battle_menu_get_thread_activity, without the transition state or the blocked
+ * input case: 2 while the menu-building slot runs, 4 while a thread in slots 4 to 8 runs, else 0. */
 s32 world_menu_get_thread_activity(void) {
     s32 i;
 
-    if (world_thread_is_running_80100164(3) != 0) {
+    if (world_thread_is_running_asm(THREAD_SLOT_MENU_BUILDING) != 0) {
         return 2;
     }
     for (i = 4; i < 9; i++) {
-        if (world_thread_is_running_80100164(i) != 0) {
+        if (world_thread_is_running_asm(i) != 0) {
             break;
         }
     }

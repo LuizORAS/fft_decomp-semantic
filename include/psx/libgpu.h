@@ -1,13 +1,17 @@
 #ifndef PSX_LIBGPU_H
 #define PSX_LIBGPU_H
 
+/* Psy-Q LIBGPU: GPU primitives, drawing environments and ordering tables. */
+
 #include "psx/libapi.h"
 #include "psx/libetc.h"
 #include "psx/libgte.h"
+#include "psx/stddef.h"
 
+#include "psx/tmd.h"
 #include "psx/types.h"
 
-/* Command byte in the first GP0 word; packet lengths exclude the DMA tag. */
+/* Command byte in the first 32-bit GP0 command; packet lengths exclude the DMA tag. */
 typedef enum {
     PSYQ_GPU_CODE_CLEAR_CACHE = 0x01,
     PSYQ_GPU_CODE_BLOCK_FILL = 0x02,
@@ -39,6 +43,13 @@ typedef enum {
     PSYQ_GPU_CODE_RAW_TEXTURE = 0x01,
     PSYQ_GPU_CODE_SEMI_TRANSPARENT = 0x02,
 } psyq_gpu_primitive_flag_e;
+
+/* Polygon command layout flags. */
+enum {
+    PSYQ_GPU_POLYGON_TEXTURED = 0x04,
+    PSYQ_GPU_POLYGON_QUAD = 0x08,
+    PSYQ_GPU_POLYGON_GOURAUD = 0x10,
+};
 
 #define PSYQ_GPU_FIXED_TILE_WORDS          2
 #define PSYQ_GPU_FIXED_SPRITE_WORDS        3
@@ -98,20 +109,10 @@ typedef enum {
 #define PSYQ_GPU_STATUS_READY_DMA       0x10000000U
 #define PSYQ_GPU_STATUS_ODD_LINE        0x80000000U
 
-/* CPU DMA channel control and priority registers. */
-#define PSYQ_GPU_DMA_TO_DEVICE         0x00000001U
-#define PSYQ_GPU_DMA_ADDRESS_DECREMENT 0x00000002U
-#define PSYQ_GPU_DMA_MODE_REQUEST      0x00000200U
-#define PSYQ_GPU_DMA_MODE_LINKED_LIST  0x00000400U
-#define PSYQ_GPU_DMA_BUSY              0x01000000U
-#define PSYQ_GPU_DMA_TRIGGER           0x10000000U
-#define PSYQ_GPU_DMA_GPU_ENABLE        0x00000800U
-#define PSYQ_GPU_DMA_OTC_ENABLE        0x08000000U
+/* GPU DMA addresses and image-transfer policy. */
 #define PSYQ_GPU_DMA_ADDRESS_MASK      0x00ffffffU
 #define PSYQ_GPU_DMA_END               0x00ffffffU
 #define PSYQ_GPU_DMA_IMAGE_BLOCK_WORDS 16U
-#define PSYQ_GPU_DMA_GPU_CHANNEL       2
-#define PSYQ_GPU_DMA_OTC_CHANNEL       6
 
 /* GP1 display-mode payload. */
 #define PSYQ_GPU_DISPLAY_WIDTH_320  0x01U
@@ -124,10 +125,10 @@ typedef enum {
 #define PSYQ_GPU_DISPLAY_WIDTH_368  0x40U
 #define PSYQ_GPU_DISPLAY_REVERSE    0x80U
 
-/* GPU packet header: low 24 bits link to the next primitive; high 8 bits
- * contain the packet length. The SDK view continues with the first command
- * word (colour and GPU code), so it is 8 bytes; game code only uses it
- * through casts of primitive pointers. */
+/* GPU packet prefix: low 24 bits link to the next primitive; high 8 bits
+ * contain the packet length. The next word stores color and command bytes,
+ * making P_TAG 8 bytes. Primitive header macros access it through casts of
+ * primitive pointers. */
 typedef struct {
     u32 addr : 24;
     u32 len : 8;
@@ -137,9 +138,96 @@ typedef struct {
     u8 code;
 } P_TAG;
 
-#define setaddr(p, a)  (((P_TAG*)(p))->addr = (u32)(a))
-#define getaddr(p)     ((u32)((P_TAG*)(p))->addr)
-#define addPrim(ot, p) setaddr(p, getaddr(ot)), setaddr(ot, p)
+#define setaddr(p, a)        (((P_TAG*)(p))->addr = (u32)(a))
+#define getaddr(p)           ((u32)((P_TAG*)(p))->addr)
+#define addPrim(ot, p)       setaddr(p, getaddr(ot)), setaddr(ot, p)
+#define addPrims(ot, p0, p1) setaddr(p1, getaddr(ot)), setaddr(ot, p0)
+#define catPrim(p0, p1)      setaddr(p0, p1)
+#define termPrim(p)          setaddr(p, 0xffffffff)
+#define nextPrim(p)          ((void*)((((P_TAG*)(p))->addr) | 0x80000000))
+#define isendprim(p)         ((((P_TAG*)(p))->addr) == 0xffffff)
+
+#define setlen(p, l)  (((P_TAG*)(p))->len = (u8)(l))
+#define setcode(p, c) (((P_TAG*)(p))->code = (u8)(c))
+#define getlen(p)     ((u8)((P_TAG*)(p))->len)
+#define getcode(p)    (((P_TAG*)(p))->code)
+
+#define setPolyF3(p)  (setlen(p, 4), setcode(p, 0x20))
+#define setPolyFT3(p) (setlen(p, 7), setcode(p, 0x24))
+#define setPolyG3(p)  (setlen(p, 6), setcode(p, 0x30))
+#define setPolyGT3(p) (setlen(p, 9), setcode(p, 0x34))
+#define setPolyF4(p)  (setlen(p, 5), setcode(p, 0x28))
+#define setPolyFT4(p) (setlen(p, 9), setcode(p, 0x2c))
+#define setPolyG4(p)  (setlen(p, 8), setcode(p, 0x38))
+#define setPolyGT4(p) (setlen(p, 12), setcode(p, 0x3c))
+
+#define setSprt8(p)     (setlen(p, 3), setcode(p, 0x74))
+#define setSprt16(p)    (setlen(p, 3), setcode(p, 0x7c))
+#define setSprt(p)      (setlen(p, 4), setcode(p, 0x64))
+#define setTile1(p)     (setlen(p, 2), setcode(p, 0x68))
+#define setTile8(p)     (setlen(p, 2), setcode(p, 0x70))
+#define setTile16(p)    (setlen(p, 2), setcode(p, 0x78))
+#define setTile(p)      (setlen(p, 3), setcode(p, 0x60))
+#define setBlockFill(p) (setlen(p, 3), setcode(p, 0x02))
+#define setDrawMove(p)  (setlen(p, 5), setcode(p, 0x01), (p)->code2 = 0x80000000)
+#define setLineF2(p)    (setlen(p, 3), setcode(p, 0x40))
+#define setLineG2(p)    (setlen(p, 4), setcode(p, 0x50))
+#define setLineF3(p)    (setlen(p, 5), setcode(p, 0x48), (p)->pad = 0x55555555)
+#define setLineF4(p)    (setlen(p, 6), setcode(p, 0x4c), (p)->pad = 0x55555555)
+
+#define setSemiTrans(p, abe) ((abe) ? setcode(p, getcode(p) | 0x02) : setcode(p, getcode(p) & ~0x02))
+#define setShadeTex(p, tge)  ((tge) ? setcode(p, getcode(p) | 0x01) : setcode(p, getcode(p) & ~0x01))
+
+#define limitRange(x, l, h) ((x) = ((x) < (l) ? (l) : (x) > (h) ? (h) : (x)))
+
+#define getClut(x, y) (((y) << 6) | (((x) >> 4) & 0x3f))
+
+#define getTPage(tp, abr, x, y)                                                                                        \
+    ((GetGraphType() == 1 || GetGraphType() == 2)                                                                      \
+            ? ((((tp) & 0x3) << 9) | (((abr) & 0x3) << 7) | (((y) & 0x300) >> 3) | (((x) & 0x3ff) >> 6))               \
+            : ((((tp) & 0x3) << 7) | (((abr) & 0x3) << 5) | (((y) & 0x100) >> 4) | (((x) & 0x3ff) >> 6)                \
+                  | (((y) & 0x200) << 2)))
+
+#define _get_mode(dfe, dtd, tpage)                                                                                     \
+    ((GetGraphType() == 1 || GetGraphType() == 2)                                                                      \
+            ? (0xe1000000 | ((dtd) ? 0x0800 : 0) | ((dfe) ? 0x1000 : 0) | ((tpage) & 0x27ff))                          \
+            : (0xe1000000 | ((dtd) ? 0x0200 : 0) | ((dfe) ? 0x0400 : 0) | ((tpage) & 0x9ff)))
+
+#define copyVector(v0, v1) (v0)->vx = (v1)->vx, (v0)->vy = (v1)->vy, (v0)->vz = (v1)->vz
+
+#define setVector(v, x, y, z) (v)->vx = (x), (v)->vy = (y), (v)->vz = (z)
+
+#define setRGB0(p, r, g, b) (p)->r0 = (r), (p)->g0 = (g), (p)->b0 = (b)
+#define setRGB1(p, r, g, b) (p)->r1 = (r), (p)->g1 = (g), (p)->b1 = (b)
+#define setRGB2(p, r, g, b) (p)->r2 = (r), (p)->g2 = (g), (p)->b2 = (b)
+#define setRGB3(p, r, g, b) (p)->r3 = (r), (p)->g3 = (g), (p)->b3 = (b)
+
+#define setRECT(r, _x, _y, _w, _h) (r)->x = (_x), (r)->y = (_y), (r)->w = (_w), (r)->h = (_h)
+
+#define setXY0(p, _x0, _y0) (p)->x0 = (_x0), (p)->y0 = (_y0)
+#define setUV0(p, _u0, _v0) (p)->u0 = (_u0), (p)->v0 = (_v0)
+#define setWH(p, _w, _h)    (p)->w = _w, (p)->h = _h
+
+#define setXY2(p, _x0, _y0, _x1, _y1) (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x1), (p)->y1 = (_y1)
+
+#define setXY4(p, _x0, _y0, _x1, _y1, _x2, _y2, _x3, _y3)                                                              \
+    (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x1), (p)->y1 = (_y1), (p)->x2 = (_x2), (p)->y2 = (_y2),              \
+    (p)->x3 = (_x3), (p)->y3 = (_y3)
+
+#define setXYWH(p, _x0, _y0, _w, _h)                                                                                   \
+    (p)->x0 = (_x0), (p)->y0 = (_y0), (p)->x1 = (_x0) + (_w), (p)->y1 = (_y0), (p)->x2 = (_x0),                        \
+    (p)->y2 = (_y0) + (_h), (p)->x3 = (_x0) + (_w), (p)->y3 = (_y0) + (_h)
+
+#define setUV3(p, _u0, _v0, _u1, _v1, _u2, _v2)                                                                        \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u1), (p)->v1 = (_v1), (p)->u2 = (_u2), (p)->v2 = (_v2)
+
+#define setUV4(p, _u0, _v0, _u1, _v1, _u2, _v2, _u3, _v3)                                                              \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u1), (p)->v1 = (_v1), (p)->u2 = (_u2), (p)->v2 = (_v2),              \
+    (p)->u3 = (_u3), (p)->v3 = (_v3)
+
+#define setUVWH(p, _u0, _v0, _w, _h)                                                                                   \
+    (p)->u0 = (_u0), (p)->v0 = (_v0), (p)->u1 = (_u0) + (_w), (p)->v1 = (_v0), (p)->u2 = (_u0),                        \
+    (p)->v2 = (_v0) + (_h), (p)->u3 = (_u0) + (_w), (p)->v3 = (_v0) + (_h)
 
 typedef struct {
     s16 x;
@@ -372,20 +460,29 @@ typedef struct {
     u32 code[2];
 } DR_MODE;
 
+typedef DR_MODE DR_TWIN;
+
+/* VRAM upload packet; SetDrawLoad sets the tag and commands, leaving p untouched. */
+typedef struct {
+    u32 tag;
+    u32 code[4];
+    u32 p[12];
+} DR_LOAD;
+
 typedef struct {
     u32 tag;
     u32 code[2];
 } DR_PRIO;
 
-/* libgpu DR_MOVE (u32 code[5]); the VRAM-to-VRAM move command words are
- * spelled out so game code can fill the source/destination halfwords. */
+/* Psy-Q 3.5 VRAM-to-VRAM move packet. */
 typedef struct {
     u32 tag;
-    u32 code[2]; /* 0x04: cache flush, move command */
-    s16 x0;      /* 0x0c: source */
+    u32 code;  /* 0x04: cache flush */
+    u32 code2; /* 0x08: move command */
+    s16 sx;    /* 0x0c: source */
+    s16 sy;
+    s16 x0; /* 0x10: destination */
     s16 y0;
-    s16 x1; /* 0x10: destination */
-    s16 y1;
     s16 w; /* 0x14 */
     s16 h;
 } DR_MOVE;
@@ -499,68 +596,87 @@ typedef struct {
     u16 clut;
 } SPRT_8;
 
-/* Resolved retail TMD record used by ReadTMD; field offsets are measured. */
+typedef SPRT_8 SPRT_16;
+
+typedef struct {
+    u32 tag;
+    u8 r0, g0, b0, code;
+    s16 x0, y0;
+} TILE_1;
+
+typedef TILE_1 TILE_8;
+typedef TILE_1 TILE_16;
+
+/* Psy-Q decoded TMD primitive. Some fields are unused for a given primitive mode. */
 typedef struct {
     u32 id;
-    CVECTOR color0, color1, color2, color3;
+    u8 r0, g0, b0, p0;
+    u8 r1, g1, b1, p1;
+    u8 r2, g2, b2, p2;
+    u8 r3, g3, b3, p3;
     u16 tpage, clut;
     u8 u0, v0, u1, v1, u2, v2, u3, v3;
     SVECTOR x0, x1, x2, x3;
     SVECTOR n0, n1, n2, n3;
-    SVECTOR* vertex_base;
-    SVECTOR* normal_base;
-    u16 vertex0, vertex1, vertex2, vertex3;
-    u16 normal0, normal1, normal2, normal3;
-} psyq_tmd_primitive_t;
+    SVECTOR* v_ofs;
+    SVECTOR* n_ofs;
+    u16 vert0, vert1, vert2, vert3;
+    u16 norm0, norm1, norm2, norm3;
+} TMD_PRIM;
+
+typedef char assert_tmd_prim_size[sizeof(TMD_PRIM) == 120 ? 1 : -1];
+
+#define FNT_MAX_ID   8
+#define FNT_MAX_SPRT 1024
 
 extern void FntLoad(int, int);
 extern int FntOpen(int, int, int, int, int, int);
 extern int FntPrint(char*, ...);
 extern u32* FntFlush(int);
 extern void SetDumpFnt(int);
-extern int OpenTIM(void*);
-extern int ReadTIM(TIM_IMAGE*);
+extern s32 OpenTIM(u32*);
+extern TIM_IMAGE* ReadTIM(TIM_IMAGE*);
 extern u16 LoadTPage(u32*, int, int, int, int, int, int);
 extern u16 LoadClut2(u32*, int, int);
 extern void AddPrim(void*, void*);
-void AddPrims(u32* ot, void* first, void* last);
+void AddPrims(void* ot, void* first, void* last);
 extern void SetSemiTrans(void*, int);
 extern void SetShadeTex(void*, int);
 extern void SetPolyF3(POLY_F3*);
-extern void SetPolyFT3(void*);
-extern void SetPolyG3(void*);
-extern void SetPolyGT3(void*);
+extern void SetPolyFT3(POLY_FT3*);
+extern void SetPolyG3(POLY_G3*);
+extern void SetPolyGT3(POLY_GT3*);
 extern void SetPolyF4(POLY_F4*);
 extern void SetPolyFT4(POLY_FT4*);
-extern void SetPolyG4(void*);
-extern void SetPolyGT4(void*);
-extern void SetSprt8(void*);
-extern void SetSprt16(void*);
-extern void SetSprt(void*);
-extern void SetTile1(void*);
-extern void SetTile8(void*);
-extern void SetTile16(void*);
-extern void SetTile(void*);
-extern void SetLineF2(void*);
-extern void SetLineG2(void*);
-extern void SetLineF3(void*);
-extern void SetLineG3(void*);
-extern void SetLineF4(void*);
-extern void SetLineG4(void*);
-extern void SetBlockFill(void*);
-extern void SetDrawMove(void*);
+extern void SetPolyG4(POLY_G4*);
+extern void SetPolyGT4(POLY_GT4*);
+extern void SetSprt8(SPRT_8*);
+extern void SetSprt16(SPRT_16*);
+extern void SetSprt(SPRT*);
+extern void SetTile1(TILE_1*);
+extern void SetTile8(TILE_8*);
+extern void SetTile16(TILE_16*);
+extern void SetTile(TILE*);
+extern void SetLineF2(LINE_F2*);
+extern void SetLineG2(LINE_G2*);
+extern void SetLineF3(LINE_F3*);
+extern void SetLineG3(LINE_G3*);
+extern void SetLineF4(LINE_F4*);
+extern void SetLineG4(LINE_G4*);
+extern void SetBlockFill(TILE*);
+extern void SetDrawMove(DR_MOVE*);
 extern u16 GetTPage(int tp, int abr, int x, int y);
 extern u16 GetClut(int x, int y);
-extern DR_MODE* SetDrawMode(DR_MODE*, int, int, int, RECT*);
-extern DR_AREA* SetDrawArea(DR_AREA*, RECT*);
+extern void SetDrawMode(DR_MODE*, int, int, int, RECT*);
+extern void SetDrawArea(DR_AREA*, RECT*);
 extern void SetDispMask(int);
 extern int ResetGraph(int);
 extern int SetGraphDebug(int);
 extern int GetGraphType(void);
-extern void* DrawSyncCallback(void*);
+extern psyq_interrupt_callback_t DrawSyncCallback(psyq_interrupt_callback_t callback);
 extern int DrawSync(int);
-extern void ClearImage(RECT*, u8, u8, u8);
-extern u32* ClearOTag(void*, int);
+extern int ClearImage(RECT*, u8, u8, u8);
+extern u32* ClearOTag(u32*, int);
 extern u32* ClearOTagR(u32*, int);
 extern s32 LoadImage(RECT*, u32*);
 extern s32 StoreImage(RECT*, u32*);
@@ -573,7 +689,7 @@ extern DRAWENV* PutDrawEnv(DRAWENV*);
 extern DISPENV* PutDispEnv(DISPENV*);
 
 u16 LoadClut(u32* clut, s32 x, s32 y);
-void SetDrawOffset(void* destination, void* position);
+void SetDrawOffset(DR_OFFSET* destination, u16* position);
 
 void DrawPrim(void* p);
 
@@ -587,32 +703,32 @@ void DumpDispEnv(DISPENV* env);
 void SetDrawEnv(DR_ENV* packet, DRAWENV* env);
 void DrawOTagEnv(u32* ot, DRAWENV* env);
 DISPENV* GetDispEnv(DISPENV* env);
-u32 GetODE(void);
-void SetTexWindow(void* packet, RECT* window);
+int GetODE(void);
+void SetTexWindow(DR_TWIN* packet, RECT* window);
 void SetPriority(DR_PRIO* packet, int test_mask, int set_mask);
 void* NextPrim(void* primitive);
 int IsEndPrim(void* primitive);
 void CatPrim(void* primitive, void* next);
 void TermPrim(void* primitive);
-void SetDrawTPage(void* primitive, int dfe, int dtd, int tpage);
-void SetDrawLoad(void* primitive, RECT* rect);
+void SetDrawTPage(DR_TPAGE* p, int dfe, int dtd, int tpage);
+void SetDrawLoad(DR_LOAD* primitive, RECT* rect);
 int MargePrim(void* first, void* second);
 int OpenTMD(u32* tmd, int object_index);
-psyq_tmd_primitive_t* ReadTMD(psyq_tmd_primitive_t* primitive);
+TMD_PRIM* ReadTMD(TMD_PRIM* primitive);
 
 /* driver internals */
 
-typedef union {
-    RECT rect;
-    u32 words[2];
-} psyq_gpu_rect_words_t;
+/* TIM identifier and palette-present field. */
+#define PSYQ_TIM_ID         0x10U
+#define PSYQ_TIM_HAS_CLUT   0x08U
+#define PSYQ_TIM_CLUT_SHIFT 3
 
+/* TIM palette and pixel blocks carry a byte length, VRAM rectangle and payload. */
 typedef struct {
-    u32 tag;
-    u32 cache_flush;
-    u32 command;
-    psyq_gpu_rect_words_t rect;
-} psyq_draw_load_t;
+    u32 size_bytes;
+    RECT rect;
+    u32 data[0]; /* Variable-length 32-bit payload follows the 12-byte header. */
+} psyq_tim_block_t;
 
 typedef int (*psyq_gpu_operation_t)(void*, u32);
 typedef struct {
@@ -639,10 +755,10 @@ typedef struct {
     u8 queue_enabled;
     u8 debug_level;
     u8 reversed;
-    u16 vram_width;
-    u16 vram_height;
+    s16 vram_width;
+    s16 vram_height;
     s32 completion_pending;
-    void* draw_sync_callback;
+    void (*draw_sync_callback)(void);
     DRAWENV draw;
     DISPENV display;
 } psyq_gpu_environment_t;
@@ -652,16 +768,6 @@ extern psyq_gpu_environment_t g_psyq_gpu_environment;
 extern psyq_gpu_dispatch_t* g_psyq_gpu_dispatch;
 extern psyq_gpu_dispatch_t g_psyq_gpu_dispatch_table;
 extern int (*g_psyq_gpu_printf)(const char*, ...);
-extern u8 g_psyq_gpu_graph_type;
-extern u8 g_psyq_gpu_queue_enabled;
-extern u8 g_psyq_gpu_debug_level;
-extern u8 g_psyq_gpu_graph_reverse;
-extern u16 g_psyq_gpu_vram_width;
-extern u16 g_psyq_gpu_vram_height;
-extern s32 g_psyq_gpu_completion_pending;
-extern void* g_psyq_gpu_draw_sync_callback;
-extern DRAWENV g_psyq_gpu_draw_environment;
-extern DISPENV g_psyq_gpu_display_environment;
 extern volatile u32* g_psyq_gpu_gp0_port;
 extern volatile u32* g_psyq_gpu_gp1_port;
 extern volatile u32* g_psyq_gpu_dma_madr;
@@ -673,9 +779,15 @@ extern volatile u32* g_psyq_gpu_otc_dma_chcr;
 extern volatile u32* g_psyq_gpu_dma_dpcr;
 extern u8 g_psyq_gpu_gp1_cache[256];
 extern u32* g_psyq_gpu_tim_cursor;
-extern int g_psyq_gpu_font_window_count;
-extern int g_psyq_gpu_default_font_window;
-extern u8 g_psyq_gpu_font_asset[];
+/* font */
+typedef struct {
+    u16 palette[16];
+    u8 _unused_020[480];
+    u32 pixels[32][16];
+} psyq_gpu_font_asset_t;
+
+typedef char assert_gpu_font_asset_pixels_offset[offsetof(psyq_gpu_font_asset_t, pixels) == 512 ? 1 : -1];
+typedef char assert_gpu_font_asset_size[sizeof(psyq_gpu_font_asset_t) == 2560 ? 1 : -1];
 
 typedef struct {
     TILE tile;
@@ -687,40 +799,44 @@ typedef struct {
     int wrap_disabled;
 } psyq_font_window_t;
 
-extern psyq_font_window_t g_psyq_gpu_font_windows[8];
+extern int g_psyq_gpu_font_window_count;
+extern int g_psyq_gpu_default_font_window;
+extern psyq_gpu_font_asset_t g_psyq_gpu_font_asset;
+extern psyq_font_window_t Font[FNT_MAX_ID];
 extern int g_psyq_gpu_font_allocated_characters;
 extern const char* g_psyq_gpu_font_hex_digits;
-extern char g_psyq_gpu_font_text_pool[1024];
-extern SPRT_8 g_psyq_gpu_font_sprite_pool[1024];
+extern char g_psyq_gpu_font_text_pool[FNT_MAX_SPRT];
+extern SPRT_8 g_psyq_gpu_font_sprite_pool[FNT_MAX_SPRT];
 extern u16 g_psyq_gpu_font_tpage;
 extern u16 g_psyq_gpu_font_clut;
 extern int g_psyq_gpu_sync_deadline;
 extern int g_psyq_gpu_sync_poll_count;
-extern const u16 g_psyq_gpu_vram_width_lookup[10];
-extern const u16 g_psyq_gpu_vram_height_lookup[10];
-extern int g_psyq_gpu_queue_head;
-extern volatile int g_psyq_gpu_queue_tail;
+extern const int g_psyq_gpu_vram_width_lookup[5];
+extern const int g_psyq_gpu_vram_height_lookup[5];
+extern volatile int _qin;
+extern volatile int _qout;
 extern int g_psyq_gpu_reset_interrupt_mask;
-typedef struct {
-    psyq_gpu_operation_t volatile operation;
-    void* volatile source;
-    volatile u32 argument;
-    u32 packet_words[21];
-} psyq_gpu_queue_entry_t;
-
-/* A packet member repeats every 96 bytes; its tail overlaps the next entry's metadata. */
-typedef struct {
-    u32 packet_words[21];
-    u32 _unknown_54[3];
-} psyq_gpu_queue_packet_view_t;
-
 typedef struct {
     psyq_gpu_operation_t operation;
     void* source;
     u32 argument;
 } psyq_gpu_operation_snapshot_t;
 
-extern psyq_gpu_queue_entry_t g_psyq_gpu_operation_queue[64];
+typedef struct {
+    psyq_gpu_operation_snapshot_t request;
+    u32 packet_words[21];
+} psyq_gpu_queue_entry_t;
+
+typedef char assert_gpu_operation_snapshot_size[sizeof(psyq_gpu_operation_snapshot_t) == 12 ? 1 : -1];
+typedef char assert_gpu_queue_entry_size[sizeof(psyq_gpu_queue_entry_t) == 96 ? 1 : -1];
+
+enum {
+    PSYQ_GPU_QUEUE_CAPACITY = 64,
+    PSYQ_GPU_QUEUE_INDEX_MASK = PSYQ_GPU_QUEUE_CAPACITY - 1,
+};
+
+/* The DMA interrupt callback (_exeque) and the foreground share the queue. */
+extern volatile psyq_gpu_queue_entry_t _que[PSYQ_GPU_QUEUE_CAPACITY];
 extern int g_psyq_gpu_enqueue_interrupt_mask;
 extern int g_psyq_gpu_queue_interrupt_mask;
 
@@ -730,7 +846,7 @@ u32 _getctl(int command);
 int _cwb(u32* commands, int count);
 void _cwc(u32* ot);
 u32 _param(int command);
-void memset2(void* destination, int value, int size);
+void psyq_gpu_memset(void* destination, int value, int size);
 int psyq_gpu_decode_tim(u32* tim, TIM_IMAGE* image);
 int _addque(psyq_gpu_operation_t operation, void* source, u32 argument);
 int _addque2(psyq_gpu_operation_t operation, void* source, int copy_size, u32 argument);
@@ -773,11 +889,6 @@ extern const char g_psyq_gpu_reset_graph_format[];
 extern const char g_psyq_gpu_put_draw_env_format[];
 extern const char g_psyq_gpu_draw_otag_env_format[];
 extern const char g_psyq_gpu_put_disp_env_format[];
-extern u16 g_psyq_gpu_cached_display_x, g_psyq_gpu_cached_display_y, g_psyq_gpu_cached_display_width,
-    g_psyq_gpu_cached_display_height;
-extern u16 g_psyq_gpu_cached_screen_x, g_psyq_gpu_cached_screen_y, g_psyq_gpu_cached_screen_width,
-    g_psyq_gpu_cached_screen_height;
-extern u32 g_psyq_gpu_cached_display_flags;
 extern u32 g_psyq_gpu_ot_terminator;
 
 typedef struct {
@@ -789,23 +900,16 @@ typedef struct {
 } psyq_gpu_move_packet_t;
 
 extern psyq_gpu_move_packet_t g_psyq_gpu_move_packet;
-extern u32 g_psyq_gpu_move_copy_words[3];
-extern u32 g_psyq_gpu_move_destination;
-extern u32 g_psyq_gpu_move_dimensions;
 
-u32 get_mode(int dfe, int dtd, int tpage);
-u32 get_cs(int x, int y);
-u32 get_ce(int x, int y);
-u32 get_ofs(int x, int y);
+u32 get_mode(int dfe, int dtd, u16 tpage);
+u32 get_cs(s16 x, s16 y);
+u32 get_ce(s16 x, s16 y);
+u32 get_ofs(s16 x, s16 y);
 u32 get_tw(RECT* rect);
 int get_dx(RECT* rect);
 int get_alarm(void);
 int _otc(u32* ot, int count);
 void checkRECT(const char* name, RECT* rect);
-
-typedef struct {
-    u32 id, flags, object_count;
-} psyq_tmd_header_t;
 
 typedef struct {
     u32 vertex_offset, vertex_count;
@@ -814,9 +918,16 @@ typedef struct {
     u32 scale;
 } psyq_tmd_object_t;
 
+typedef struct {
+    u32 id, flags, object_count;
+    psyq_tmd_object_t objects[0]; /* Variable-length object table follows the 12-byte header. */
+} psyq_tmd_header_t;
+
+typedef union psyq_tmd_packet psyq_tmd_packet_t;
+
 extern SVECTOR* g_psyq_gpu_tmd_vertices;
 extern SVECTOR* g_psyq_gpu_tmd_normals;
-extern u8* g_psyq_gpu_tmd_cursor;
+extern psyq_tmd_packet_t* g_psyq_gpu_tmd_cursor;
 extern int g_psyq_gpu_tmd_primitive_count;
 extern const char g_psyq_gpu_tmd_decode_message[];
 extern const char g_psyq_gpu_tmd_object_format[];
@@ -824,33 +935,50 @@ extern const char g_psyq_gpu_tmd_vertices_format[];
 extern const char g_psyq_gpu_tmd_normals_format[];
 extern const char g_psyq_gpu_tmd_primitives_format[];
 int psyq_gpu_open_tmd_object(
-    psyq_tmd_header_t* header, int object_index, u8** primitive, SVECTOR** vertices, SVECTOR** normals);
-int psyq_gpu_decode_tmd_primitive(const u8* source, psyq_tmd_primitive_t* primitive);
+    psyq_tmd_header_t* header, int object_index, psyq_tmd_packet_t** primitive, SVECTOR** vertices, SVECTOR** normals);
+int psyq_gpu_decode_tmd_primitive(const psyq_tmd_packet_t* packet, TMD_PRIM* primitive);
 
-extern psyq_gpu_operation_t g_psyq_gpu_last_operation;
-extern void* g_psyq_gpu_last_source;
-extern u32 g_psyq_gpu_last_argument;
+extern volatile psyq_gpu_operation_snapshot_t _qlog;
 extern const char g_psyq_gpu_timeout_state_format[];
 extern const char g_psyq_gpu_timeout_operation_format[];
 int _exeque(void);
 int _sync(int mode);
 
-/* Tile and block-fill paths reuse these words; separate aliases preserve the original address loads. */
-extern u32 g_psyq_gpu_clear_packet_tag;
-extern u32 g_psyq_gpu_clear_packet_word_1;
-extern u32 g_psyq_gpu_clear_packet_word_2;
-extern u32 g_psyq_gpu_clear_packet_word_3;
-extern u32 g_psyq_gpu_clear_packet_word_4;
-extern u32 g_psyq_gpu_clear_packet_word_5;
-extern u32 g_psyq_gpu_clear_packet_word_6;
-extern u32 g_psyq_gpu_clear_packet_word_7;
-extern u32 g_psyq_gpu_clear_restore_tag;
-extern u32 g_psyq_gpu_clear_restore_area_start;
-extern u32 g_psyq_gpu_clear_restore_area_end;
-extern u32 g_psyq_gpu_clear_restore_offset;
-int _clr(void* rectangle, u32 color);
-int _dws(void* rectangle, u32 pixels);
-int _drs(void* rectangle, u32 pixels);
+/* One DMA tag covers either a block fill or a tile with drawing-state commands. */
+typedef struct {
+    u32 tag;
+    u32 draw_mask;
+    u32 fill_color;
+    u32 xy;
+    u32 wh;
+} psyq_gpu_clear_fill_packet_t;
+
+typedef struct {
+    u32 tag;
+    u32 draw_area_top_left;
+    u32 draw_area_bottom_right;
+    u32 draw_offset;
+    u32 draw_mask;
+    u32 tile_color;
+    u32 xy;
+    u32 wh;
+} psyq_gpu_clear_tile_packet_t;
+
+typedef union {
+    psyq_gpu_clear_fill_packet_t fill;
+    psyq_gpu_clear_tile_packet_t tile;
+} psyq_gpu_clear_packet_t;
+
+typedef struct {
+    DR_AREA area;
+    u32 draw_offset;
+} psyq_gpu_clear_restore_packet_t;
+
+extern psyq_gpu_clear_packet_t g_psyq_gpu_clear_packet;
+extern psyq_gpu_clear_restore_packet_t g_psyq_gpu_clear_restore;
+int _clr(RECT* rect, u32 color);
+int _dws(RECT* rect, u32* data);
+int _drs(RECT* rect, u32* data);
 
 /* Input layouts used by the retail TMD converter; lengths include its header. */
 typedef enum {
@@ -870,278 +998,27 @@ typedef enum {
     PSYQ_TMD_PACKET_G4 = 0x39010608,
     PSYQ_TMD_PACKET_FT4 = 0x2d010709,
     PSYQ_TMD_PACKET_GT4 = 0x3d010a0c,
-    PSYQ_TMD_PACKET_MODE_MASK = 0xfdffffffU,
 } psyq_tmd_packet_id_e;
 
-typedef struct {
+union psyq_tmd_packet {
     u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-} psyq_tmd_f3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-} psyq_tmd_g3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-} psyq_tmd_ft3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-} psyq_tmd_gt3_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_0e[2];
-} psyq_tmd_f3_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_16[2];
-} psyq_tmd_g3_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_1a[2];
-} psyq_tmd_ft3_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u8 _unknown_22[2];
-} psyq_tmd_gt3_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-    u8 _unknown_12[2];
-} psyq_tmd_f4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-    u16 normal3;
-    u16 vertex3;
-} psyq_tmd_g4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-    u8 _unknown_1e[2];
-} psyq_tmd_ft4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    u16 normal0;
-    u16 vertex0;
-    u16 normal1;
-    u16 vertex1;
-    u16 normal2;
-    u16 vertex2;
-    u16 normal3;
-    u16 vertex3;
-} psyq_tmd_gt4_lit_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_f4_packet_t;
-
-typedef struct {
-    u32 id;
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    CVECTOR color3;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_g4_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    CVECTOR color0;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_ft4_packet_t;
-
-typedef struct {
-    u32 id;
-    u8 u0;
-    u8 v0;
-    u16 clut;
-    u8 u1;
-    u8 v1;
-    u16 tpage;
-    u8 u2;
-    u8 v2;
-    u8 _unknown_0e[2];
-    u8 u3;
-    u8 v3;
-    u8 _unknown_12[2];
-    CVECTOR color0;
-    CVECTOR color1;
-    CVECTOR color2;
-    CVECTOR color3;
-    u16 vertex0;
-    u16 vertex1;
-    u16 vertex2;
-    u16 vertex3;
-} psyq_tmd_gt4_packet_t;
-
-typedef union {
-    u32 id;
-    psyq_tmd_f3_lit_packet_t f3_lit;
-    psyq_tmd_g3_lit_packet_t g3_lit;
-    psyq_tmd_ft3_lit_packet_t ft3_lit;
-    psyq_tmd_gt3_lit_packet_t gt3_lit;
-    psyq_tmd_f3_packet_t f3;
-    psyq_tmd_g3_packet_t g3;
-    psyq_tmd_ft3_packet_t ft3;
-    psyq_tmd_gt3_packet_t gt3;
-    psyq_tmd_f4_lit_packet_t f4_lit;
-    psyq_tmd_g4_lit_packet_t g4_lit;
-    psyq_tmd_ft4_lit_packet_t ft4_lit;
-    psyq_tmd_gt4_lit_packet_t gt4_lit;
-    psyq_tmd_f4_packet_t f4;
-    psyq_tmd_g4_packet_t g4;
-    psyq_tmd_ft4_packet_t ft4;
-    psyq_tmd_gt4_packet_t gt4;
-} psyq_tmd_packet_t;
+    TMD_P_F3 f3_lit;
+    TMD_P_G3 g3_lit;
+    TMD_P_TF3 ft3_lit;
+    TMD_P_TG3 gt3_lit;
+    TMD_P_NF3 f3;
+    TMD_P_NG3 g3;
+    TMD_P_TNF3 ft3;
+    TMD_P_TNG3 gt3;
+    TMD_P_F4 f4_lit;
+    TMD_P_G4 g4_lit;
+    TMD_P_TF4 ft4_lit;
+    TMD_P_TG4 gt4_lit;
+    TMD_P_NF4 f4;
+    TMD_P_NG4 g4;
+    TMD_P_TNF4 ft4;
+    TMD_P_TNG4 gt4;
+};
 
 extern const char g_psyq_gpu_tmd_f3_lit_name[];
 extern const char g_psyq_gpu_tmd_g3_lit_name[];

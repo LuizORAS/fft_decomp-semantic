@@ -3,20 +3,6 @@
 #include "psx/pad.h"
 #include "psx/types.h"
 
-/* Local view of world_menu_thread_data_t with the +0x0a field. */
-typedef struct world_card_prompt_thread_data {
-    u8 _unused_00[0x0a];
-    s16 window_y; /* 0x0a: menu record window y; prompt y chosen from the selected row */
-    u8 _unused_0c[0x74 - 0x0c];
-    s16 selection; /* 0x74 */
-} world_card_prompt_thread_data_t;
-
-extern world_card_prompt_thread_data_t g_world_card_overwrite_confirm_prompt;
-extern world_card_prompt_thread_data_t g_world_card_load_confirm_prompt;
-extern world_card_prompt_thread_data_t* g_world_card_confirm_prompt;
-
-extern world_draw_number_command_t* world_menu_script_draw_formatted_number();
-
 /*
  * Memory-card slot list: in menu step 3 handle slot selection input, then
  * draw the visible slot rows, the row cursor and the scroll arrows.
@@ -36,7 +22,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
     s32 value;
     RECT rect;
 
-    if (g_world_card_menu_step == 3) {
+    if (g_world_card_menu_step == WORLD_CARD_MENU_STEP_SELECT_SAVE) {
         if (g_world_card_slot_list_input_ready == 0) {
             g_world_card_overwrite_prompt_running = 0;
             g_world_card_load_prompt_running = 0;
@@ -48,27 +34,29 @@ void world_card_update_and_draw_slot_list(s32 input) {
         }
         if (world_card_check_selected() > CARD_IO_RESULT_COMPLETE) {
             if (world_card_wait_for_selected_status(3) != CARD_IO_RESULT_COMPLETE) {
-                world_menu_stop_thread_and_wait(6);
-                world_menu_stop_thread_and_wait(5);
-                g_world_card_menu_step = 2;
-                g_card_save_last_written_slot = 0xff;
+                world_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU);
+                world_menu_stop_thread_and_wait(THREAD_SCREEN_SLOT_MENU_CHILD);
+                g_world_card_menu_step = WORLD_CARD_MENU_STEP_SCANNING;
+                g_main_card_save_last_used_slot = CARD_SAVE_LAST_USED_SLOT_NONE;
             }
         } else if (g_world_card_overwrite_prompt_running != 0) {
-            g_world_card_overwrite_prompt_running = world_menu_run_thread(6, &g_world_card_overwrite_confirm_prompt);
+            g_world_card_overwrite_prompt_running
+                = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_card_overwrite_confirm_prompt);
             if (g_world_card_overwrite_prompt_running == 0 && g_world_menu_selection_results[5] == 0) {
-                g_world_card_menu_step = 5;
+                g_world_card_menu_step = WORLD_CARD_MENU_STEP_SAVING;
             }
         } else if (g_world_card_load_prompt_running != 0) {
-            g_world_card_load_prompt_running = world_menu_run_thread(6, &g_world_card_load_confirm_prompt);
+            g_world_card_load_prompt_running
+                = world_menu_run_thread(THREAD_SCREEN_SLOT_MENU, g_world_card_load_confirm_prompt);
             if (g_world_card_load_prompt_running == 0 && g_world_menu_selection_results[5] == 0) {
-                g_world_card_menu_step = 4;
+                g_world_card_menu_step = WORLD_CARD_MENU_STEP_LOADING;
             }
         } else if ((input & PSX_PAD_CIRCLE) && g_world_card_list_scroll_velocity == 0) {
             main_sound_play_sfx(MAIN_SFX_CONFIRM);
             remaining = g_world_card_slot_cursor_row;
             if (g_world_card_save_mode == 0) {
                 for (i = 0; i < 15; i++) {
-                    if (g_card_save_slot_file_states[i] != -1) {
+                    if (g_card_save_slot_file_states[i] != CARD_SAVE_SLOT_UNAVAILABLE) {
                         remaining--;
                     }
                     if (remaining < 0) {
@@ -77,7 +65,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 }
             } else {
                 for (i = 0; i < 15; i++) {
-                    if (g_card_save_slot_file_states[i] == 0) {
+                    if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_OCCUPIED) {
                         remaining--;
                     }
                     if (remaining < 0) {
@@ -102,18 +90,18 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 break;
             }
             if (g_world_card_save_mode == 0) {
-                g_world_card_confirm_prompt = &g_world_card_overwrite_confirm_prompt;
-                g_world_card_overwrite_confirm_prompt.selection = 1;
+                g_world_card_confirm_prompt = g_world_card_overwrite_confirm_prompt;
+                g_world_card_overwrite_confirm_prompt[1].selected_index = 1;
             } else {
-                g_world_card_confirm_prompt = &g_world_card_load_confirm_prompt;
-                g_world_card_load_confirm_prompt.selection = 0;
+                g_world_card_confirm_prompt = g_world_card_load_confirm_prompt;
+                g_world_card_load_confirm_prompt[1].selected_index = 0;
             }
-            g_world_card_confirm_prompt->window_y = i;
+            g_world_card_confirm_prompt->window.y = i;
             if (g_world_card_save_mode == 0) {
-                if (g_card_save_slot_file_states[g_world_card_active_slot] == 0) {
+                if (g_card_save_slot_file_states[g_world_card_active_slot] == CARD_SAVE_SLOT_OCCUPIED) {
                     g_world_card_overwrite_prompt_running = 1;
                 } else {
-                    g_world_card_menu_step = 5;
+                    g_world_card_menu_step = WORLD_CARD_MENU_STEP_SAVING;
                 }
             } else {
                 g_world_card_load_prompt_running = 1;
@@ -121,14 +109,14 @@ void world_card_update_and_draw_slot_list(s32 input) {
         } else if (input & PSX_PAD_CROSS) {
             if (g_world_card_list_scroll_velocity == 0) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CANCEL;
-                g_world_card_menu_step = 0;
+                g_world_card_menu_step = WORLD_CARD_MENU_STEP_SELECT_CARD;
             }
         } else if (g_world_card_list_scroll_velocity == 0) {
             i = g_world_card_slot_cursor_row;
             if (input & PSX_PAD_DOWN) {
                 g_world_card_slot_cursor_row = i + 1;
-                if (g_world_card_slot_cursor_row >= (s8)g_world_card_selectable_slot_count) {
-                    g_world_card_slot_cursor_row = (s8)g_world_card_selectable_slot_count - 1;
+                if (g_world_card_slot_cursor_row >= g_world_card_selectable_slot_count) {
+                    g_world_card_slot_cursor_row = g_world_card_selectable_slot_count - 1;
                 }
             } else if ((input & PSX_PAD_UP) && i != 0) {
                 g_world_card_slot_cursor_row = i - 1;
@@ -137,7 +125,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
                 g_world_menu_sound_effect_id = MAIN_SFX_CURSOR_MOVE;
             }
         }
-        if (g_world_card_menu_step != 3) {
+        if (g_world_card_menu_step != WORLD_CARD_MENU_STEP_SELECT_SAVE) {
             input = 0;
             g_world_card_slot_list_input_ready = 0;
         }
@@ -145,17 +133,17 @@ void world_card_update_and_draw_slot_list(s32 input) {
 
     world_card_scroll_menu_list(g_world_card_slot_cursor_row);
     g_world_menu_window_rect_source = &g_world_card_slot_window;
-    busy = g_world_card_menu_step != 3;
+    busy = g_world_card_menu_step != WORLD_CARD_MENU_STEP_SELECT_SAVE;
     for (i = 0, row = 0; i < 15; i++, row++) {
         if (g_world_card_save_mode != 0) {
-            while (g_card_save_slot_file_states[i] != 0) {
+            while (g_card_save_slot_file_states[i] != CARD_SAVE_SLOT_OCCUPIED) {
                 i++;
                 if (i >= 15) {
                     break;
                 }
             }
         } else {
-            while (g_card_save_slot_file_states[i] == -1) {
+            while (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_UNAVAILABLE) {
                 i++;
                 if (i >= 15) {
                     break;
@@ -166,50 +154,50 @@ void world_card_update_and_draw_slot_list(s32 input) {
             break;
         }
         g_world_card_slot_window.rect.y
-            = (u16)g_world_card_list_scroll_y + (u16)g_world_card_list_scroll_velocity + row * 48 + 12;
+            = g_world_card_list_scroll_y + g_world_card_list_scroll_velocity + row * 48 + 12;
         if (g_world_card_slot_window.rect.y < -48 || g_world_card_slot_window.rect.y >= 241) {
             continue;
         }
         world_menu_set_draw_priority(10);
         value = row != g_world_card_slot_cursor_row || busy != 0;
         world_menu_set_palette_mode(value);
-        world_menu_parse_draw_window_frame(&g_world_card_slot_window_command);
-        g_world_card_slot_quad_3.y = g_world_card_slot_quad_4.y = g_world_card_slot_quad_0.y
-            = g_world_card_slot_quad_1.y = g_world_card_slot_window.rect.y - 14;
-        g_world_card_slot_quad_3.y = g_world_card_slot_quad_3.y + 1;
-        g_world_card_slot_quad_4.y = g_world_card_slot_quad_4.y + 1;
-        g_world_card_slot_quad_1.y++;
-        if (g_world_card_slot_quad_0.y >= 0 && g_world_card_slot_quad_0.y < 241) {
+        world_menu_script_draw_window_frame((menu_instruction_t*)&g_world_card_slot_window_command);
+        g_world_card_slot_quad_3.position.y = g_world_card_slot_quad_4.position.y = g_world_card_slot_quad_0.position.y
+            = g_world_card_slot_quad_1.position.y = g_world_card_slot_window.rect.y - 14;
+        g_world_card_slot_quad_3.position.y = g_world_card_slot_quad_3.position.y + 1;
+        g_world_card_slot_quad_4.position.y = g_world_card_slot_quad_4.position.y + 1;
+        g_world_card_slot_quad_1.position.y++;
+        if (g_world_card_slot_quad_0.position.y >= 0 && g_world_card_slot_quad_0.position.y < 241) {
             world_gfx_enqueue_oriented_textured_quad(
-                (world_oriented_quad_t*)&g_world_card_slot_quad_0, (u8*)world_menu_get_sprite_color(), 0, 0, 11);
+                &g_world_card_slot_quad_0, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             world_gfx_enqueue_oriented_textured_quad(
-                (world_oriented_quad_t*)&g_world_card_slot_quad_1, (u8*)world_menu_get_sprite_color(), 0, 0, 11);
+                &g_world_card_slot_quad_1, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             world_gfx_enqueue_oriented_textured_quad(
-                (world_oriented_quad_t*)&g_world_card_slot_quad_3, (u8*)world_menu_get_sprite_color(), 0, 0, 11);
+                &g_world_card_slot_quad_3, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             world_gfx_enqueue_oriented_textured_quad(
-                (world_oriented_quad_t*)&g_world_card_slot_quad_4, (u8*)world_menu_get_sprite_color(), 0, 0, 11);
+                &g_world_card_slot_quad_4, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             world_menu_set_draw_priority(11);
-            g_world_card_slot_number_command.y = g_world_card_slot_quad_0.y;
-            g_world_card_slot_number_command.value = (u8)i + 1;
-            world_menu_script_draw_formatted_number(&g_world_card_slot_number_command);
+            g_world_card_slot_number_command.y = g_world_card_slot_quad_0.position.y;
+            g_world_card_slot_number_command.value = i + 1;
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_slot_number_command);
         }
-        g_world_card_slot_quad_2.y = g_world_card_slot_quad_0.y;
-        if (g_world_card_slot_quad_2.y >= 0 && g_world_card_slot_quad_2.y < 241) {
+        g_world_card_slot_quad_2.position.y = g_world_card_slot_quad_0.position.y;
+        if (g_world_card_slot_quad_2.position.y >= 0 && g_world_card_slot_quad_2.position.y < 241) {
             world_gfx_enqueue_oriented_textured_quad(
-                (world_oriented_quad_t*)&g_world_card_slot_quad_2, (u8*)world_menu_get_sprite_color(), 0, 0, 11);
+                &g_world_card_slot_quad_2, world_menu_get_sprite_color(), TEXTURE_UV_FLIP_NONE, 0, 11);
             g_world_card_playtime_seconds_command.y = g_world_card_playtime_minutes_command.y
-                = g_world_card_playtime_hours_command.y = g_world_card_slot_quad_0.y;
-            g_world_card_playtime_seconds_command.value = g_card_save_slot_playtimes[i][2];
-            g_world_card_playtime_minutes_command.value = g_card_save_slot_playtimes[i][1];
-            g_world_card_playtime_hours_command.value = g_card_save_slot_playtimes[i][0];
+                = g_world_card_playtime_hours_command.y = g_world_card_slot_quad_0.position.y;
+            g_world_card_playtime_seconds_command.value = g_main_card_save_slot_playtimes[i].seconds;
+            g_world_card_playtime_minutes_command.value = g_main_card_save_slot_playtimes[i].minutes;
+            g_world_card_playtime_hours_command.value = g_main_card_save_slot_playtimes[i].hours;
             if (g_world_card_playtime_hours_command.value >= 100) {
                 g_world_card_playtime_hours_command.value = 99;
             }
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_hours_command);
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_minutes_command);
-            world_menu_script_draw_formatted_number(&g_world_card_playtime_seconds_command);
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_hours_command);
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_minutes_command);
+            world_menu_script_draw_formatted_number((menu_instruction_t*)&g_world_card_playtime_seconds_command);
         }
-        if (g_card_save_slot_file_states[i] == 1) {
+        if (g_card_save_slot_file_states[i] == CARD_SAVE_SLOT_AVAILABLE) {
             rect.x = 0x74;
             rect.y = g_world_card_slot_window.rect.y + 5;
             rect.w = 0x28;
@@ -250,7 +238,7 @@ void world_card_update_and_draw_slot_list(s32 input) {
         rect.h = 0x10;
         world_gfx_enqueue_textured_quad(&rect, 0xd8, 0, 0, 0, g_world_menu_icon_tpage, g_world_menu_clut_front, 15);
     }
-    if ((s8)g_world_card_selectable_slot_count - g_world_card_list_first_visible_row >= 5) {
+    if (g_world_card_selectable_slot_count - g_world_card_list_first_visible_row >= 5) {
         rect.x = 0xe3;
         rect.y = 0xba;
         rect.w = 8;

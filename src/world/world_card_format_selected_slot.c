@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/types.h"
 
 /* Format the selected card slot three times once it reports ready.

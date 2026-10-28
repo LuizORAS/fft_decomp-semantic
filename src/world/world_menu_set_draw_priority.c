@@ -1,6 +1,7 @@
 #include "fft/world.h"
 #include "psx/types.h"
 
-void world_menu_set_draw_priority(s16 priority) {
+/* Set the ordering-table priority the display scripts draw at. */
+void world_menu_set_draw_priority(s32 priority) {
     g_world_menu_draw_priority = priority;
 }

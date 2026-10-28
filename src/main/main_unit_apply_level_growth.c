@@ -1,26 +1,25 @@
 #include "fft/main.h"
 #include "psx/types.h"
 
+/* Applies one level of growth (or its inverse for a level down) to each
+ * 24-bit raw stat: raw +/- raw / (growth + level), a zero growth counting as
+ * 1, capped at 0xffffff; then refreshes the derived stats and clamps HP/MP. */
 void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down) {
-    u8* raw_stat_base;
-    /* Pin: as a pseudo, loop.c splits raw_stat into two biased induction pointers. */
-    register u8* raw_stat __asm__("$18");
-    u8* growth;
+    unit_raw_stat_bytes_t* raw_stats;
+    job_stat_growth_t* growth;
     u32 value;
     u32 divisor;
-    /* Pin: unpinned, level and level_down swap $s6 and $s7. */
-    register u8 level __asm__("$23");
+    s32 level;
     u32 minimum_growth;
-    u32 stored_byte;
+    s32 i;
 
-    raw_stat_base = unit->raw_stats;
-    raw_stat = raw_stat_base;
-    growth = &unit->raw_stats[UNIT_RAW_STAT_DATA_BYTE_COUNT];
+    raw_stats = unit->raw_stats;
+    growth = unit->stat_growths;
     level = unit->level;
 
-    do {
-        divisor = *growth;
-        value = raw_stat[0] + (raw_stat[1] << 8) + (raw_stat[2] << 16);
+    for (i = 0; i < UNIT_RAW_STAT_COUNT; i++) {
+        divisor = growth[i].growth;
+        value = raw_stats[i].low + (raw_stats[i].middle << 8) + (raw_stats[i].high << 16);
         minimum_growth = divisor;
         if (divisor == 0) {
             minimum_growth = 1;
@@ -32,18 +31,13 @@ void main_unit_apply_level_growth(battle_stats_t* unit, s32 level_down) {
         } else {
             value += value / divisor;
         }
-        growth += 2;
         if (value > 0x00ffffff) {
             value = 0x00ffffff;
         }
-        stored_byte = value >> 8;
-        raw_stat[1] = stored_byte;
-        stored_byte = value >> 16;
-        raw_stat[0] = value;
-        raw_stat[2] = stored_byte;
-        raw_stat += UNIT_RAW_STAT_SERIALIZED_BYTES;
-        /* The signed compare is byte-required (slt, not sltu). */
-    } while ((s32)raw_stat < (s32)(raw_stat_base + UNIT_RAW_STAT_DATA_BYTE_COUNT));
+        raw_stats[i].low = value;
+        raw_stats[i].middle = value >> 8;
+        raw_stats[i].high = value >> 16;
+    }
 
     main_unit_refresh_stats_and_statuses(unit);
     if (unit->hp > unit->max_hp) {

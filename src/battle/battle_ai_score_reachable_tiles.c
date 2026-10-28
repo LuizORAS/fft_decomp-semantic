@@ -1,67 +1,68 @@
-#include "fft/battle.h"
+#include "fft/battle_ai.h"
 
-/*
- * Score each reachable tile, resuming suspended evaluations.
+/* Score standing on each reachable tile of the current scenario: simulate moving there without
+ * acting, with the crystal or treasure pickup (battle_ai_update_tile_pickup,
+ * battle_ai_simulate_action_and_score), and store the negated score in tile_priority. The simulation
+ * unit returns to its own tile when the scan ends. Returns -1 to suspend, resuming at the same tile,
+ * else 0.
  *
- * Return -1 to suspend and 0 after restoring the simulation coordinates.
- * Integer address stages preserve the target's addition order; direct typed
- * indexing changes the machine code. Each level has 18 rows of 16 tiles.
- */
+ * Integer address stages preserve the target's addition order; direct typed indexing changes the
+ * machine code. Each level has 18 rows of 16 tiles. */
 s32 battle_ai_score_reachable_tiles(void) {
     s32 x, y, level;
     battle_ai_data_t* ai = &g_battle_ai_data_base;
     u32 row;
 
-    if (g_battle_ai_data_base.decision_state != 0) {
-        x = g_battle_ai_data_base.current_action.coords.bytes.x;
-        y = g_battle_ai_data_base.current_action.coords.bytes.y;
-        level = g_battle_ai_data_base.current_action.coords.bytes.elevation;
+    if (g_battle_ai_data_base.resume_pending != 0) {
+        x = g_battle_ai_data_base.current_action.coords.fields.x;
+        y = g_battle_ai_data_base.current_action.coords.fields.y;
+        level = g_battle_ai_data_base.current_action.coords.fields.elevation;
         {
             u32 scenario_address = g_battle_ai_data_base.movement_scenario * sizeof(ai->reachable_tiles[0]) + (u32)ai;
             u32 level_address;
             u32 row_address;
             scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-            level_address = level * 36 + scenario_address;
-            row_address = y * 2 + level_address;
+            level_address = level * sizeof(ai->reachable_tiles[0][0]) + scenario_address;
+            row_address = y * sizeof(ai->reachable_tiles[0][0][0]) + level_address;
             row = *(u16*)row_address;
         }
         /* This tile was already set up before the interrupted evaluation. */
         goto evaluate_tile;
     }
     level = 0;
-    g_battle_ai_data_base.current_action.target_flags_set = 0;
-    g_battle_ai_data_base.current_action.skillset = 0;
-    for (; level < 2; level++) {
+    g_battle_ai_data_base.current_action.act_before_move = 0;
+    g_battle_ai_data_base.current_action.command.skillset_id = 0;
+    for (; level < MAP_TERRAIN_LAYER_COUNT; level++) {
         for (y = 0; y < ai->map_max_y; y++) {
             {
                 u32 scenario_address = ai->movement_scenario * sizeof(ai->reachable_tiles[0]) + (u32)ai;
                 u32 level_address;
                 u32 row_address;
                 scenario_address += (u32)&ai->reachable_tiles - (u32)ai;
-                level_address = level * 36 + scenario_address;
-                row_address = y * 2 + level_address;
+                level_address = level * sizeof(ai->reachable_tiles[0][0]) + scenario_address;
+                row_address = y * sizeof(ai->reachable_tiles[0][0][0]) + level_address;
                 row = *(u16*)row_address;
             }
             if (row != 0) {
                 for (x = 0; x < ai->map_max_x; x++) {
                     if ((row << x) & 0x8000) {
-                        ai->current_action.coords.bytes.x = x;
-                        ai->current_action.coords.bytes.y = y;
-                        ai->current_action.coords.bytes.elevation = level;
-                        battle_ai_check_unit_for_crystal_or_treasure_status();
+                        ai->current_action.coords.fields.x = x;
+                        ai->current_action.coords.fields.y = y;
+                        ai->current_action.coords.fields.elevation = level;
+                        battle_ai_update_tile_pickup();
                     evaluate_tile:
                         if (battle_ai_simulate_action_and_score() == -1) {
                             /* Keep the current coordinates and uncommitted score. */
                             return -1;
                         }
                         {
-                            u32 level_address = level * 576 + (u32)ai;
+                            u32 level_address = level * sizeof(ai->tile_priority[0]) + (u32)ai;
                             u32 row_address;
                             u32 tile_address;
                             level_address += (u32)&ai->tile_priority - (u32)ai;
-                            row_address = y * 32 + level_address;
-                            tile_address = x * 2 + row_address;
-                            *(u16*)tile_address = -ai->current_action.priority;
+                            row_address = y * sizeof(ai->tile_priority[0][0]) + level_address;
+                            tile_address = x * sizeof(ai->tile_priority[0][0][0]) + row_address;
+                            *(u16*)tile_address = -ai->current_action.rank.priority;
                         }
                     }
                 }

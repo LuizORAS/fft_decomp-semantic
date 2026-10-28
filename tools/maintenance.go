@@ -3,10 +3,13 @@ package main
 
 import (
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 func validSHA256(value string) bool {
@@ -78,5 +81,60 @@ func (p project) checkConfig() error {
 	}
 	fmt.Printf("  declarations: no conflicting file-scope declarations\n")
 	fmt.Printf("  placeholders: no accesses to _unused_ or _padding_ members\n")
+	fmt.Printf("  addresses: no RAM address written as a number in code outside a header #define\n")
+	shards, err := p.checkWorkflowShards(config)
+	if err != nil {
+		return err
+	}
+	if shards > 0 {
+		fmt.Printf("  workflow: the %d check shards cover every module once\n", shards)
+	}
 	return nil
+}
+
+// workflowFile is the CI workflow whose check job is split into shards.
+const workflowFile = ".github/workflows/check.yml"
+
+var workflowShardPattern = regexp.MustCompile(`(?m)^\s*-\s*\{\s*name:\s*[^,}]+,\s*modules:\s*([^}]+?)\s*\}\s*$`)
+
+// checkWorkflowShards fails unless the module lists of the workflow's
+// check shards select every configured module exactly once, so CI cannot
+// skip a module that the shard list forgot. It returns the shard count, or 0
+// when the checkout has no workflow file.
+func (p project) checkWorkflowShards(config *projectConfig) (int, error) {
+	data, err := os.ReadFile(filepath.Join(p.root, filepath.FromSlash(workflowFile)))
+	if errors.Is(err, fs.ErrNotExist) {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	matches := workflowShardPattern.FindAllStringSubmatch(string(data), -1)
+	if len(matches) == 0 {
+		return 0, fmt.Errorf("%s: no check shard of the form `- { name: N, modules: M }` found", workflowFile)
+	}
+	owner := make(map[*moduleSpec]string)
+	for _, match := range matches {
+		selection := strings.TrimSpace(match[1])
+		modules, err := resolveModuleSelection(config, selection)
+		if err != nil {
+			return 0, fmt.Errorf("%s: shard %q: %w", workflowFile, selection, err)
+		}
+		for _, m := range modules {
+			if other, taken := owner[m]; taken {
+				return 0, fmt.Errorf("%s: module %s is checked by two shards (%q and %q)", workflowFile, m.ID, other, selection)
+			}
+			owner[m] = selection
+		}
+	}
+	var missing []string
+	for _, m := range config.Modules {
+		if _, covered := owner[m]; !covered {
+			missing = append(missing, m.ID)
+		}
+	}
+	if len(missing) > 0 {
+		return 0, fmt.Errorf("%s: %d modules are in no check shard: %s", workflowFile, len(missing), strings.Join(missing, " "))
+	}
+	return len(matches), nil
 }

@@ -1,11 +1,13 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_menu.h"
+#include "fft/battle_unit.h"
 #include "psx/types.h"
 
-/* Collect the item ids the unit may throw into `out`, terminated with -1.
- *
- * The skillset's abilities select item types through g_main_throw_ability_item_types; every item of
- * a selected type that is throwable and that the party still owns is listed.
- * */
+/* Collect the items the unit may throw into out, terminated with 0xff: its learned Throw
+ * abilities select item types (g_main_throw_ability_item_types), and every throwable weapon of a
+ * selected type is listed, for a blue unit only while the party has one
+ * (battle_action_decrement_player_item_quantity with consume 0). Returns 0x100 plus the count, or 0
+ * when the unit is missing, the skillset is not Throw or nothing is learned. */
 s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
     u16 abilities[0x14];
     u8 item_types[0x14];
@@ -13,7 +15,7 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
     u8 charge_times[0x14];
     u8 ability_flags[0x14];
     u8 turn_counts[0x14];
-    struct battle_stats* unit;
+    battle_stats_t* unit;
     s32 count;
     s32 ability_count;
     s32 i;
@@ -34,18 +36,18 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
         || (ability_count = battle_menu_get_unit_skillset_ability_data(
                 unit_id, SKILLSET_ID_THROW, (s16*)abilities, mp_costs, charge_times, 0, ability_flags, turn_counts))
             == 0) {
-        *out = 0xff;
+        *out = ITEM_ID_NONE;
         return 0;
     }
     for (i = 0; i < ability_count; i++) {
-        if ((u16)(abilities[i] - 0x17e) < 12) {
+        if (abilities[i] >= ABILITY_ID_THROW_FIRST && abilities[i] < ABILITY_ID_JUMP_FIRST) {
             type_table = g_main_throw_ability_item_types;
             throw_index = abilities[i];
-            throw_index = throw_index - 0x17e;
+            throw_index = throw_index - ABILITY_ID_THROW_FIRST;
             item_types[i] = type_table[throw_index];
         }
     }
-    for (i = 0; i < 0x100; i++) {
+    for (i = 0; i < ITEM_ID_COUNT; i++) {
         item = &g_main_item_primary_data[i];
         type = item->type;
         found = 0;
@@ -55,8 +57,8 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
                 break;
             }
         }
-        if (found != 0 && (item->type_flags & 0x80) != 0
-            && (g_main_item_weapon_data[item->secondary_data_id].flags & 2) != 0) {
+        if (found != 0 && (item->type_flags & ITEM_TYPE_FLAG_WEAPON) != 0
+            && (g_main_item_weapon_data[item->secondary_data_id].flags & WEAPON_FLAG_THROWABLE) != 0) {
             item_id = i;
             if (battle_action_decrement_player_item_quantity(unit, item_id, 0) == 0) {
                 *out = item_id;
@@ -65,6 +67,6 @@ s32 battle_menu_collect_throwable_items(s32 unit_id, u8 skillset, u8* out) {
             }
         }
     }
-    *out = 0xff;
+    *out = ITEM_ID_NONE;
     return count + 0x100;
 }

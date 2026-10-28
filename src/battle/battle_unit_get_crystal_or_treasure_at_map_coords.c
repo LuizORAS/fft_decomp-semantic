@@ -1,24 +1,29 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_unit.h"
 
-battle_unit_misc_data_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z) {
-    battle_unit_misc_data_t* matches[16];
-    battle_unit_misc_data_t* unit;
+/* Return the runtime record of a crystal or chest on a tile (a unit still in the battle under
+ * Crystal or Treasure), preferring the casting unit's own (g_battle_unit_source_runtime_id) when several share
+ * it; NULL when there is none. The unit-move setup, the post-move events and the CRYSTAL_LEARN state
+ * use it. */
+battle_unit_t* battle_unit_get_crystal_or_treasure_at_map_coords(s32 map_x, s32 map_y, s32 map_z) {
+    battle_unit_t* matches[BATTLE_UNIT_RUNTIME_SLOT_COUNT];
+    battle_unit_t* unit;
     s32 count;
     s32 index;
 
     count = 0;
-    unit = g_battle_unit_misc_list_head;
+    unit = g_battle_unit_list_head;
     while (unit != 0) {
-        if ((unit->map_x == map_x) && (unit->map_y == map_y) && (unit->map_z == map_z) && (unit->battle_data != 0)
-            && (unit->battle_data->entd_slot != BATTLE_ENTD_SLOT_NONE)
-            && ((unit->status_flags_5_6 & (BATTLE_MISC_STATUS_CRYSTAL | BATTLE_MISC_STATUS_TREASURE)) != 0)) {
+        if ((unit->map_x == map_x) && (unit->map_y == map_y) && (unit->map_z == map_z) && (unit->stats != 0)
+            && (unit->stats->entd_slot != BATTLE_ENTD_SLOT_NONE)
+            && ((unit->status_flags_5_6 & (BATTLE_UNIT_STATUS_CRYSTAL | BATTLE_UNIT_STATUS_TREASURE)) != 0)) {
             matches[count++] = unit;
         }
         unit = unit->previous;
     }
     if (count != 0) {
         for (index = 0; index < count; index++) {
-            if (matches[index]->unit_id == g_casting_unit_misc_id) {
+            if (matches[index]->runtime_id == g_battle_unit_source_runtime_id) {
                 return matches[index];
             }
         }

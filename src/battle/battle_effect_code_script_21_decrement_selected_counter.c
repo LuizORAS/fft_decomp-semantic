@@ -1,10 +1,12 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-s32 battle_effect_code_script_21_decrement_selected_counter(effect_record_t* effect) {
-    u8* instruction;
+/* Opcode 21: subtract 1 from the counter selected by the top two bits of the
+ * instruction's second byte. */
+effect_script_result_e battle_effect_code_script_21_decrement_selected_counter(battle_effect_record_t* record) {
+    effect_script_parameters_t parameters;
 
-    instruction = effect->script + effect->pc;
-    effect->counters[instruction[1] >> 6] -= 1;
-    effect->pc += 2;
+    parameters = effect_get_current_script_instruction(record)->header.parameters;
+    record->counters[parameters.counter.slot] -= 1;
+    record->pc += 2;
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

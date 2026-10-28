@@ -1,17 +1,19 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/main.h"
 
-typedef s32 (*battle_secondary_effect_function_t)(void);
-
-extern battle_secondary_effect_function_t g_battle_effect_secondary_handlers[];
-
+/* Run the handler of every active secondary effect once, newest first, and remove
+ * each one whose handler returns 0. Returns 0 when none is active.
+ *
+ * Before the handlers run it takes this frame's ordering table and flips the
+ * buffer index their double-buffered primitives use. */
 s32 battle_effect_update_secondary_effects(void) {
     battle_effect_secondary_data_t* effect;
     u32 previous_slot_id;
 
     g_battle_effect_polygon_depth_data = main_gfx_get_otag();
     g_battle_effect_buffer_index = 1 - g_battle_effect_buffer_index;
-    g_battle_effect_current_slot_id = g_battle_effect_active_slot_tail;
-    if (g_battle_effect_active_slot_tail == 0) {
+    g_battle_effect_current_slot_id = g_battle_effect_secondary_active_tail;
+    if (g_battle_effect_secondary_active_tail == 0) {
         return 0;
     }
 

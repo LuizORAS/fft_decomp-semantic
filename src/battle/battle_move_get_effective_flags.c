@@ -1,4 +1,4 @@
-#include "fft/battle.h"
+#include "fft/battle_move.h"
 
 /*
  * Combines movement abilities with Float, Frog, and Chicken status effects.
@@ -14,8 +14,8 @@ battle_move_effective_flags_e battle_move_get_effective_flags(const battle_stats
     s32 current_status_3;
 
     current_status_3 = unit->status_sets.current[2];
-    movement_abilities_3 = unit->movement_abilities[2];
-    movement_abilities_2 = unit->movement_abilities[1];
+    movement_abilities_3 = unit->ability_flags.movement[2];
+    movement_abilities_2 = unit->ability_flags.movement[1];
 
     flags = 0;
     if (current_status_3 & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FLOAT)) {
@@ -25,9 +25,9 @@ battle_move_effective_flags_e battle_move_get_effective_flags(const battle_stats
         & (BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_CHICKEN) | BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_FROG))) {
         movement_abilities_3 &= (u8)~BATTLE_MOVEMENT_SET_3_FLY;
     }
-    if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
+    if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
         flags = BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
-    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
         flags = BATTLE_EFFECTIVE_MOVEMENT_IN_WATER;
     }
     if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_SILENT_WALK) {
@@ -53,9 +53,9 @@ battle_move_effective_flags_e battle_move_get_effective_flags(const battle_stats
     } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_FLOAT) {
         /* The target preserves Silent Walk and undefined bit 0x04 here. */
         flags = (flags & 0x06) | BATTLE_EFFECTIVE_MOVEMENT_FLOAT;
-    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
-        flags |= BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
     } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_MOVE_IN_WATER) {
+        flags |= BATTLE_EFFECTIVE_MOVEMENT_ON_WATER;
+    } else if (movement_abilities_3 & BATTLE_MOVEMENT_SET_3_WALK_ON_WATER) {
         flags |= BATTLE_EFFECTIVE_MOVEMENT_IN_WATER;
     }
     return flags;

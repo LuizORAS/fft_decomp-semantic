@@ -1,21 +1,15 @@
 #include "fft/wldcore.h"
 
-typedef struct wldcore_text_origin {
-    s16 x;
-    s16 y;
-    s32 _unused_04;
-    s32 value;
-} wldcore_text_origin_t;
+/* Draw text `text_id` at `point` into `buffer`, the window image of render record `index`
+ * (world_menu_display_text_entry, with the record's image width as the stride).
+ *
+ * `point` is passed by value: GCC spills the two register values to their home slots before narrowing
+ * them into the origin record. */
+void wldcore_menu_display_text_entry(s32 index, s32 text_id, open_point32_t point, u32* buffer) {
+    world_glyph_blit_t origin;
 
-/* `point` is passed by value: GCC spills the two register words to their
- * home slots before narrowing them into the origin record. */
-void wldcore_menu_display_text_entry(s32 index, s32 text_id, wldcore_point32_t point, void* buffer) {
-    wldcore_text_origin_t origin;
-    s32 x = point.x;
-    s32 y = point.y;
-
-    origin.x = x;
-    origin.y = y;
-    origin.value = g_wldcore_window_render_records[index].width;
-    world_menu_display_text_entry(text_id, buffer, &origin);
+    origin.rect.x = point.x;
+    origin.rect.y = point.y;
+    origin.stride = g_wldcore_window_render_records[index].bounds.w;
+    world_menu_display_text_entry(text_id, (u8*)buffer, &origin);
 }

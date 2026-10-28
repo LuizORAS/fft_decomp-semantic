@@ -1,4 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_unit.h"
 #include "psx/libgte.h"
 #include "psx/types.h"
 
@@ -17,23 +19,23 @@ s32 battle_effect_check_arc_trajectory_between_units(u8 source_id, u8 target_id)
 
     query.source.unit_id = source_id;
     query.target.unit_id = target_id;
-    query.source.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(source_id) * 2 / 3;
-    query.target.height = battle_gfx_get_unit_spritesheet_height_by_unit_id(target_id);
+    query.source.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(source_id) * 2 / 3;
+    query.target.height = battle_gfx_get_unit_spritesheet_height_by_battle_id(target_id);
     battle_effect_list_valid_unit_targeting_data(source_id, target_id, &obstacles);
-    battle_unit_get_tile_center_and_height_by_battle_id(source_id, (battle_screen_coords_t*)&query.source.position);
+    battle_unit_get_tile_center_and_height_by_battle_id(source_id, &query.source.position);
     query.source.position.vy -= query.source.height;
-    battle_unit_get_tile_center_and_height_by_battle_id(target_id, (battle_screen_coords_t*)&query.target.position);
+    battle_unit_get_tile_center_and_height_by_battle_id(target_id, &query.target.position);
     query.delta.x = query.target.position.vx - query.source.position.vx;
     query.delta.z = query.target.position.vz - query.source.position.vz;
     query.delta.y = query.source.position.vy - query.target.position.vy;
-    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) << 12);
+    query.delta.distance = SquareRoot12((query.delta.x * query.delta.x + query.delta.z * query.delta.z) * ONE);
     rotation.vy = ratan2(-query.delta.z, query.delta.x);
     if (battle_effect_calculate_arcing_trajectory(&query, &arc_a, &arc_b) != 0
         && (battle_effect_trace_arc_trajectory_path(
-                &query.source.position, &arc_a, &query.delta.distance, (battle_effect_arc_t*)&rotation, obstacles)
+                &query.source.position, &arc_a, &query.delta.distance, &rotation, obstacles)
                 != 0
             || battle_effect_trace_arc_trajectory_path(
-                   &query.source.position, &arc_b, &query.delta.distance, (battle_effect_arc_t*)&rotation, obstacles)
+                   &query.source.position, &arc_b, &query.delta.distance, &rotation, obstacles)
                 != 0)) {
         return 1;
     }

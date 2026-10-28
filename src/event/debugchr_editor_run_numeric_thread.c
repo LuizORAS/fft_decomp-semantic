@@ -1,38 +1,39 @@
+#include "fft/battle_script.h"
 #include "fft/event_debugchr.h"
+#include "fft/gfx.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
-
-struct menu_number_entry;
-struct menu_number_position;
 
 /* Thread task 0x3b: numeric editor panel; twin of equip_editor_run_numeric_thread.
  * The primitive block is battle_menu_status_panel_numeric_buffer_t, double buffered at
  * g_debugchr_editor_numeric_state_a (thread 12) or _b; the thread parameter block is
- * battle_menu_status_panel_frame_config_t. */
-
+ * wldcore_menu_status_thread_t. */
 void debugchr_editor_run_numeric_thread(void) {
-    battle_menu_status_panel_frame_config_t* thread;
+    wldcore_menu_status_thread_t* thread;
     battle_menu_status_panel_numeric_buffer_t* buffer;
     battle_menu_status_panel_numeric_buffer_t* buffers;
-    u8* text_pixels;
-    u8* entries;
+    menu_unit_stat_number_images_t* number_images;
+    menu_number_entry_t* entries;
     RECT* upload_a;
     RECT* upload_b;
     RECT* upload_c;
-    const world_gfx_image_load_parameters_t* descriptor;
+    const image_load_parameters_t* descriptor;
     s32 i;
     s32 frame;
     s32 field_y;
     s32 use_offset;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_STATUS_PANEL);
-    thread
-        = (battle_menu_status_panel_frame_config_t*)g_battle_threads[g_battle_current_thread_id].function_parameter_1;
-    g_debugchr_input_controller = battle_script_get_controller_input_pointer(0) + 1;
-    if (g_battle_current_thread_id == 12) {
+    thread_set_current_task_id(THREAD_TASK_STATUS_PANEL);
+    thread = (wldcore_menu_status_thread_t*)g_threads[g_thread_current_id].function_parameter_1;
+    g_menu_input_controller = input_get_menu_controller(0) + 1;
+    if (g_thread_current_id == THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
         buffer = g_debugchr_editor_numeric_state_a;
         buffers = buffer;
-        text_pixels = g_debugchr_editor_numeric_text_a;
+        number_images = &g_debugchr_editor_numeric_text_a;
         upload_a = &g_debugchr_editor_numeric_entries_a;
         upload_b = &g_debugchr_editor_numeric_entries_b;
         upload_c = &g_debugchr_editor_numeric_entries_c;
@@ -40,86 +41,79 @@ void debugchr_editor_run_numeric_thread(void) {
     } else {
         buffer = g_debugchr_editor_numeric_state_b;
         buffers = buffer;
-        text_pixels = g_debugchr_editor_numeric_text_b;
+        number_images = &g_debugchr_editor_numeric_text_b;
         upload_a = &g_debugchr_editor_numeric_entries_d;
         upload_b = &g_debugchr_editor_numeric_entries_e;
         upload_c = &g_debugchr_editor_numeric_entries_f;
         entries = g_debugchr_editor_numeric_descriptor_b;
     }
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], 0);
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], 2);
-    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], 1);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[0], MENU_TEXTURE_PAGE_FRAME);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[1], MENU_TEXTURE_PAGE_TEXT_IMAGES);
+    battle_gfx_set_draw_mode_for_texture_page(&buffer->draw_modes[2], MENU_TEXTURE_PAGE_ALLOCATED_IMAGES);
     battle_menu_init_numeric_display_frame_primitives(
-        &g_debugchr_editor_numeric_table.source.texture_rect, &buffer->numeric_frame);
-    debugchr_gfx_init_scaled_draw_area_packets(&buffer->portrait);
+        &g_debugchr_editor_numeric_table.texture_rect, &buffer->numeric_frame);
+    menu_init_scaled_draw_area_packets(&buffer->portrait);
     i = 0;
-    descriptor = (const world_gfx_image_load_parameters_t*)g_debugchr_editor_numeric_texture;
+    descriptor = g_debugchr_editor_numeric_texture;
     for (; i < 18; i++) {
         battle_menu_init_semitransparent_sprt(&buffer->sprites[i]);
-        battle_gfx_init_image_loading((POLY_FT4*)&buffer->sprites[i], g_debugchr_editor_numeric_geometry,
-            &g_debugchr_editor_numeric_table.source.texture_origin, descriptor);
+        gfx_init_image_loading(&buffer->sprites[i], g_menu_status_panel_numeric_geometry,
+            &g_debugchr_editor_numeric_table.texture_rect, descriptor);
         descriptor++;
     }
-    if (g_battle_current_thread_id != 12) {
+    if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
         buffer->sprites[14].v0 += 0x4C;
         buffer->sprites[15].v0 += 0x4C;
         buffer->sprites[16].v0 += 0x4C;
     }
     buffer->sprites[10].clut = 0x7D7C;
-    battle_copy_bytes(&buffer[1], buffer, sizeof(battle_menu_status_panel_numeric_buffer_t));
+    mem_copy_bytes_nonempty(&buffer[1], buffer, sizeof(battle_menu_status_panel_numeric_buffer_t));
 
     for (frame = 0;; frame++) {
         buffer = &buffers[frame & 1];
         if (frame == 0 || thread->redraw_request != 0) {
-            battle_clear_menu_render_buffer(text_pixels, 0x918);
-            g_menu_text_state.stride = 0x14;
+            battle_menu_clear_render_buffer(number_images, sizeof(*number_images));
+            g_menu_text_state.pen.stride = 0x14;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_current_thread_id != 12) {
-                debugchr_text_render_signed_decimal_entries((s32)text_pixels,
-                    (battle_menu_status_panel_gauge_entry_t*)entries,
-                    (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 3);
+            if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
+                debugchr_text_render_signed_decimal_entries(
+                    number_images->mobility, entries, &g_menu_text_state.pen, 3);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)text_pixels, (struct menu_number_entry*)entries,
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 3);
+                battle_menu_draw_numeric_display_entries(number_images->mobility, entries, &g_menu_text_state.pen, 3);
             }
-            g_menu_text_state.stride = 0x40;
+            g_menu_text_state.pen.stride = 0x40;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_current_thread_id != 12) {
-                debugchr_text_render_signed_decimal_entries((s32)(text_pixels + 0x168),
-                    (battle_menu_status_panel_gauge_entry_t*)(entries + 0x24),
-                    (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 4);
+            if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
+                debugchr_text_render_signed_decimal_entries(
+                    number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x168),
-                    (struct menu_number_entry*)(entries + 0x24),
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 4);
+                battle_menu_draw_numeric_display_entries(
+                    number_images->weapons, entries + 3, &g_menu_text_state.pen, 4);
             }
-            g_menu_text_state.stride = 0x64;
+            g_menu_text_state.pen.stride = 0x64;
             battle_menu_set_text_origin(0, 0);
-            if (g_battle_current_thread_id != 12) {
-                debugchr_text_render_signed_decimal_entries((s32)(text_pixels + 0x468),
-                    (battle_menu_status_panel_gauge_entry_t*)(entries + 0x54),
-                    (battle_menu_status_panel_text_position_t*)&g_menu_text_state.origin_x, 8);
+            if (g_thread_current_id != THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
+                debugchr_text_render_signed_decimal_entries(
+                    number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             } else {
-                battle_menu_draw_numeric_display_entries((s32)(text_pixels + 0x468),
-                    (struct menu_number_entry*)(entries + 0x54),
-                    (struct menu_number_position*)&g_menu_text_state.origin_x, 8);
+                battle_menu_draw_numeric_display_entries(number_images->combat, entries + 7, &g_menu_text_state.pen, 8);
             }
-            LoadImage(upload_a, (u32*)text_pixels);
-            LoadImage(upload_b, (u32*)(text_pixels + 0x168));
-            LoadImage(upload_c, (u32*)(text_pixels + 0x468));
+            LoadImage(upload_a, (u32*)number_images->mobility);
+            LoadImage(upload_b, (u32*)number_images->weapons);
+            LoadImage(upload_c, (u32*)number_images->combat);
         }
         field_y = g_main_gfx_screen_polarity * 0xF0;
         use_offset = field_y != 0xF0;
-        g_debugchr_gfx_draw_offset_y = -use_offset & 0xF0;
-        debugchr_gfx_build_scaled_draw_area_packets(
-            &buffer->portrait, &g_debugchr_editor_numeric_table.draw_area_rect, frame, field_y, (s16*)thread);
-        buffer->draw_offsets[0].x = thread->origin_x - 0x80;
-        buffer->draw_offsets[0].y = thread->origin_y + g_debugchr_gfx_draw_offset_y;
-        SetDrawOffset(&buffer->draw_offsets[0], &buffer->draw_offsets[0].x);
-        buffer->draw_offsets[1].x = -0x80;
-        buffer->draw_offsets[1].y = g_debugchr_gfx_draw_offset_y;
-        SetDrawOffset(&buffer->draw_offsets[1], &buffer->draw_offsets[1].x);
-        if (thread->style == 1 || g_event_mode == 1) {
+        g_menu_gfx_draw_offset_y = -use_offset & 0xF0;
+        menu_build_scaled_draw_area_packets(
+            &buffer->portrait, &g_debugchr_editor_numeric_table.draw_area_rect, frame, field_y, thread);
+        buffer->draw_offsets[0].position.x = thread->x - 0x80;
+        buffer->draw_offsets[0].position.y = thread->y + g_menu_gfx_draw_offset_y;
+        SetDrawOffset(&buffer->draw_offsets[0].packet, (u16*)&buffer->draw_offsets[0].position);
+        buffer->draw_offsets[1].position.x = -0x80;
+        buffer->draw_offsets[1].position.y = g_menu_gfx_draw_offset_y;
+        SetDrawOffset(&buffer->draw_offsets[1].packet, (u16*)&buffer->draw_offsets[1].position);
+        if (thread->style == 1 || g_menu_input_lock_mode == 1) {
             for (i = 17; i >= 0; i--) {
                 buffer->sprites[i].clut = 0x7D3C;
             }
@@ -136,34 +130,34 @@ void debugchr_editor_run_numeric_thread(void) {
             buffer->sprites[15].clut = 0x7FFC;
             buffer->sprites[16].clut = 0x7FFC;
         }
-        debugchr_gfx_apply_menu_palette_for_mode(&buffer->numeric_frame, thread);
+        menu_select_status_primitive_color_palette(&buffer->numeric_frame, thread);
         if (frame < 13) {
-            battle_gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
+            gfx_draw_or_append_gpu_primitive(&buffer->portrait.areas[1]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_offsets[1]);
+        gfx_draw_or_append_gpu_primitive(&buffer->draw_offsets[1]);
         for (i = 0; i < 14; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
         }
-        battle_gfx_draw_or_append_gpu_primitive(&buffer->sprites[17]);
-        battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[0]);
+        gfx_draw_or_append_gpu_primitive(&buffer->sprites[17]);
+        gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[0]);
         for (; i < 17; i++) {
-            battle_gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
+            gfx_draw_or_append_gpu_primitive(&buffer->sprites[i]);
         }
-        if (g_battle_current_thread_id == 12) {
-            battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[1]);
+        if (g_thread_current_id == THREAD_SCREEN_SLOT_NUMERIC_EDITOR) {
+            gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[1]);
         } else {
-            battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[2]);
+            gfx_draw_or_append_gpu_primitive(&buffer->draw_modes[2]);
         }
-        battle_menu_submit_numeric_display_frame_primitives(&buffer->numeric_frame);
-        battle_gfx_draw_or_append_gpu_primitive(&buffer->draw_offsets[0]);
+        menu_submit_numeric_display_frame_primitives(&buffer->numeric_frame);
+        gfx_draw_or_append_gpu_primitive(&buffer->draw_offsets[0]);
         if (frame < 13) {
-            battle_gfx_draw_or_append_gpu_primitive(&buffer->portrait);
+            gfx_draw_or_append_gpu_primitive(&buffer->portrait);
         }
-        battle_thread_yield();
+        thread_yield();
         if (battle_thread_get_current_parameter_3() != 0) {
             break;
         }
     }
-    battle_thread_yield();
-    battle_thread_exit_current();
+    thread_yield();
+    thread_exit_current();
 }

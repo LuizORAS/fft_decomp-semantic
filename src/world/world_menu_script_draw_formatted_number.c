@@ -1,5 +1,4 @@
 #include "fft/world.h"
-#include "psx/libc.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
@@ -9,53 +8,40 @@
  * The command selects its value source, width, spacing, palette, and one of
  * three glyph layouts. High value bits request a disabled palette or dashes.
  */
-world_draw_number_command_t* world_menu_script_draw_formatted_number(
-    world_draw_number_command_t* command, s32 context) {
+menu_instruction_t* world_menu_script_draw_formatted_number(menu_instruction_t* instruction) {
     s8 text[16];
     RECT rect;
     RECT glyph;
     RECT minus_rect;
-    s32 (*getter)(s32, s32);
+    s32 (*getter)(s32);
     s32 row;
-    s32 scroll_index;
-    u16 raw_step;
+    s16 step;
     s32 y;
     s32 value;
     s32 digit;
     s16 blanks;
     s32 text_index;
     s32 i;
-    s32 negative;
-    CVECTOR* color;
+    s8 negative;
+    rgb24_t* color;
     u16 clut;
-    /* Pin required: unpinned, the digit count loads into $s0 instead of $a2. */
-    register s32 remaining __asm__("$6");
-    s32 next_remaining;
-    s32 x;
-    s32 negative_state;
 
-    getter = (s32 (*)(s32, s32))g_world_menu_script_callbacks[command->getter];
+    getter = g_world_menu_script_callbacks[instruction->number.getter].value;
     if (g_world_menu_use_scroll_position == 0) {
-        row = command->value;
-        y = command->y;
+        row = instruction->number.value;
+        y = instruction->number.y;
     } else {
-        row = g_world_menu_scroll_offset;
-        scroll_index = g_world_menu_scroll_row_offset;
-        row += scroll_index;
-        raw_step = g_world_menu_row_height;
-        /* Loads the halfword apart from the shifted context; otherwise the
-         * getter pointer leaves $a2. */
-        __asm__("" : "=r"(raw_step) : "0"(raw_step));
-        context = raw_step << 16;
-        y = (context >> 16) * scroll_index + command->y - g_world_menu_scroll_pixel_offset;
+        row = g_world_menu_scroll_offset + g_world_menu_scroll_row_offset;
+        step = g_world_menu_row_height;
+        y = step * g_world_menu_scroll_row_offset + instruction->number.y - g_world_menu_scroll_pixel_offset;
         if (g_world_menu_scroll_pixel_offset < 0) {
             row--;
-            y -= context >> 16;
+            y -= step;
         }
     }
     negative = 0;
     if (getter != 0) {
-        value = getter(row, context);
+        value = getter(row);
     } else {
         value = row;
     }
@@ -63,28 +49,27 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(
         value = -value;
         negative = 1;
     }
-    {
-        u8 opcode = command->opcode;
-
-        if (opcode == 0x1B || (color = 0, opcode == 0x19)) {
-            color = &g_world_menu_sprite_color;
-        }
+    if (instruction->number.opcode == MENU_SCRIPT_OP_NUMBER_TINTED
+        || instruction->number.opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
+        color = &g_world_menu_sprite_color;
+    } else {
+        color = 0;
     }
-    if (command->alternate_palette != 0) {
+    if (instruction->number.alternate_palette != 0) {
         clut = g_world_menu_alternate_number_clut;
     } else {
         clut = g_world_menu_palette_clut;
     }
-    if (value & 0x40000000) {
+    if (value & MENU_NUMBER_VALUE_DISABLED) {
         clut = g_world_menu_disabled_number_clut;
-        value &= 0xBFFFFFFF;
+        value &= ~MENU_NUMBER_VALUE_DISABLED;
     }
-    if (command->style == 1) {
+    if (instruction->number.style == 1) {
         glyph.x = 0x78;
         glyph.y = 1;
         glyph.w = 8;
         glyph.h = 0xE;
-    } else if (command->style == 0) {
+    } else if (instruction->number.style == 0) {
         glyph.x = 0x78;
         glyph.y = 0x10;
         glyph.w = 6;
@@ -95,66 +80,58 @@ world_draw_number_command_t* world_menu_script_draw_formatted_number(
         glyph.w = 0xA;
         glyph.h = 0x10;
     }
-    if (value & 0x20000000) {
-        remaining = command->width;
-        if (remaining > 0) {
-            do {
-                x = command->x;
-                next_remaining = remaining - 1;
-                rect.x = x + next_remaining * command->spacing;
-                rect.y = y + 5;
-                rect.w = 6;
-                rect.h = 3;
-                world_gfx_enqueue_textured_quad(&rect, 0xBA, 0x13, color, g_world_menu_semi_trans,
-                    g_world_menu_window_tpage, clut, g_world_menu_draw_priority);
-                remaining = next_remaining;
-            } while (remaining > 0);
+    if (value & MENU_NUMBER_VALUE_DASHES) {
+        for (value = instruction->number.width; value > 0; value--) {
+            rect.x = instruction->number.x + (value - 1) * instruction->number.spacing;
+            rect.y = y + 5;
+            rect.w = 6;
+            rect.h = 3;
+            world_gfx_enqueue_textured_quad(&rect, 0xBA, 0x13, color, g_world_menu_semi_trans,
+                g_world_menu_window_tpage, clut, g_world_menu_draw_priority);
         }
     } else {
-        blanks = command->width - sprintf(text, "%d", value) - negative;
+        blanks = instruction->number.width - sprintf(text, "%d", value) - negative;
         text_index = 0;
-        for (i = 0; i < command->width; i++) {
-            rect.x = command->x + i * command->spacing;
+        for (i = 0; i < instruction->number.width; i++) {
+            rect.x = instruction->number.x + i * instruction->number.spacing;
             rect.y = y;
             rect.w = glyph.w;
             rect.h = glyph.h;
-            negative_state = negative;
-            /* The target copies the sign state before branching on it. */
-            __asm__("" : "=r"(negative_state) : "0"(negative_state));
-            if (negative_state != 0) {
+            if (negative != 0) {
                 minus_rect.x = rect.x - 6;
                 minus_rect.y = y + 2;
                 minus_rect.w = 6;
                 minus_rect.h = 0xB;
-                if (command->opcode == 0x1A) {
+                if (instruction->number.opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS) {
                     minus_rect.x = 0xAE;
                 }
                 world_gfx_enqueue_textured_quad(&minus_rect, 0xBA, 0x10, color, g_world_menu_semi_trans,
                     g_world_menu_window_tpage, clut, g_world_menu_draw_priority);
                 negative = 0;
             } else {
-                if (command->opcode == 0x1A) {
+                if (instruction->number.opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS) {
                     clut = g_world_menu_palette_clut;
                 }
                 if (blanks != 0) {
                     digit = 0;
                     blanks--;
-                    if (command->opcode == 0x19) {
+                    if (instruction->number.opcode == MENU_SCRIPT_OP_NUMBER_TINTED_NO_LEADING_ZEROS) {
                         continue;
                     }
-                    if (command->opcode == 0x1A && i < command->width - 1) {
+                    if (instruction->number.opcode == MENU_SCRIPT_OP_NUMBER_DIM_LEADING_ZEROS
+                        && i < instruction->number.width - 1) {
                         clut = g_world_menu_disabled_number_clut;
                     }
                 } else {
                     digit = text[text_index] - '0';
                     text_index++;
                 }
-                if (command->style < 2) {
+                if (instruction->number.style < 2) {
                     world_gfx_enqueue_textured_quad(&rect, glyph.x + glyph.w * digit, glyph.y, color,
                         g_world_menu_semi_trans, g_world_menu_window_tpage, clut, g_world_menu_draw_priority);
                 }
             }
         }
     }
-    return (world_draw_number_command_t*)((u8*)command + command->length);
+    return menu_next_instruction(instruction);
 }

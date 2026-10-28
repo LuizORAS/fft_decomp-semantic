@@ -1,11 +1,6 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_gfx.h"
 #include "psx/libgte.h"
-
-/* flags is passed as a sign-extended word; the u16 mode parameter would
- * zero-extend it, so these calls use a word-mode view. */
-#define CONSTRUCT_POLYGONS_WORD_MODE                                                                                   \
-    ((void (*)(battle_gfx_sprite_display_t*, s32, s32, s16*, s16, s32, s16*,                                           \
-        u32*))battle_gfx_construct_polygon_data_for_units)
 
 /* Queue a unit's sprite layers into the ordering table at its depth.
  *
@@ -20,11 +15,11 @@
  * reload, but the duplicated RTL makes the mount loop large enough that
  * loop.c leaves `row * 16 + g_battle_gfx_animation_layer_priorities` inside it, which is why the target
  * recomputes the table address each iteration and spills `row`. */
-void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
+void battle_gfx_draw_unit_sprite_layers(battle_unit_t* unit) {
     SVECTOR position;
     SVECTOR rider_position;
     SVECTOR zoom = { ONE, ONE, ONE };
-    battle_unit_misc_data_t* rider;
+    battle_unit_t* rider;
     battle_gfx_sprite_display_data_t* display;
     battle_gfx_sprite_display_data_t* rider_display;
     s32 row;
@@ -36,35 +31,33 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
     s16 flags;
     s16 rider_flags;
 
-    position.vx = unit->item_get_camera_x;
-    position.vy = unit->item_get_camera_y;
+    position.vx = unit->camera_relative_x;
+    position.vy = unit->camera_relative_y;
     SetGeomScreen(0x200);
     SetGeomOffset(0, 0);
     angle = 0;
     if (unit->otag_depth_index - 1 >= 0x17f) {
         return;
     }
-    if (unit->numeric_display_active) {
-        battle_gfx_animate_post_action_text(unit, (u16*)&position);
+    if (unit->numeric_display.active) {
+        battle_gfx_animate_post_action_text(unit, &position);
     }
-    if (!(((u16)position.vx >= 0x61 && (u16)position.vx < 0x1a0) && ((u16)(position.vy + 0x1f) < 0x12f))
-        && unit->spritesheet_id != 0x49) {
+    if (!((position.vx >= 0x61 && position.vx <= 0x19f) && (position.vy >= -0x1f && position.vy <= 0x10f))
+        && unit->spritesheet_id != BATTLE_SPRITESHEET_ID_ALTIMA_SECOND_FORM) {
         return;
     }
-    zoom.vx = g_battle_camera_zoom.vx;
-    zoom.vy = g_battle_camera_zoom.vy;
-    zoom.vz = g_battle_camera_zoom.vz;
-    flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags.half;
+    copyVector(&zoom, &g_battle_camera_zoom);
+    flags = unit->horizontal_flip_flag ^ unit->sprite_display_flags;
     row = unit->layer_priority;
-    if (unit->sprite_graphic_trigger == 0) {
+    if (unit->animation.trigger == 0) {
         return;
     }
-    if (unit->item_ability_display) {
-        battle_gfx_init_item_get_rendering((battle_gfx_render_unit_t*)unit);
+    if (unit->item_display_active) {
+        battle_gfx_init_item_get_rendering(unit);
     }
-    if (unit->mount_state != BATTLE_MISC_MOUNT_STATE_NONE) {
-        if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_RIDER) {
-        } else if (unit->mount_state == BATTLE_MISC_MOUNT_STATE_MOUNT) {
+    if (unit->mount_state != BATTLE_UNIT_MOUNT_STATE_NONE) {
+        if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_RIDER) {
+        } else if (unit->mount_state == BATTLE_UNIT_MOUNT_STATE_MOUNT) {
             for (i = 0; i < 4; i++) {
                 entry = g_battle_gfx_animation_layer_priorities[row][i];
                 if (entry != 0) {
@@ -72,17 +65,17 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                         continue;
                     }
                     display = unit->sprite_blocks[entry - 1].display;
-                    CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)display, display->part_count, 0,
-                        (s16*)&position, angle, flags, (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                    battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
+                        flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                 } else {
-                    display = unit->sprite_display_section;
-                    CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)display, 3, 0, (s16*)&position, angle,
-                        flags, (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
-                    rider = battle_unit_get_misc_data_by_misc_id(unit->mount_partner_misc_id);
-                    if (rider != 0 && rider->ability_in_use != 0) {
-                        rider_position.vx = rider->item_get_camera_x;
-                        rider_position.vy = rider->item_get_camera_y;
-                        rider_flags = rider->sprite_display_flags.half;
+                    display = unit->animation.display;
+                    battle_gfx_construct_polygon_data_for_units(
+                        display, 3, 0, &position, angle, flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                    rider = battle_unit_get_by_runtime_id(unit->mount_partner_runtime_id);
+                    if (rider != 0 && rider->draw_enabled != 0) {
+                        rider_position.vx = rider->camera_relative_x;
+                        rider_position.vy = rider->camera_relative_y;
+                        rider_flags = rider->sprite_display_flags;
                         rider_row = rider->layer_priority;
                         for (j = 0; j < 4; j++) {
                             entry = g_battle_gfx_animation_layer_priorities[rider_row][j];
@@ -91,19 +84,19 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                                     continue;
                                 }
                                 rider_display = rider->sprite_blocks[entry - 1].display;
-                                CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)rider_display,
-                                    rider_display->part_count, 0, (s16*)&rider_position, angle, rider_flags,
-                                    (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                                battle_gfx_construct_polygon_data_for_units(rider_display, rider_display->part_count, 0,
+                                    &rider_position, angle, rider_flags, &zoom,
+                                    main_gfx_get_otag() + unit->otag_depth_index);
                             } else {
-                                rider_display = rider->sprite_display_section;
-                                CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)rider_display,
-                                    rider_display->part_count, 0, (s16*)&rider_position, angle, rider_flags,
-                                    (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                                rider_display = rider->animation.display;
+                                battle_gfx_construct_polygon_data_for_units(rider_display, rider_display->part_count, 0,
+                                    &rider_position, angle, rider_flags, &zoom,
+                                    main_gfx_get_otag() + unit->otag_depth_index);
                             }
                         }
                     }
-                    CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)display, display->part_count, 3,
-                        (s16*)&position, angle, flags, (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                    battle_gfx_construct_polygon_data_for_units(display, display->part_count, 3, &position, angle,
+                        flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
                 }
             }
             if (unit->shadow_graphic_trigger) {
@@ -118,13 +111,12 @@ void battle_gfx_draw_unit_sprite_layers(battle_unit_misc_data_t* unit) {
                     continue;
                 }
                 display = unit->sprite_blocks[entry - 1].display;
-                CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)display, display->part_count, 0,
-                    (s16*)&position, angle, flags, (s16*)&zoom, main_gfx_get_otag() + unit->otag_depth_index);
+                battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle, flags,
+                    &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             } else {
-                display = unit->sprite_display_section;
-                CONSTRUCT_POLYGONS_WORD_MODE((battle_gfx_sprite_display_t*)display, display->part_count, 0,
-                    (s16*)&position, angle, (s16)(flags ^ unit->animation_flags), (s16*)&zoom,
-                    main_gfx_get_otag() + unit->otag_depth_index);
+                display = unit->animation.display;
+                battle_gfx_construct_polygon_data_for_units(display, display->part_count, 0, &position, angle,
+                    flags ^ unit->animation.flags, &zoom, main_gfx_get_otag() + unit->otag_depth_index);
             }
         }
         if (unit->shadow_graphic_trigger) {

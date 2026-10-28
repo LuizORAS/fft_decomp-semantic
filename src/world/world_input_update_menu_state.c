@@ -1,3 +1,5 @@
+#include "fft/script.h"
+#include "fft/thread.h"
 #include "fft/world.h"
 #include "psx/pad.h"
 #include "psx/types.h"
@@ -15,57 +17,57 @@ void world_input_update_menu_state(void) {
     u32 previous_input;
     u32 counter;
 
-    g_world_menu_new_button_input = 0;
-    world_input_store_menu_state(&g_world_menu_new_button_input);
-    world_thread_yield();
+    g_script_event_input = 0;
+    script_load_event_input_state(&g_script_event_input);
+    thread_yield();
     input = PadRead(1);
     if (input == 0
-        || (world_script_check_tutorial_event_slot() != 0
-            && (world_script_get_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS) & 0x5000))) {
-        g_world_menu_input_repeat_counter_0 = 0;
-        g_world_menu_input_repeat_counter_1 = 0;
-        g_world_menu_input_repeat_counter_2 = 0;
+        || (world_script_is_tutorial_event_slot() != 0
+            && (script_get_variable(EVENT_SCRIPT_VAR_DISABLED_CONTROLLER_INPUTS) & 0x5000))) {
+        g_script_event_initial_repeat_counter = 0;
+        g_script_event_repeat_counter = 0;
+        g_script_event_secondary_repeat_counter = 0;
     }
 
-    previous_input = g_world_menu_current_button_input;
-    g_world_menu_current_button_input = input;
-    g_world_menu_new_button_input = 0;
-    g_world_menu_previous_button_input = previous_input;
+    previous_input = g_script_event_current_input;
+    g_script_event_current_input = input;
+    g_script_event_input = 0;
+    g_script_event_previous_input = previous_input;
 
     if (previous_input != input || (input & (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_DPAD_MASK)) == 0) {
-        g_world_menu_new_button_input = ~previous_input & input;
-        g_world_menu_input_repeat_counter_0 = 0;
+        g_script_event_input = ~previous_input & input;
+        g_script_event_initial_repeat_counter = 0;
     } else {
-        initial_delay = g_main_input_repeat_initial_delay / g_world_event_speed;
-        counter = ++g_world_menu_input_repeat_counter_0;
+        initial_delay = g_main_input_repeat_initial_delay / g_script_event_speed;
+        counter = ++g_script_event_initial_repeat_counter;
         if (counter == initial_delay) {
-            g_world_menu_new_button_input = input & (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_DPAD_MASK);
+            g_script_event_input = input & (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_DPAD_MASK);
         }
         if (counter >= initial_delay) {
-            repeat_delay = g_main_input_repeat_period / g_world_event_speed;
-            counter = ++g_world_menu_input_repeat_counter_1;
-            g_world_menu_input_repeat_counter_2++;
+            repeat_delay = g_main_input_repeat_period / g_script_event_speed;
+            counter = ++g_script_event_repeat_counter;
+            g_script_event_secondary_repeat_counter++;
             if (counter >= repeat_delay) {
-                g_world_menu_input_repeat_counter_1 = 0;
+                g_script_event_repeat_counter = 0;
                 if ((input & PSX_PAD_SQUARE) != 0) {
-                    g_world_menu_new_button_input = input & (PSX_PAD_RIGHT | PSX_PAD_LEFT);
+                    g_script_event_input = input & (PSX_PAD_RIGHT | PSX_PAD_LEFT);
                 } else {
-                    g_world_menu_new_button_input = input & PSX_PAD_DPAD_MASK;
+                    g_script_event_input = input & PSX_PAD_DPAD_MASK;
                 }
             }
-            secondary_repeat_delay = g_main_input_secondary_repeat_period / g_world_event_speed;
-            if (g_world_menu_input_repeat_counter_2 >= secondary_repeat_delay) {
-                g_world_menu_input_repeat_counter_2 = 0;
-                if ((g_world_menu_current_button_input & PSX_PAD_SQUARE) != 0) {
-                    g_world_menu_new_button_input
-                        |= g_world_menu_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_UP | PSX_PAD_DOWN);
+            secondary_repeat_delay = g_main_input_secondary_repeat_period / g_script_event_speed;
+            if (g_script_event_secondary_repeat_counter >= secondary_repeat_delay) {
+                g_script_event_secondary_repeat_counter = 0;
+                if ((g_script_event_current_input & PSX_PAD_SQUARE) != 0) {
+                    g_script_event_input
+                        |= g_script_event_current_input & (PSX_PAD_L1 | PSX_PAD_R1 | PSX_PAD_UP | PSX_PAD_DOWN);
                 } else {
-                    g_world_menu_new_button_input |= g_world_menu_current_button_input & (PSX_PAD_L1 | PSX_PAD_R1);
+                    g_script_event_input |= g_script_event_current_input & (PSX_PAD_L1 | PSX_PAD_R1);
                 }
             }
         } else {
-            g_world_menu_input_repeat_counter_1 = 0;
-            g_world_menu_input_repeat_counter_2 = 0;
+            g_script_event_repeat_counter = 0;
+            g_script_event_secondary_repeat_counter = 0;
         }
     }
 }

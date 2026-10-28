@@ -1,22 +1,26 @@
-#include "fft/battle.h"
+#include "fft/battle_event.h"
+#include "fft/battle_menu.h"
+#include "fft/thread.h"
 #include "psx/types.h"
 
-s32 battle_menu_should_close_thread(s32* out_flag) {
+/* Polled by a menu thread each frame with the frame's input buttons: return 1 when the thread has been
+ * asked to close (third parameter set) and no other thread is stopping. While menu input is locked or
+ * the help is open the input is cleared and 0 returned; while another thread is stopping the input is
+ * cleared too. */
+s32 battle_menu_should_close_thread(u32* input) {
     s32 i;
-    s32 offset;
     s32 task_state;
 
-    if (g_event_mode != 0 || g_battle_menu_help_open != 0) {
-        *out_flag = 0;
+    if (g_menu_input_lock_mode != 0 || g_battle_menu_help_open != 0) {
+        *input = 0;
         return 0;
     }
     i = 0;
     task_state = 3;
-    offset = 0;
-    for (; i < 16; i++, offset += NATIVE_THREAD_STRIDE) {
-        if (i != g_battle_current_thread_id && battle_thread_is_running_8014cc94(i) != 0
-            && *(volatile s32*)((s8*)g_battle_thread_task_ids + offset) == task_state) {
-            *out_flag = 0;
+    for (; i < 16; i++) {
+        if (i != g_thread_current_id && battle_thread_is_running_asm(i) != 0
+            && g_thread_contexts[i].task_id == task_state) {
+            *input = 0;
             break;
         }
     }

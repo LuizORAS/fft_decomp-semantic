@@ -1,6 +1,10 @@
-#include "fft/battle.h"
+#include "fft/battle_action.h"
+#include "fft/battle_formula.h"
 #include "psx/types.h"
 
+/* Drain HP. Once the target's result is finalized (battle_action_finalize_target_current_action,
+ * which caps it at 999), a hit target takes the HP damage and the attacker heals by the same amount.
+ * An undead target reverses it: the attacker takes the damage and the target heals. */
 void battle_formula_apply_hp_absorption(void) {
     battle_action_data_t* action;
     battle_action_data_t* attacker;
@@ -9,7 +13,8 @@ void battle_formula_apply_hp_absorption(void) {
     battle_action_data_t* attacker2;
     u16 amount;
 
-    if (g_battle_action_target->status_sets.current[0] & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
+    if (g_battle_action_target->status_sets.current[BATTLE_STATUS_BYTE_INDEX(BATTLE_STATUS_ID_UNDEAD)]
+        & BATTLE_STATUS_BYTE_MASK(BATTLE_STATUS_ID_UNDEAD)) {
         battle_action_finalize_target_current_action();
         action = g_battle_action_target_data;
         if (action->hit != 0) {

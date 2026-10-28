@@ -1,4 +1,5 @@
 #include "fft/event_jobstts.h"
+#include "fft/menu.h"
 #include "psx/pad.h"
 
 /*
@@ -26,7 +27,7 @@ jobstts_menu_page_scroll_direction_e jobstts_input_read_page_scroll_direction(vo
         g_jobstts_input_page_scroll_hold_frames = 0;
     }
     /* One variable holds the input and then the speed, as in the target. */
-    input = g_jobstts_menu_event_speed;
+    input = g_menu_event_speed;
     initial_delay = g_main_input_repeat_initial_delay / input;
     repeat_period = g_main_input_secondary_repeat_period / input;
     held_frames = g_jobstts_input_page_scroll_hold_frames;

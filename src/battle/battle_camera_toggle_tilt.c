@@ -1,28 +1,26 @@
-#include "fft/battle.h"
+#include "fft/battle_camera.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
-/* The retail routine preserves the ambient a1 value on the state-1 path. */
-void battle_camera_toggle_tilt(s32 unused_0, s32 sound_arg) {
+/* Switch the tilt target for R2 between low (pitch 0x12e) and high (0x1c0), start the move and play its
+ * sound. Targets 3 and 4, which no BATTLE code gives a pitch, lead to each other and back to low. */
+void battle_camera_toggle_tilt(void) {
     s32 target;
 
-    target = g_battle_map_tilt_target;
-    if (target == 1) {
-        g_battle_camera_tilt_action = 2;
-        g_battle_map_tilt_target = 2;
-    } else {
-        sound_arg = 2;
-        if (target == 2) {
-            g_battle_map_tilt_target = 1;
-            g_battle_camera_tilt_action = 4;
-        } else if (target == 3) {
-            g_battle_camera_tilt_action = 4;
-            g_battle_map_tilt_target = 4;
-        } else if (target == 4) {
-            g_battle_map_tilt_target = 1;
-            g_battle_camera_tilt_action = 2;
-        }
+    target = g_battle_camera_tilt_target;
+    if (target == BATTLE_CAMERA_TILT_LOW) {
+        g_battle_camera_tilt_action = BATTLE_CAMERA_STEP_INCREASE;
+        g_battle_camera_tilt_target = BATTLE_CAMERA_TILT_HIGH;
+    } else if (target == BATTLE_CAMERA_TILT_HIGH) {
+        g_battle_camera_tilt_target = BATTLE_CAMERA_TILT_LOW;
+        g_battle_camera_tilt_action = BATTLE_CAMERA_STEP_DECREASE;
+    } else if (target == 3) {
+        g_battle_camera_tilt_action = BATTLE_CAMERA_STEP_DECREASE;
+        g_battle_camera_tilt_target = 4;
+    } else if (target == 4) {
+        g_battle_camera_tilt_target = BATTLE_CAMERA_TILT_LOW;
+        g_battle_camera_tilt_action = BATTLE_CAMERA_STEP_INCREASE;
     }
     g_battle_camera_tilt_increment = 1;
-    /* The target passes a second argument the one-parameter callee ignores. */
-    ((void (*)(s32, s32))main_sound_play_sfx)(0x31, sound_arg);
+    main_sound_play_sfx(MAIN_SFX_CAMERA_TILT);
 }

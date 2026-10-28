@@ -1,10 +1,10 @@
-#include "fft/battle.h"
+#include "fft/battle_map.h"
 #include "psx/types.h"
 
 /*
  * Map light matrix commands, selected on command - 0x5e: 0x5e loads both
- * matrices from the arguments and applies the colour matrix to the GTE, 0x5f
- * saves and 0x60 restores them, 0x61 and 0x62 return the colour and light
+ * matrices from the arguments and applies the color matrix to the GTE, 0x5f
+ * saves and 0x60 restores them, 0x61 and 0x62 return the color and light
  * matrices. 0x66 and 0x68 start a transition from the current matrices over
  * duration frames and queue 0x67 or 0x69 in g_battle_map_light_transition_command, which the map draw
  * loop then issues once per frame: 0x67 interpolates toward target matrices,
@@ -15,41 +15,42 @@
  * Commands 0x5e-0x60 and 0x66-0x69 return the uninitialized result, like
  * battle_map_light_state_command.
  */
-MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* light, s32 duration) {
+MATRIX* battle_map_light_matrix_command(
+    map_light_matrix_command_e command, MATRIX* color, MATRIX* light, s32 duration) {
     MATRIX* result;
     s32 i;
     s32 j;
 
     switch (command) {
-    case 0x5e:
+    case MAP_LIGHT_MATRIX_COMMAND_SET:
         g_battle_map_light_color_matrix = *color;
         g_battle_map_light_matrix = *light;
         SetColorMatrix(&g_battle_map_light_color_matrix);
         break;
-    case 0x5f:
+    case MAP_LIGHT_MATRIX_COMMAND_SAVE:
         g_battle_map_saved_light_color_matrix = g_battle_map_light_color_matrix;
         g_battle_map_saved_light_matrix = g_battle_map_light_matrix;
         break;
-    case 0x60:
+    case MAP_LIGHT_MATRIX_COMMAND_RESTORE:
         g_battle_map_light_color_matrix = g_battle_map_saved_light_color_matrix;
         g_battle_map_light_matrix = g_battle_map_saved_light_matrix;
         break;
-    case 0x61:
+    case MAP_LIGHT_MATRIX_COMMAND_GET_COLOR:
         result = &g_battle_map_light_color_matrix;
         break;
-    case 0x62:
+    case MAP_LIGHT_MATRIX_COMMAND_GET_LIGHT:
         result = &g_battle_map_light_matrix;
         break;
-    case 0x66:
+    case MAP_LIGHT_MATRIX_COMMAND_START_BLEND:
         g_battle_map_light_transition_start_color_matrix = g_battle_map_light_color_matrix;
         g_battle_map_light_transition_start_light_matrix = g_battle_map_light_matrix;
         g_battle_map_light_transition_target_color_matrix = *color;
         g_battle_map_light_transition_target_light_matrix = *light;
         g_battle_map_light_transition_frame = 0;
         g_battle_map_light_transition_duration = duration;
-        g_battle_map_light_transition_command = 0x67;
+        g_battle_map_light_transition_command = MAP_LIGHT_MATRIX_COMMAND_STEP_BLEND;
         break;
-    case 0x67:
+    case MAP_LIGHT_MATRIX_COMMAND_STEP_BLEND:
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
                 g_battle_map_light_color_matrix.m[i][j] = g_battle_map_light_transition_start_color_matrix.m[i][j]
@@ -76,16 +77,16 @@ MATRIX* battle_map_light_matrix_command(s32 command, MATRIX* color, MATRIX* ligh
             g_battle_map_light_transition_command = 0;
         }
         break;
-    case 0x68:
+    case MAP_LIGHT_MATRIX_COMMAND_START_DELTA:
         g_battle_map_light_transition_start_color_matrix = g_battle_map_light_color_matrix;
         g_battle_map_light_transition_start_light_matrix = g_battle_map_light_matrix;
         g_battle_map_light_transition_target_color_matrix = *color;
         g_battle_map_light_transition_target_light_matrix = *light;
         g_battle_map_light_transition_frame = 0;
         g_battle_map_light_transition_duration = duration;
-        g_battle_map_light_transition_command = 0x69;
+        g_battle_map_light_transition_command = MAP_LIGHT_MATRIX_COMMAND_STEP_DELTA;
         break;
-    case 0x69:
+    case MAP_LIGHT_MATRIX_COMMAND_STEP_DELTA:
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 3; j++) {
                 g_battle_map_light_color_matrix.m[i][j] = g_battle_map_light_transition_start_color_matrix.m[i][j]

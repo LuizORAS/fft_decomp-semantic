@@ -1,5 +1,4 @@
 #include "fft/main.h"
-#include "psx/libetc.h"
 #include "psx/types.h"
 
 /* Opens and enables the eight memory-card BIOS events (SwCARD then HwCARD,

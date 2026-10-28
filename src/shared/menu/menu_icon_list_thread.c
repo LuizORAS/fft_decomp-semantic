@@ -1,0 +1,66 @@
+#include "fft/battle_menu.h"
+#include "fft/memory.h"
+#include "fft/menu.h"
+#include "fft/script.h"
+#include "fft/thread.h"
+
+/* Menu window thread: rebuilds the text image whenever the entry's refresh
+ * flag is raised and alternates between two sprite records until the menu
+ * closes. BUNIT, DEBUGCHR, EQUIP, REQUIRE and WORLD (world_menu_icon_list_thread) compile this
+ * text. */
+void menu_icon_list_thread(void) {
+    RECT rect;
+    world_menu_icon_record_t records[2];
+    s32 cursor;
+    world_menu_entry_t* state;
+    u8* buffer;
+    s32 i;
+    s32 fresh;
+    world_menu_icon_record_t* record;
+    s16* redraw;
+
+    g_menu_input_controller = input_get_menu_controller(0);
+    state = (world_menu_entry_t*)battle_thread_get_current_parameter_1();
+    state->window.y &= ~1;
+    cursor = state->selected_index;
+    record = &records[0];
+    if (cursor == -1) {
+        cursor = 0;
+    }
+    battle_menu_build_window_sprites(&rect, state, record);
+    mem_copy_bytes_nonempty(&records[1], record, sizeof(records[1]));
+    fresh = 0;
+    redraw = state->context;
+    *redraw = 1;
+    for (i = 0;; i++) {
+        if (*redraw == 1) {
+            *redraw = 0;
+            buffer = battle_menu_build_and_upload_window_frame_image(
+                state->inner_width, state->inner_height, &rect, MENU_WINDOW_FRAME_BUILD);
+            fresh = 1;
+            g_menu_text_state.pen.stride = state->inner_width;
+            battle_menu_set_text_origin(8, 9);
+            g_menu_text_palette_offset = 0;
+            battle_menu_display_text_entry(state->text_id, buffer, &g_menu_text_state.pen);
+            LoadImage(&rect, (u32*)buffer);
+        }
+        record = &records[i & 1];
+        thread_yield();
+        if (fresh == 1) {
+            battle_menu_free_memory(buffer);
+            fresh = 0;
+        }
+        state->selected_index = cursor;
+        if (battle_menu_should_close_thread(g_menu_input_controller) != 0) {
+            break;
+        }
+        battle_menu_step_wrapping_row_cursor(state, &cursor);
+        battle_menu_handle_entry_confirm(state, cursor);
+        battle_menu_handle_entry_cancel(state);
+        battle_menu_select_icon_cluts(&record->base);
+        battle_menu_update_icon_cursor_sprites(state, &record->base, i, cursor);
+        battle_menu_submit_icon_primitives(&record->base);
+    }
+    thread_yield();
+    thread_exit_current();
+}

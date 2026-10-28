@@ -1,0 +1,15 @@
+#include "fft/battle_action.h"
+#include "psx/types.h"
+
+/* Distribute: when healing goes past max HP, a successful Brave roll queues the reaction with the
+ * excess in last_received_attack, to share among injured allies. */
+void battle_reaction_try_distribute(void) {
+    battle_stats_t* target = g_battle_action_target;
+    battle_action_data_t* action = g_battle_action_target_data;
+    /* hp_healing is read signed (lh) here. */
+    s32 excess = action->hp_healing - (target->max_hp - target->hp);
+    if (excess > 0 && battle_reaction_fails_brave_roll(target) == 0) {
+        g_battle_action_target_data->last_received_attack = excess;
+        g_battle_action_target_data->reaction_id = ABILITY_ID_REACTION_DISTRIBUTE;
+    }
+}

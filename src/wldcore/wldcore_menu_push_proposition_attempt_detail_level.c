@@ -1,7 +1,8 @@
+#include "fft/thread.h"
 #include "fft/wldcore.h"
 
 /* Pushes the proposition-attempt detail text window as menu level 0x2a, the
- * partner of the 0x80088180 pop. Records the entry on the new level, decodes
+ * partner of the wldcore_menu_close_proposition_attempt_detail_level pop. Records the entry on the new level, decodes
  * that entry's last-attempt date out of the packed nine-bit array at
  * g_main_proposition_last_attempt_date_bits (dest[0] month 1-12, dest[1] day
  * 1-31), and sets up the shared scrollable text window at g_wldcore_scrollable_text_window for text
@@ -9,59 +10,52 @@
  * text substitutions. Then hides the parent window-render level's window and
  * render record with flag 0x10 and starts WORLD thread 14 on text 0xb849.
  *
- * Addressing follows wldcore_menu_push_tutorial_topic_text_level: the target holds one base of
- * g_wldcore_scrollable_text_window+0x34 (its text_id) and reaches the earlier fields at negative
- * displacements, so the original held a pointer biased to that field.
- * image_y is the one field the target still stores absolutely, so it is
- * written as g_wldcore_scrollable_text_window.image_y.
+ * The coordinate mode is a constant local, yet retail still switched on it to
+ * choose the text image origin: (0, 0x60) for mode 0, (0, 0x70) for mode 1.
+ * The compiler folds the switch in its first CSE pass, after the stores were
+ * split around it, which is why image_y keeps its absolute address while the
+ * later stores go through the text_id base register. That only happens when
+ * the live case is the last one.
  *
- * Both decoded date bytes are read into locals before the substitution stores.
- * alias.c cannot prove the stack reads do not alias the stores through window,
- * so spelling date[1] inline kept its lbu below sw v0,0x34(v1), which left the
- * first lbu's load-delay shadow with no filler but li a1,0xb84f. Reading month
- * and day first lets the two lbu pack adjacent, carries day in a2 into the jal
- * delay slot, and leaves the constant hoisted above sw v0,0x30(v1), which is
- * exactly where the target materialises it. */
+ * `unused` reproduces eight bytes of locals below the date bytes that the
+ * target never touches. */
 void wldcore_menu_push_proposition_attempt_detail_level(s32 value) {
-    wldcore_text_scrollable_window_t* window;
-    s32* anchor;
-    s32 month;
-    s32 day;
+    s32 coordinate_mode = 1;
     u8 unused[8];
-    u8 date[2];
+    calendar_date_t date;
 
-    wldcore_wait_for_file_load();
+    wldcore_file_wait_for_load();
     g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth].window_index = value;
-    wldcore_read_nine_bit_record(g_main_proposition_last_attempt_date_bits, value, date);
-
-    /* Opaque to cse, or it rewrites the displacements as absolute $at stores. */
-    anchor = &g_wldcore_scrollable_text_window.text_id;
-    __asm__("" : "=r"(anchor) : "0"(anchor));
-    window = (wldcore_text_scrollable_window_t*)(anchor - 13);
-
-    window->text_id = value + 0x8800;
-    window->image_x = 0;
-    g_wldcore_scrollable_text_window.image_y = 0x70;
-    window->base.x = -122;
-    window->base.y = -40;
-    window->text_width = 0xdc;
-    window->rows_per_page = 8;
-    window->priority = 8;
-    window->image_coordinate_mode = 1;
-    window->extra_render_index = -1;
-    month = date[0];
-    day = date[1];
-    window->text_substitutions[0] = month + 0xb84f;
-    window->text_substitutions[1] = day;
-    wldcore_text_init_scrollable_window(window);
+    wldcore_calendar_read_date(g_main_proposition_last_attempt_date_bits, value, &date);
+    g_wldcore_scrollable_text_window.text_id = value + TEXT_ID_WORLD_MESSAGE_BASE;
+    switch (coordinate_mode) {
+    case 0:
+        g_wldcore_scrollable_text_window.image_x = 0;
+        g_wldcore_scrollable_text_window.image_y = 0x60;
+        break;
+    case 1:
+        g_wldcore_scrollable_text_window.image_x = 0;
+        g_wldcore_scrollable_text_window.image_y = 0x70;
+        break;
+    }
+    g_wldcore_scrollable_text_window.base.x = -122;
+    g_wldcore_scrollable_text_window.base.y = -40;
+    g_wldcore_scrollable_text_window.text_width = 0xdc;
+    g_wldcore_scrollable_text_window.rows_per_page = 8;
+    g_wldcore_scrollable_text_window.priority = 8;
+    g_wldcore_scrollable_text_window.image_coordinate_mode = coordinate_mode;
+    g_wldcore_scrollable_text_window.extra_render_index = -1;
+    g_wldcore_scrollable_text_window.text_substitutions[0] = date.month + WLDCORE_TEXT_ID_MONTH_NAME_BASE;
+    g_wldcore_scrollable_text_window.text_substitutions[1] = date.day;
+    wldcore_text_init_scrollable_window(&g_wldcore_scrollable_text_window);
     g_wldcore_window_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                  .window_render.window_index]
-        .flags |= 0x10;
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
     g_wldcore_window_render_records[g_wldcore_menu_stack_records_next[g_wldcore_menu_stack_depth - 1]
                                         .window_render.render_index]
-        .flags |= 0x10;
-    g_world_text_substitution_values[0] = value + 0x6000;
-    world_thread_set_parameters(0xE, 0x19, 0xB849, 0);
+        .flags |= WLDCORE_DISPLAY_OBJECT_HIDDEN;
+    g_text_substitution_values[0] = value + TEXT_ID_COMPLETED_PROPOSITION_NAME_BASE;
+    thread_set_parameters(WLDCORE_THREAD_SLOT_MESSAGE, 0x19, WLDCORE_TEXT_ID_BRAVE_STORY_ENTRY_INFO, 0);
     g_wldcore_menu_stack_types[g_wldcore_menu_stack_depth + 1] = WLDCORE_MENU_LEVEL_PROPOSITION_ATTEMPT_DETAIL;
     g_wldcore_menu_stack_depth = g_wldcore_menu_stack_depth + 1;
 }

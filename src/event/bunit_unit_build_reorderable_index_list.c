@@ -11,7 +11,7 @@ s32 bunit_unit_build_reorderable_index_list(void) {
 
     count = 0;
     for (i = 0; i < g_bunit_unit_list_count; i++) {
-        if ((g_bunit_unit_data[i]->formation_order_key & BUNIT_FORMATION_ORDER_KEY_ENCODED_ROSTER_ID) == 0) {
+        if ((g_bunit_unit_pointers[i]->mount_info & BATTLE_MOUNT_INFO_FLAG_MOUNT) == 0) {
             g_bunit_unit_reorderable_indices[count] = i;
             count++;
         }

@@ -1,21 +1,23 @@
 #include "fft/event_bunit.h"
-#include "psx/types.h"
 
+/* Per-frame handler of the unit list's job page: runs the job list and,
+ * once a job is chosen, its ability list, and returns to the unit list when
+ * either step reports MENU_JOB_LIST_STEP_CLOSE. */
 void bunit_menu_update_job(void) {
     if (g_bunit_job_menu_active == 0) {
         g_bunit_job_menu_active = 1;
-        g_bunit_job_menu_phase = 0;
+        g_bunit_job_menu_phase = MENU_JOB_LIST_STEP_JOBS;
         bunit_menu_set_selection_value(0, 0);
         bunit_menu_clear_selection_records();
         g_bunit_sound_queued_effect_id = MAIN_SFX_CONFIRM;
     }
-    if (g_bunit_job_menu_phase == 0) {
+    if (g_bunit_job_menu_phase == MENU_JOB_LIST_STEP_JOBS) {
         g_bunit_job_menu_phase = bunit_menu_run_job_list();
-    } else if (g_bunit_job_menu_phase == 1) {
-        g_bunit_job_menu_phase = bunit_run_ability_list_menu();
+    } else if (g_bunit_job_menu_phase == MENU_JOB_LIST_STEP_ABILITIES) {
+        g_bunit_job_menu_phase = bunit_ability_run_list_menu();
     }
-    if (g_bunit_job_menu_phase == -1) {
-        g_bunit_menu_current_menu = -1;
+    if (g_bunit_job_menu_phase == MENU_JOB_LIST_STEP_CLOSE) {
+        g_bunit_menu_current_menu = BUNIT_MENU_UNIT_LIST;
         bunit_input_clear_state();
         g_bunit_job_menu_active = 0;
     }

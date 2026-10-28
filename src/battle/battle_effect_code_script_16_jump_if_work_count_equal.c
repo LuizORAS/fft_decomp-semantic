@@ -1,14 +1,14 @@
-#include "fft/battle.h"
+#include "fft/battle_effect.h"
 
-/* Jump to the offset in the third halfword when the record work count equals
- * the second halfword; otherwise step over the 6-byte instruction. */
-s32 battle_effect_code_script_16_jump_if_work_count_equal(effect_record_t* effect) {
-    s16 pc = effect->pc;
-    s16* instruction = (s16*)(pc + (s32)effect->script);
-    if ((s16)effect->work_count == instruction[1]) {
-        effect->pc = (s16) * (u16*)(instruction + 2);
+/* Opcode 16: jump to the offset in the third 16-bit value when the record has as
+ * many particles as the second 16-bit value says; otherwise step over the 6-byte
+ * instruction. Retail scripts end with it, waiting for 0. */
+effect_script_result_e battle_effect_code_script_16_jump_if_work_count_equal(battle_effect_record_t* record) {
+    const effect_script_instruction_t* instruction = effect_get_current_script_instruction(record);
+    if (record->work_count == instruction->branch.comparison) {
+        record->pc = instruction->branch.target_offset;
     } else {
-        effect->pc = pc + 6;
+        record->pc += 6;
     }
     return EFFECT_SCRIPT_RESULT_CONTINUE;
 }

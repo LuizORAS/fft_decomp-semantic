@@ -4,7 +4,7 @@
 /* The loop is an explicitly guarded do/while rather than a `for` because of
  * these placement facts:
  *  - `right = 1` is emitted between the loop's entry test and the loop top,
- *    which is only reachable when the initialisation follows the guard's jump;
+ *    which is only reachable when the initialization follows the guard's jump;
  *    with a `for`, the inits precede the duplicated exit test and the `li 1`
  *    is instead hoisted out of the row loop (a partial movable, with a
  *    compensating copy in the row loop's latch).
@@ -19,7 +19,7 @@
 /* Nibble accessors for a 4bpp image whose rows are `stride` pixels wide.
  * The target evaluates the argument expressions before choosing the mask
  * and multiplies afterwards, which is the shape of an inlined helper. */
-static inline s32 world_get_4bpp_pixel(u8* pixels, s32 x, s32 y, s32 stride) {
+static inline s32 world_get_4bpp_pixel(const u8* pixels, s32 x, s32 y, s32 stride) {
     s32 mask;
     s32 value;
 
@@ -55,25 +55,27 @@ static inline void world_set_4bpp_pixel(u8* pixels, s32 x, s32 y, s32 stride, s3
 
 /* Mirrors a rectangle of a 4bpp image horizontally, swapping pixels from
  * both ends of each row toward the middle. */
-void world_gfx_mirror_4bpp_rect(u8* pixels, world_gfx_4bpp_rect_t* rect) {
+void world_gfx_mirror_4bpp_rect(u8* pixels, const world_glyph_blit_t* rect) {
     s32 row;
     s32 col;
     s32 right;
     s32 left_value;
     s32 right_value;
 
-    for (row = 0; row < rect->h; row++) {
+    for (row = 0; row < rect->rect.h; row++) {
         col = 0;
-        if (col < rect->w / 2) {
+        if (col < rect->rect.w / 2) {
             right = 1;
             do {
-                left_value = world_get_4bpp_pixel(pixels, rect->x + col, rect->y + row, rect->stride);
-                right_value = world_get_4bpp_pixel(pixels, rect->x + rect->w - right, rect->y + row, rect->stride);
-                world_set_4bpp_pixel(pixels, rect->x + col, rect->y + row, rect->stride, right_value);
-                world_set_4bpp_pixel(pixels, rect->x + rect->w - right, rect->y + row, rect->stride, left_value);
+                left_value = world_get_4bpp_pixel(pixels, rect->rect.x + col, rect->rect.y + row, rect->stride);
+                right_value = world_get_4bpp_pixel(
+                    pixels, rect->rect.x + rect->rect.w - right, rect->rect.y + row, rect->stride);
+                world_set_4bpp_pixel(pixels, rect->rect.x + col, rect->rect.y + row, rect->stride, right_value);
+                world_set_4bpp_pixel(
+                    pixels, rect->rect.x + rect->rect.w - right, rect->rect.y + row, rect->stride, left_value);
                 right++;
                 col++;
-            } while (col < rect->w / 2);
+            } while (col < rect->rect.w / 2);
         }
     }
 }

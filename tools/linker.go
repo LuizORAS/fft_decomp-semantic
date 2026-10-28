@@ -76,33 +76,99 @@ func compilerEmitted(name string) bool {
 
 // symbolResolver answers which address a name has for a module: the module's
 // own functions, data and imports, then each linked module's functions and
-// data in order, then main's.
+// data in order, then main's. A name qualified with a module
+// (qualifiedName) is that module's function or data row.
 type symbolResolver struct {
 	config   *projectConfig
 	own      map[string]map[string]uint32
 	exported map[string]map[string]uint32
+	placed   map[string]map[string]bool      // the functions and data rows a module's link places in its image
+	owners   map[string]map[string]linkOwner // the owner of each row or import that names another module's object (In)
+}
+
+// linkOwner is the module whose link places a name, and the symbol it has
+// there.
+type linkOwner struct {
+	module, symbol string
 }
 
 func newSymbolResolver(config *projectConfig) symbolResolver {
-	resolver := symbolResolver{config: config, own: make(map[string]map[string]uint32), exported: make(map[string]map[string]uint32)}
+	resolver := symbolResolver{config: config, own: make(map[string]map[string]uint32), exported: make(map[string]map[string]uint32),
+		placed: make(map[string]map[string]bool), owners: make(map[string]map[string]linkOwner)}
 	for _, m := range config.Modules {
 		own := make(map[string]uint32)
 		exported := make(map[string]uint32)
+		placed := make(map[string]bool)
+		owners := make(map[string]linkOwner)
 		for _, f := range m.Functions {
-			own[f.Name], exported[f.Name] = f.Addr, f.Addr
+			own[f.Name], exported[f.Name], placed[f.Name] = f.Addr, f.Addr, true
 		}
 		for _, symbol := range m.Data {
 			own[symbol.Name], exported[symbol.Name] = symbol.Addr, symbol.Addr
+			placed[symbol.Name] = m.contains(symbol.Addr, 1)
 		}
 		for _, symbol := range m.Imports {
 			own[symbol.Name] = symbol.Addr
 		}
+		for _, symbol := range append(append([]symbolSpec(nil), m.Data...), m.Imports...) {
+			if other, ok := config.byID[symbol.In]; ok && symbol.In != m.ID {
+				if name, ok := other.symbolStartingAt(symbol.Addr, symbol.Name); ok {
+					owners[symbol.Name] = linkOwner{other.ID, name}
+				}
+			}
+		}
 		resolver.own[m.ID], resolver.exported[m.ID] = own, exported
+		resolver.placed[m.ID], resolver.owners[m.ID] = placed, owners
 	}
 	return resolver
 }
 
+// qualifiedName is the link's name for module's symbol in another module's
+// link: a relocation that names a module (In) binds it, so the same name in
+// two modules stays two symbols. Module ids hold no underscore, so the dot
+// and the underscores spell it back (splitQualifiedName).
+func qualifiedName(module, symbol string) string {
+	return strings.ReplaceAll(module, "-", "_") + "." + symbol
+}
+
+func splitQualifiedName(name string) (string, string, bool) {
+	module, symbol, ok := strings.Cut(name, ".")
+	return strings.ReplaceAll(module, "_", "-"), symbol, ok
+}
+
+// owner names the module and symbol whose link places name for m when that
+// is another module resident with m (projectConfig.resident): m's own row or
+// import that names another module's object (In), a name m resolves from a
+// linked module or MAIN that its link places (or names with In), or a
+// qualified name. A fixed area (a row outside every image), and a name from a
+// module never resident with m, have none: they stay at the address target/
+// gives.
+func (resolver symbolResolver) owner(m *moduleSpec, name string) (linkOwner, bool) {
+	if module, symbol, ok := splitQualifiedName(name); ok {
+		return linkOwner{module, symbol}, resolver.config.resident(m.ID, module)
+	}
+	if _, ok := resolver.own[m.ID][name]; ok {
+		owner, ok := resolver.owners[m.ID][name]
+		return owner, ok && resolver.config.resident(m.ID, owner.module)
+	}
+	for _, link := range append(append([]string(nil), m.Links...), mainModuleID) {
+		if _, ok := resolver.exported[link][name]; !ok {
+			continue
+		}
+		owner, ok := resolver.owners[link][name]
+		if !ok {
+			owner, ok = linkOwner{link, name}, resolver.placed[link][name]
+		}
+		return owner, ok && resolver.config.resident(m.ID, owner.module)
+	}
+	return linkOwner{}, false
+}
+
 func (resolver symbolResolver) resolve(m *moduleSpec, name string) (uint32, bool) {
+	if module, symbol, ok := splitQualifiedName(name); ok {
+		addr, ok := resolver.exported[module][symbol]
+		return addr, ok
+	}
 	if addr, ok := resolver.own[m.ID][name]; ok {
 		return addr, true
 	}
@@ -135,6 +201,10 @@ func (resolver symbolResolver) linkerBindings(m *moduleSpec, f *functionSpec, us
 			bindings[override.Name] = override.Addr
 		}
 	}
+	// The shared C definition is this entry's self symbol, not another entry.
+	if f.SourceSymbol != "" {
+		bindings[f.sourceSymbol()] = f.Addr
+	}
 	return bindings
 }
 
@@ -149,6 +219,10 @@ func linkerScript(f *functionSpec, bindings map[string]uint32) (string, error) {
 	var script strings.Builder
 	script.WriteString("OUTPUT_ARCH(mips)\n")
 	for _, name := range names {
+		// The mapped definition must come from the object, never PROVIDE.
+		if f.SourceSymbol != "" && name == f.sourceSymbol() {
+			continue
+		}
 		if name == "_gp" {
 			// GPREL relocations consult this linker symbol implicitly; PROVIDE
 			// can omit it because the object has no explicit _gp reference.
@@ -167,6 +241,9 @@ func linkerScript(f *functionSpec, bindings map[string]uint32) (string, error) {
 	}
 	fmt.Fprintf(&script, "  .text 0x%x : SUBALIGN(4) { *(.text) }\n", f.Addr)
 	script.WriteString("  /DISCARD/ : { *(.reginfo) *(.pdr) *(.comment) *(.gnu.attributes) }\n}\n")
+	if f.SourceSymbol != "" {
+		fmt.Fprintf(&script, "ASSERT(%s == 0x%08x, \"source definition must begin at original entry\");\n", f.sourceSymbol(), f.Addr)
+	}
 	return script.String(), nil
 }
 

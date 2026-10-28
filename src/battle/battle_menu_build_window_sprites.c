@@ -1,72 +1,57 @@
-#include "fft/battle.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_menu.h"
+#include "fft/gfx.h"
+#include "fft/menu.h"
+#include "fft/thread.h"
+#include "psx/libgpu.h"
+#include "psx/types.h"
 
 /* Build the window's background, edge sprites and optional compound-style sprites. */
-void battle_menu_build_window_sprites(
-    battle_menu_window_header_t* header, battle_menu_window_spec_t* spec, battle_menu_window_record_t* record) {
-    s32 style;
-    /* Pin: the 5..15 range test reads a separate $v1 copy of style. */
-    register s32 range_style __asm__("$3");
-    u32 range_index;
-    s32 stride;
-    /* Pins: the argument registers are loaded before the barrier below. */
-    register POLY_FT4* primitive __asm__("$4");
-    const battle_image_location_t* load;
-    register const battle_image_location_t* call_load __asm__("$5");
-    register const battle_image_location_t* screen __asm__("$6");
-    volatile u8 unused_stack[8];
+void battle_menu_build_window_sprites(RECT* rect, world_menu_entry_t* param, world_menu_icon_record_t* record) {
+    s16 style;
+    s32 index;
 
-    battle_thread_set_current_task_id(NATIVE_THREAD_TASK_MENU_WINDOW_BUILD);
-    header->texture_x = spec->load.x;
-    header->texture_y = spec->load.y;
-    header->half_width = (s16)(spec->width) >> 2;
-    header->height = spec->height;
+    thread_set_current_task_id(THREAD_TASK_MENU_WINDOW_BUILD);
+    rect->x = param->vram_origin.x;
+    rect->y = param->vram_origin.y;
+    rect->w = param->inner_width >> 2;
+    rect->h = param->inner_height;
     record->_unknown_74 = 0;
     record->_unknown_78 = 0;
-    battle_menu_init_sprite_array(record->sprites, 4, 0x7cfc);
-    battle_gfx_init_image_loading((POLY_FT4*)record->sprites, &spec->load, &spec->screen, &spec->params);
-    SetSemiTrans(&record->sprites[1], 0);
-    SetSemiTrans(&record->sprites[2], 1);
-    record->sprites[1].w = 0x10;
-    record->sprites[1].h = 0x10;
-    record->sprites[2].w = 0x10;
-    record->sprites[2].h = 0x10;
-    record->sprites[1].u0 = 0xa8;
-    record->sprites[1].v0 = 0;
-    record->sprites[2].u0 = 0xb8;
-    record->sprites[2].v0 = 0;
-    style = spec->style;
-    range_style = style;
+    menu_init_sprite_array(record->base.sprites, 4, 0x7cfc);
+    gfx_init_image_loading(record->base.sprites, &param->vram_origin, &param->window, &param->text_image);
+    SetSemiTrans(&record->base.sprites[1], 0);
+    SetSemiTrans(&record->base.sprites[2], 1);
+    record->base.sprites[1].w = 0x10;
+    record->base.sprites[1].h = 0x10;
+    record->base.sprites[2].w = 0x10;
+    record->base.sprites[2].h = 0x10;
+    record->base.sprites[1].u0 = 0xa8;
+    record->base.sprites[1].v0 = 0;
+    record->base.sprites[2].u0 = 0xb8;
+    record->base.sprites[2].v0 = 0;
+    style = param->header_id;
     if (style < 5) {
-        battle_gfx_init_image_loading((POLY_FT4*)&record->sprites[3], &g_battle_menu_texture_location, &spec->screen,
+        gfx_init_image_loading(&record->base.sprites[3], &g_menu_texture_location, &param->window,
             &g_battle_menu_single_icon_image_params[style]);
-    } else if ((range_index = range_style - 5) < 0xb) {
-        battle_menu_init_sprite_array(record->extra[0], 1, 0x7cfc);
-        battle_menu_init_sprite_array(record->extra[1], 1, 0x7cfc);
-        battle_menu_init_sprite_array(record->extra[2], 1, 0x7cfc);
-        style -= 5;
-        primitive = (POLY_FT4*)&record->sprites[3];
-        load = &g_battle_menu_texture_location;
-        call_load = load;
-        screen = &spec->screen;
-        /* Keeps the argument setup ahead of the displacement calculation. */
-        __asm__("" : "=r"(style) : "0"(style), "r"(primitive), "r"(call_load), "r"(screen));
-        range_index = style << 2;
-        stride = (style << 3) + range_index;
-        /* A typed 48-byte row index emits 3 scaling instructions instead of
-         * the target's 4. The explicit word displacement preserves the match. */
-        battle_gfx_init_image_loading(primitive, call_load, screen,
-            (world_gfx_image_load_parameters_t*)((u32*)&g_battle_menu_icon_strip_image_params[0] + stride));
-        battle_gfx_init_image_loading((POLY_FT4*)record->extra[0], load, &spec->screen,
-            (world_gfx_image_load_parameters_t*)((u32*)&g_battle_menu_icon_strip_image_params[1] + stride));
-        battle_gfx_init_image_loading((POLY_FT4*)record->extra[1], load, &spec->screen,
-            (world_gfx_image_load_parameters_t*)((u32*)&g_battle_menu_icon_strip_image_params[2] + stride));
-        battle_gfx_init_image_loading((POLY_FT4*)record->extra[2], load, &spec->screen,
-            (world_gfx_image_load_parameters_t*)((u32*)&g_battle_menu_icon_strip_image_params[3] + stride));
+    } else if (style >= 5 && style <= 15) {
+        index = (style - 5) * 4;
+        menu_init_sprite_array(record->icons[0], 1, 0x7cfc);
+        menu_init_sprite_array(record->icons[1], 1, 0x7cfc);
+        menu_init_sprite_array(record->icons[2], 1, 0x7cfc);
+        gfx_init_image_loading(&record->base.sprites[3], &g_menu_texture_location, &param->window,
+            &g_battle_menu_icon_strip_image_params[index]);
+        gfx_init_image_loading(record->icons[0], &g_menu_texture_location, &param->window,
+            &g_battle_menu_icon_strip_image_params[index + 1]);
+        gfx_init_image_loading(record->icons[1], &g_menu_texture_location, &param->window,
+            &g_battle_menu_icon_strip_image_params[index + 2]);
+        gfx_init_image_loading(record->icons[2], &g_menu_texture_location, &param->window,
+            &g_battle_menu_icon_strip_image_params[index + 3]);
     } else {
-        record->extra[0] = (SPRT*)0;
-        record->extra[1] = (SPRT*)0;
-        record->extra[2] = (SPRT*)0;
+        record->icons[0] = 0;
+        record->icons[1] = 0;
+        record->icons[2] = 0;
     }
-    battle_gfx_set_draw_mode_from_rect(record, (const u16*)spec);
-    SetDrawMode(&record->mode1, 0, 0, GetTPage(0, 2, 0x3c0, 0x100) & 0xffff, &g_battle_menu_disabled_texture_window);
+    battle_gfx_set_draw_mode_from_origin(&record->base.first_draw_mode, &param->vram_origin);
+    SetDrawMode(&record->base.draw_mode, 0, 0, GetTPage(0, 2, 0x3c0, 0x100), &g_menu_disabled_texture_window);
 }

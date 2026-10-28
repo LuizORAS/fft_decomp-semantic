@@ -1,6 +1,6 @@
 #include "fft/event_card.h"
-#include "psx/types.h"
 
+/* Start the fade from intensity 0 up to full (the screen fades out). */
 void card_gfx_start_increasing_fade(void) {
     g_card_gfx_increasing_fade_active = 1;
     g_card_gfx_fade_intensity = 0;

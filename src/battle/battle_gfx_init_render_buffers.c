@@ -1,8 +1,11 @@
 #include "fft/battle.h"
+#include "fft/battle_effect.h"
+#include "fft/battle_gfx.h"
+#include "fft/battle_map.h"
 #include "psx/libgpu.h"
 #include "psx/types.h"
 
-/* Initialises both battle render buffers: every primitive in each pool gets its
+/* Initializes both battle render buffers: every primitive in each pool gets its
  * GPU command code, the full-screen Gouraud overlay gets its corners and two
  * semi-transparent draw modes, and the ordering table pointers are bound.
  *
@@ -13,9 +16,9 @@ void battle_gfx_init_render_buffers(void) {
     s32 primitive_index;
     s32 buffer_index;
 
-    g_battle_data = &g_battle_render_buffers[0];
-    g_battle_render_buffers[0].otag = g_battle_otags[0];
-    g_battle_render_buffers[1].otag = g_battle_otags[1];
+    g_battle_gfx_current_render_buffer = &g_battle_render_buffers[0];
+    g_battle_render_buffers[0].otag = g_main_gfx_battle_otags[0];
+    g_battle_render_buffers[1].otag = g_main_gfx_battle_otags[1];
     {
         for (buffer_index = 0; buffer_index < 2; buffer_index++) {
             for (primitive_index = 0; primitive_index < 64; primitive_index++) {
@@ -24,28 +27,14 @@ void battle_gfx_init_render_buffers(void) {
         }
     }
     SetPolyF3(&prototype);
-    g_battle_map_light_direction[0] = 0;
-    g_battle_map_light_direction[1] = 0;
-    g_battle_map_light_direction[2] = 1;
-    g_battle_map_light_direction[3] = prototype.code;
+    g_battle_map_untextured_polygon_color.r = 0;
+    g_battle_map_untextured_polygon_color.g = 0;
+    g_battle_map_untextured_polygon_color.b = 1;
+    g_battle_map_untextured_polygon_color.cd = prototype.code;
     SetPolyG4(&g_battle_render_buffers[0].overlay);
     SetPolyG4(&g_battle_render_buffers[1].overlay);
-    g_battle_render_buffers[0].overlay.x0 = 0;
-    g_battle_render_buffers[0].overlay.y0 = 0;
-    g_battle_render_buffers[0].overlay.x1 = 0x180;
-    g_battle_render_buffers[0].overlay.y1 = 0;
-    g_battle_render_buffers[0].overlay.x2 = 0;
-    g_battle_render_buffers[0].overlay.y2 = 0xF0;
-    g_battle_render_buffers[0].overlay.x3 = 0x180;
-    g_battle_render_buffers[0].overlay.y3 = 0xF0;
-    g_battle_render_buffers[1].overlay.x0 = 0;
-    g_battle_render_buffers[1].overlay.y0 = 0;
-    g_battle_render_buffers[1].overlay.x1 = 0x180;
-    g_battle_render_buffers[1].overlay.y1 = 0;
-    g_battle_render_buffers[1].overlay.x2 = 0;
-    g_battle_render_buffers[1].overlay.y2 = 0xF0;
-    g_battle_render_buffers[1].overlay.x3 = 0x180;
-    g_battle_render_buffers[1].overlay.y3 = 0xF0;
+    setXY4(&g_battle_render_buffers[0].overlay, 0, 0, 0x180, 0, 0, 0xF0, 0x180, 0xF0);
+    setXY4(&g_battle_render_buffers[1].overlay, 0, 0, 0x180, 0, 0, 0xF0, 0x180, 0xF0);
     SetDrawMode(&g_battle_render_buffers[0].overlay_modes[1], 0, 1, 0, 0);
     SetDrawMode(&g_battle_render_buffers[1].overlay_modes[1], 0, 1, 0, 0);
     SetDrawMode(&g_battle_render_buffers[0].overlay_modes[0], 0, 1, 0, 0);
@@ -80,5 +69,5 @@ void battle_gfx_init_render_buffers(void) {
     }
     g_battle_sound_primary_weather_sfx_id = 0;
     g_battle_sound_weather_sfx_enabled = 0;
-    g_current_effect_work = 0;
+    g_battle_effect_map_vertices = 0;
 }

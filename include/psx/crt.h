@@ -1,11 +1,13 @@
 #ifndef PSX_CRT_H
 #define PSX_CRT_H
 
+/* C runtime start-up state: constructor tables, the saved return address and the heap. */
+
 #include "psx/types.h"
 
 typedef void (*psyq_crt_handler_t)(void);
 typedef struct {
-    u32 _unknown_00;
+    u32 _padding_00; /* rounds the private frame to 16 bytes; never stored */
     u32 saved_s0;
     u32 saved_s1;
     void* saved_ra;

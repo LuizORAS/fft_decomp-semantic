@@ -1,49 +1,76 @@
 #ifndef THREAD_H
 #define THREAD_H
 
-/* Native cooperative threads shared by the BATTLE and WORLD schedulers. */
+/* Cooperative game threads and the BATTLE/WORLD scheduler interfaces. */
 
 #include "psx/types.h"
 
-/* Native cooperative scheduler context, not scenario bytecode or its operand
- * buffer. BATTLE 0x8014c8a0 and WORLD 0x800ffd70 initialize the same layout;
- * both index slots with thread_id << 10 and start SP/FP at slot + 0x3f0.
- * The parameter stores at BATTLE 0x8014ca38 and WORLD's corresponding
- * three/four-parameter helpers establish full 32-bit payload words.
- * The seven task words at 0x50 are zeroed by battle_thread_start /
- * world_thread_start; each task gives them its own meaning: menu blink/icon
- * cursor threads use [0] timer and [1] state, event unit/sprite-move threads
- * keep the misc id in [0], and DisplayMessage text threads use [2] x offset,
- * [3] y offset, [4] arrow offset, [5] opening type and [6] width override. The
- * remaining saved context/stack stays provisional. */
-typedef struct native_thread {
-    s32 function_parameter_1; /* 0x00 */
-    s32 function_parameter_2; /* 0x04 */
-    s32 function_parameter_3; /* 0x08 */
-    s32 function_parameter_4; /* 0x0c; set by WORLD's four-parameter helper */
-    u8 _unused_010[0x28];
-    void* global_pointer;       /* 0x38 */
-    u32* stack_pointer;         /* 0x3c */
-    u32* frame_pointer;         /* 0x40 */
-    void (*code_pointer)(void); /* 0x44 */
-    s32 is_running;             /* 0x48 */
-    s32 task_id;                /* 0x4c */
-    s32 task_words[7];          /* 0x50: per-task words, see above */
-    u8 _unused_06c[0x3f0 - 0x6c];
-    u32 stack_top[4]; /* 0x3f0: initial SP/FP; the stack grows down from here */
-} native_thread_t;
-typedef char native_thread_size_must_be_0x400[(sizeof(native_thread_t) == 0x400) ? 1 : -1];
-typedef char native_thread_running_must_be_0x48[((unsigned long)&((native_thread_t*)0)->is_running == 0x48) ? 1 : -1];
-typedef char native_thread_task_must_be_0x4c[((unsigned long)&((native_thread_t*)0)->task_id == 0x4c) ? 1 : -1];
+/* thread */
+/* The thread record both schedulers use, and the task ids threads publish. */
 
-/* Reset loops cover sixteen 0x400-byte slots. WORLD's scheduler also scans
- * slot 16, which lies beyond this reset span. */
+/* Reset loops clear sixteen 0x400-byte slots. WORLD also uses slot 16 for
+ * tutorial text; the scheduler scans it, but reset does not clear it. */
 enum {
-    NATIVE_THREAD_SLOT_COUNT = 16,
-    NATIVE_THREAD_STRIDE = 0x400,
-    NATIVE_THREAD_ARRAY_BYTES = 0x4000,
-    NATIVE_THREAD_LAST_WORD_OFFSET = 0x3ffc,
+    THREAD_SLOT_COUNT = 16,
+    THREAD_STRIDE = 1024,
+    THREAD_ARRAY_BYTES = 16384,
+    THREAD_LAST_WORD_OFFSET = 0x3ffc,
 };
+
+/* Slot numbers of the cooperative threads: the index into g_threads
+ * and the first argument of the thread calls. Slot 0 is the
+ * program's main loop. No slot belongs to one thread for good: the battle and
+ * world programs run their threads in fixed slots, every menu screen runs its
+ * own in the same slots while it is up, and a menu thread starts its child
+ * menu one slot below itself. Each enum below maps the slots of one of them;
+ * world.h, wldcore.h and the overlay headers map the slots their own screens
+ * use (world_thread_slot_e, wldcore_thread_slot_e, attack_thread_slot_e,
+ * bunit_thread_slot_e, equip_thread_slot_e, require_thread_slot_e). */
+/* The battle and world programs (twin code). */
+typedef enum thread_slot {
+    THREAD_SLOT_MAIN = 0,
+    THREAD_SLOT_EVENT = 1,           /* the event script: script_run_next_event and its twin */
+    THREAD_SLOT_UNIT_VIEW = 2,       /* the unit view supervisor that starts the four panels below */
+    THREAD_SLOT_MENU_BUILDING = 3,   /* the menu entry starter and the help menu thread */
+    THREAD_SLOT_SYSTEM_FUNCTION = 4, /* the system function thread and the spell quote it dispatches */
+    THREAD_SLOT_MENU_GRANDCHILD = 6, /* the action slot list under the skillset list */
+    THREAD_SLOT_MENU_CHILD = 7,      /* the skillset list under the action menu */
+    THREAD_SLOT_MENU = 8,            /* the open entry of the menu table: action menu, mini menu, a
+                                      * system function's menu, the spell quote text */
+    /* The unit view's panel slots, named for the thread each usually runs. */
+    THREAD_SLOT_TILE_INFO_PANEL = 10,    /* tile info or numeric display */
+    THREAD_SLOT_UNIT_SUMMARY_PANEL = 11, /* unit summary */
+    THREAD_SLOT_RIGHT_UNIT_STATS = 12,   /* right unit stats or attack caster stats */
+    THREAD_SLOT_HOVERED_UNIT_STATS = 13, /* hovered unit stats or attack target stats */
+    /* Passed to the resolve_id functions, which return a slot below 16
+     * unchanged and otherwise the first idle slot. */
+    THREAD_SLOT_FIRST_IDLE = 16,
+} thread_slot_e;
+
+/* The menu screens: formation and unit list, shop, deployment, post-battle,
+ * save, debug, bar. */
+typedef enum thread_screen_slot {
+    THREAD_SCREEN_SLOT_TEXT = 1,              /* help, description and message text of a screen */
+    THREAD_SCREEN_SLOT_MESSAGE = 2,           /* a message box or text window */
+    THREAD_SCREEN_SLOT_MENU_CHILD = 5,        /* the child of the menu in slot 6 */
+    THREAD_SCREEN_SLOT_MENU = 6,              /* the menu or notice a WORLD screen or the save screen runs */
+    THREAD_SCREEN_SLOT_COMPARISON_STATUS = 7, /* the second (comparison) unit status banner */
+    THREAD_SCREEN_SLOT_UNIT_STATUS = 8,       /* the unit status banner */
+    THREAD_SCREEN_SLOT_CHARACTER_STATUS = 9,  /* the character status or equipment-and-ability panel */
+    THREAD_SCREEN_SLOT_NUMERIC_EDITOR = 12,   /* the numeric editor (stats) panel */
+} thread_screen_slot_e;
+
+/* Slots one routine takes for a thread of its own while the slot's usual
+ * thread is not running. */
+typedef enum thread_borrowed_slot {
+    THREAD_BORROWED_SLOT_CARD_BACKDROP = 2, /* the memory card screen's zooming backdrop */
+    THREAD_BORROWED_SLOT_DEPLOYMENT = 6,    /* attack_deploy_run_screen, or the map-data-load-complete thread
+                                             * when a battle has no deployment */
+    /* The AT list of the dead-unit menu, once the unit view's panels have stopped. */
+    THREAD_BORROWED_SLOT_AT_LIST_MENU_CHILD = 9, /* a wait-forever thread while the AT list's child runs */
+    THREAD_BORROWED_SLOT_AT_LIST_MENU = 10,
+    THREAD_BORROWED_SLOT_FADE_OUT = 13, /* the fade-out thread that follows the unit list overlay */
+} thread_borrowed_slot_e;
 
 /* task_id values shared by the BATTLE and WORLD schedulers. Each named id is
  * set by one family of twin thread functions (set_current_task_id or a
@@ -51,42 +78,169 @@ enum {
  * 1/2/3 are the dialogue text threads' handshake: a text thread runs as 1,
  * sets 2 to wait until another thread stores 1 to resume it, and stops when
  * another thread stores 3. Ids without a known setter stay literal. */
-typedef enum native_thread_task {
-    NATIVE_THREAD_TASK_RESUME = 1,
-    NATIVE_THREAD_TASK_WAIT_FOR_RESUME = 2,
-    NATIVE_THREAD_TASK_STOP_REQUEST = 3,
-    NATIVE_THREAD_TASK_CAMERA = 4,
-    NATIVE_THREAD_TASK_MAP_DARKNESS = 6,
-    NATIVE_THREAD_TASK_MAP_LIGHT = 7,
-    NATIVE_THREAD_TASK_EVENT_BLOCK = 8,
-    NATIVE_THREAD_TASK_SPRITE_MOVE = 0xb,
-    NATIVE_THREAD_TASK_COLOR_SCREEN = 0xc,
-    NATIVE_THREAD_TASK_EARTHQUAKE = 0xd,
-    NATIVE_THREAD_TASK_ADD_UNIT = 0xe,
-    NATIVE_THREAD_TASK_UNIT_EDITOR_PANEL = 0x15,
-    NATIVE_THREAD_TASK_NUMERIC_DISPLAY_PANEL = 0x23,
-    NATIVE_THREAD_TASK_MESSAGE_BOX = 0x26,
-    NATIVE_THREAD_TASK_MENU_WINDOW_BUILD = 0x31,
+typedef enum thread_task {
+    /* No task: *_thread_start and *_thread_exit_current store it, and
+     * world_menu_start_thread_group stores it into thread 12 when the location changes. */
+    THREAD_TASK_NONE = 0,
+    THREAD_TASK_RESUME = 1,
+    THREAD_TASK_WAIT_FOR_RESUME = 2,
+    THREAD_TASK_STOP_REQUEST = 3,
+    THREAD_TASK_CAMERA = 4,
+    THREAD_TASK_MAP_DARKNESS = 6,
+    THREAD_TASK_MAP_LIGHT = 7,
+    THREAD_TASK_EVENT_BLOCK = 8,
+    THREAD_TASK_SPRITE_MOVE = 11,
+    THREAD_TASK_COLOR_SCREEN = 12,
+    THREAD_TASK_EARTHQUAKE = 13,
+    THREAD_TASK_ADD_UNIT = 14,
+    /* Unit-view panels: the ids the view thread sets pair with each panel thread. */
+    THREAD_TASK_TILE_INFO_PANEL = 16,
+    THREAD_TASK_HOVERED_UNIT_STATS = 17,
+    THREAD_TASK_ATTACK_TARGET_STATS = 18,
+    THREAD_TASK_ATTACK_CASTER_STATS = 19,
+    THREAD_TASK_UNIT_SUMMARY_PANEL = 20,
+    THREAD_TASK_STATUS_SCREEN = 21,
+    /* g_world_menu_thread_groups gives its three text windows the ids 0x20,
+     * 0x21 and 0x22 (threads 9, 10 and 11); the window thread slides only the
+     * second one with the main scroll. */
+    THREAD_TASK_MENU_GROUP_SECOND_WINDOW = 33,
+    THREAD_TASK_NUMERIC_DISPLAY_PANEL = 35,
+    THREAD_TASK_MESSAGE_BOX = 38,
+    THREAD_TASK_MENU_WINDOW_BUILD = 49,
     /* Text thread waiting for its next message; Change Dialog and
      * world_text_resume_printing swap in new text and store 1. */
-    NATIVE_THREAD_TASK_DIALOG_AWAIT_TEXT = 0x33,
-    NATIVE_THREAD_TASK_LOAD_EVTCHR = 0x34,
-    NATIVE_THREAD_TASK_BG_SOUND = 0x35,
+    THREAD_TASK_DIALOG_AWAIT_TEXT = 51,
+    THREAD_TASK_LOAD_EVTCHR = 52,
+    THREAD_TASK_BG_SOUND = 53,
     /* Dark Screen thread start; Remove Dark Screen stores it into the
      * 0x37 thread to end the hold. */
-    NATIVE_THREAD_TASK_DARK_SCREEN = 0x36,
-    NATIVE_THREAD_TASK_DARK_SCREEN_HOLD = 0x37,
-    NATIVE_THREAD_TASK_CONDITION_DISPATCH = 0x38,
-    NATIVE_THREAD_TASK_UNIT_STATUS_BANNER = 0x39,
-    NATIVE_THREAD_TASK_STATUS_PANEL = 0x3b,
-    NATIVE_THREAD_TASK_SHOW_GRAPHIC = 0x3d,
-    NATIVE_THREAD_TASK_DEBUG_UNIT_EDITOR = 0x3e,
-    NATIVE_THREAD_TASK_HELP_MENU = 0x40,
-    NATIVE_THREAD_TASK_PLAY_EFFECT = 0x41,
-    NATIVE_THREAD_TASK_MENU_SOUND_DELAY = 0x42,
-    NATIVE_THREAD_TASK_INFLICT_STATUS = 0x43,
-    NATIVE_THREAD_TASK_EXECUTE_EVENT = 0x44,
-    NATIVE_THREAD_TASK_UNIT_MESSAGE = 0x46,
-} native_thread_task_e;
+    THREAD_TASK_DARK_SCREEN = 54,
+    THREAD_TASK_DARK_SCREEN_HOLD = 55,
+    THREAD_TASK_CONDITION_DISPATCH = 56,
+    THREAD_TASK_UNIT_STATUS_BANNER = 57,
+    THREAD_TASK_RIGHT_UNIT_STATS = 58,
+    THREAD_TASK_STATUS_PANEL = 59,
+    THREAD_TASK_SHOW_GRAPHIC = 61,
+    THREAD_TASK_DEBUG_UNIT_EDITOR = 62,
+    THREAD_TASK_HELP_MENU = 64,
+    THREAD_TASK_PLAY_EFFECT = 65,
+    THREAD_TASK_MINI_MENU = 66,
+    THREAD_TASK_INFLICT_STATUS = 67,
+    THREAD_TASK_EXECUTE_EVENT = 68,
+    THREAD_TASK_UNIT_MESSAGE = 70,
+} thread_task_e;
+
+/* BATTLE's cooperative threads: slot 0 is the main loop, and one scheduler pass a frame runs slots 1-15. */
+
+/* Main-stack callback dispatch, bound to the resident BATTLE or WORLD scheduler.
+ * It forwards a0-a3 unchanged and switches to thread 0's stack when necessary;
+ * arguments beyond those registers are not copied across the stack switch.
+ * The argument list stays unspecified because callback signatures differ. */
+extern void (*g_thread_call_target)(void);
+
+/* Native cooperative thread slot, 0x400 bytes, not scenario bytecode; both schedulers index slots with thread_id << 10.
+ * *_thread_start zeroes the task words and sets the stack to the slot's top (0x3f0), leaving about 900 bytes of stack;
+ * each *_thread_yield saves s0-s7, k0 and k1 (saved_s0..saved_k1), gp, sp, fp and ra (code_pointer) here. The
+ * parameters and task words are the thread's inputs: menu blink/icon cursor threads use [0] timer and [1] state, event
+ * unit/sprite-move threads keep the unit id in [0], DisplayMessage text threads use [2] x offset, [3] y offset, [4]
+ * arrow offset, [5] opening type and [6] width override, and the scrolling text page reads [4] as a redraw request. */
+typedef struct thread {
+    /* The four parameters are s32 but often carry pointers (QUIRKS.md). */
+    s32 function_parameter_1;   /* 0x00 */
+    s32 function_parameter_2;   /* 0x04 */
+    s32 function_parameter_3;   /* 0x08 */
+    s32 function_parameter_4;   /* 0x0c; set by WORLD's four-parameter helper */
+    u32 saved_s0;               /* 0x10 */
+    u32 saved_s1;               /* 0x14 */
+    u32 saved_s2;               /* 0x18 */
+    u32 saved_s3;               /* 0x1c */
+    u32 saved_s4;               /* 0x20 */
+    u32 saved_s5;               /* 0x24 */
+    u32 saved_s6;               /* 0x28 */
+    u32 saved_s7;               /* 0x2c */
+    u32 saved_k0;               /* 0x30 */
+    u32 saved_k1;               /* 0x34 */
+    void* global_pointer;       /* 0x38 */
+    u32* stack_pointer;         /* 0x3c */
+    u32* frame_pointer;         /* 0x40 */
+    void (*code_pointer)(void); /* 0x44 */
+    s32 is_running;             /* 0x48 */
+    s32 task_id;                /* 0x4c: thread_task_e */
+    s32 task_words[7];          /* 0x50: per-task 32-bit values, see above */
+    u8 stack[0x3f0 - 0x6c];     /* 0x6c: the thread's stack */
+    u32 stack_top[4];           /* 0x3f0: initial SP/FP; the stack grows down from here */
+} thread_t;
+typedef char thread_task_must_be_0x4c[((unsigned long)&((thread_t*)0)->task_id == 0x4c) ? 1 : -1];
+typedef char thread_running_must_be_0x48[((unsigned long)&((thread_t*)0)->is_running == 0x48) ? 1 : -1];
+typedef char thread_size_must_be_1024[(sizeof(thread_t) == 1024) ? 1 : -1];
+
+/* Fixed backing array and the separate pointer used to access its slots. */
+extern thread_t g_thread_contexts[];
+
+extern thread_t* g_threads;
+
+/* WORLD's cooperative threads, as in BATTLE but with equipment 1-16, and state some of its threads share. */
+
+s32 world_thread_find_running_by_task(s32 task_id);
+
+void thread_wait_for_unit_view_panels(void);
+
+s32 world_thread_get_current_parameter_1(void);
+
+s32 thread_call_on_main_stack();
+
+s32 world_thread_get_current_parameter_2(void);
+
+void thread_exit_current(void);
+s32 battle_thread_find_running_by_task(s32 task_id);
+
+s32 world_thread_get_current_parameter_3(void);
+
+/* Named relocations preserve the assembled helpers' $at load sequence. */
+#define THREAD_LOAD_GLOBAL(result, global)                                                                             \
+    __asm__("lui $1, %%hi(%1)\naddu $1,$1,$zero\nlw %0, %%lo(%1)($1)"                                                  \
+        : "=r"(result)                                                                                                 \
+        : "i"(&(global)), "m"(global)                                                                                  \
+        : "$1")
+
+/* Read the running CPU's $gp when seeding a native thread context. */
+void* thread_get_current_global_pointer(void);
+
+s32 battle_thread_get_current_parameter_1(void);
+
+s32 world_thread_is_previous_running(void);
+
+s32 battle_thread_get_current_parameter_2(void);
+s32 battle_thread_get_current_parameter_3(void);
+
+s32 world_thread_is_running_asm(s32 thread_id);
+
+s32 thread_get_current_task_id(void);
+
+s32 world_thread_resolve_id(s32 requested_thread_id);
+
+s32 battle_thread_is_previous_running(void);
+
+s32 world_thread_resolve_id_after_current(s32 requested_thread_id);
+
+s32 thread_is_running(s32 thread_id);
+s32 battle_thread_is_running_asm(s32 thread_id);
+void thread_reset_scheduler(void);
+s32 battle_thread_resolve_id(s32 requested_thread_id);
+s32 battle_thread_resolve_id_after_current(s32 requested_thread_id);
+void thread_resume(s32 thread_id);
+void thread_set_current_task_id(s32 task_id);
+void thread_set_parameters(s32 thread_id, s32 first, s32 second, s32 third);
+void thread_set_four_parameters(s32 thread_id, s32 first, s32 second, s32 third, s32 fourth);
+void thread_start(s32 thread_id, void (*function)(void));
+void thread_suspend(s32 thread_id);
+void thread_wait_frames(s32 count);
+void thread_wait_until_inactive(s32 thread_id);
+
+/* Yield to the next active context in the resident scene scheduler.
+ * BATTLE scans 16 slots; WORLD scans 17. Each keeps its own frame hook. */
+void thread_yield(void);
+
+extern s32 g_thread_current_id;
 
 #endif

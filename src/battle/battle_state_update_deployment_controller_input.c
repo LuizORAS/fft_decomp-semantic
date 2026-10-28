@@ -1,22 +1,20 @@
 #include "fft/battle.h"
 #include "psx/types.h"
 
-enum {
-    RESET_BUTTON_MASK = 0x090c,
-};
-
+/* Same button states (pad 1) for the setup screens, with the soft-reset combination. Returns 1, so the
+ * -1 that battle_state_run_battle_setup waits for never comes. */
 s32 battle_state_update_deployment_controller_input(void) {
     u32 previous;
     u32 current;
 
     current = PadRead(1);
-    previous = g_controller_input_previous;
-    g_controller_input_raw = current;
-    g_controller_input_previous = current;
-    g_controller_input_pressed = ~previous & current;
-    g_controller_input_released = ~current & previous;
+    previous = g_main_input_previous_buttons;
+    g_main_input_current_buttons = current;
+    g_main_input_previous_buttons = current;
+    g_main_input_pressed_buttons = ~previous & current;
+    g_main_input_released_buttons = ~current & previous;
 
-    if ((current & RESET_BUTTON_MASK) == RESET_BUTTON_MASK) {
+    if ((current & MAIN_INPUT_RESET_BUTTONS) == MAIN_INPUT_RESET_BUTTONS) {
         main_system_reset_game();
     }
     return 1;
