@@ -54,11 +54,12 @@ type relocFinding struct {
 }
 
 // relocReport counts a module's data words in scope by classification, its
-// disc and ram words, and the words outside scope that look like a sector
-// table's and are neither disc words nor values ("sector" findings).
+// disc and ram words, the words outside scope that look like a sector table's
+// and are neither disc words nor values ("sector" findings), and the RAM
+// addresses split over a lui and a use of its register outside code ("split").
 type relocReport struct {
 	words, relocations, values, pending, orphans int
-	disc, discPending, ram                       int
+	disc, discPending, ram, split                int
 	findings                                     []relocFinding
 }
 
@@ -201,7 +202,10 @@ func (n relocNames) discSector(m *moduleSpec, piece linkPiece, original []byte, 
 // words, and fails when a relocation does not name the address its original
 // word holds or a disc or ram word differs from what the layout or the RAM
 // map gives. A word outside scope that looks like a sector table's entry
-// (discSector) and is neither a disc word nor a value is a "sector" finding.
+// (discSector) and is neither a disc word nor a value is a "sector" finding,
+// and a lui of a RAM page that a following instruction completes into an
+// address is a "split" finding: no data word can relocate it, so the bytes are
+// code that needs a source.
 func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, layout linkLayout, original []byte) (relocReport, error) {
 	var report relocReport
 	relocations := make(map[uint32]relocationSpec, len(m.Relocations))
@@ -232,6 +236,13 @@ func relocClassify(resolver symbolResolver, names relocNames, m *moduleSpec, lay
 		for addr := (piece.addr + 3) &^ 3; addr+4 <= piece.addr+uint32(piece.size); addr += 4 {
 			value := binary.LittleEndian.Uint32(original[m.offset(addr):])
 			inScope := relocScopeLow <= value && value < relocScopeHigh
+			if page := value << 16; value>>26 == 0x0f && relocScopeLow <= page && page < relocScopeHigh {
+				end := int(m.offset(piece.addr)) + piece.size
+				if address, ok := pairedAddress(original, int(m.offset(addr)), end); ok {
+					report.split++
+					report.findings = append(report.findings, relocFinding{kind: "split", addr: addr, value: address, what: names.describe(m, address)})
+				}
+			}
 			if layoutValue, ok := disc[addr]; ok {
 				if layoutValue != value {
 					wrong = append(wrong, fmt.Sprintf("disc word 0x%08x holds %d, but the layout gives %d", addr, value, layoutValue))
@@ -540,10 +551,11 @@ func (p project) relocCheckModule(resolver symbolResolver, names relocNames, m *
 }
 
 // relocPendingError fails a module whose data words in scope are not all
-// relocations or values, or that holds a word like a sector table's that is
-// neither a disc word nor a value, naming the first few.
+// relocations or values, that holds a word like a sector table's that is
+// neither a disc word nor a value, or that splits a RAM address over two
+// instructions outside code, naming the first few.
 func relocPendingError(report relocReport) error {
-	if report.pending == 0 && report.discPending == 0 {
+	if report.pending == 0 && report.discPending == 0 && report.split == 0 {
 		return nil
 	}
 	var parts, first []string
@@ -553,8 +565,11 @@ func relocPendingError(report relocReport) error {
 	if report.discPending > 0 {
 		parts = append(parts, fmt.Sprintf("%d words like a disc sector table's neither disc word nor value", report.discPending))
 	}
+	if report.split > 0 {
+		parts = append(parts, fmt.Sprintf("%d RAM addresses split over a lui and its use outside code (write the bytes as a .s)", report.split))
+	}
 	for _, finding := range report.findings {
-		if finding.kind == "pending" || finding.kind == "orphan" || finding.kind == "sector" {
+		if finding.kind == "pending" || finding.kind == "orphan" || finding.kind == "sector" || finding.kind == "split" {
 			first = append(first, fmt.Sprintf("0x%08x = 0x%08x (%s)", finding.addr, finding.value, finding.what))
 			if len(first) == 3 {
 				break
@@ -627,6 +642,7 @@ func (p project) relocCheckCommand(args []string) error {
 		total.disc += report.disc
 		total.discPending += report.discPending
 		total.ram += report.ram
+		total.split += report.split
 		moduleKinds := map[string]int{}
 		for _, finding := range report.findings {
 			moduleKinds[finding.kind]++
@@ -653,6 +669,7 @@ func (p project) relocCheckCommand(args []string) error {
 	fmt.Fprintf(p.stdout(), "  code: %d own addresses left in place, %d loads of a declared page, %d more through a linked module's names, %d data rows bound inside code\n", kinds["code"], kinds["page"], kinds["link"], kinds["row"])
 	fmt.Fprintf(p.stdout(), "  disc: %d words written from the layout, %d more like a sector table's left\n", total.disc, total.discPending)
 	fmt.Fprintf(p.stdout(), "  ram: %d words written from the RAM map\n", total.ram)
+	fmt.Fprintf(p.stdout(), "  split: %d RAM addresses over two instructions outside code\n", total.split)
 	fmt.Fprintln(p.stdout(), "  lists: build/reloc-check/<module>.tsv")
 	if failed > 0 {
 		return fmt.Errorf("reloc-check: %d modules failed", failed)

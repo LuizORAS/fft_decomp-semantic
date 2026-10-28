@@ -137,6 +137,38 @@ func TestRelocClassifyChecksDiscWordsAndFindsSectorTables(t *testing.T) {
 	}
 }
 
+func TestRelocClassifyFindsSplitAddresses(t *testing.T) {
+	m := linkTestModule()
+	layout, err := moduleLinkLayout(m)
+	if err != nil {
+		t.Fatal(err)
+	}
+	names := newRelocNames(&projectConfig{Modules: []*moduleSpec{m}})
+	original := make([]byte, m.Size)
+	put := func(addr, word uint32) { binary.LittleEndian.PutUint32(original[m.offset(addr):], word) }
+	put(0x80100008, 0x3c028010) // in test_first's code: not data
+	put(0x8010000c, 0x24420030)
+	put(0x80100024, 0x3c028010) // lui v0, 0x8010
+	put(0x80100028, 0x24420030) // addiu v0, v0, 0x30: g_test_tail
+	put(0x8010002c, 0x00400008) // jr v0
+	put(0x80100034, 0x3c031f80) // lui v1, 0x1f80: hardware, not RAM
+	put(0x80100038, 0x8c631070)
+	report, err := relocClassify(symbolResolver{}, names, m, layout, original)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var got []string
+	for _, finding := range report.findings {
+		got = append(got, fmt.Sprintf("%s 0x%08x 0x%08x %s", finding.kind, finding.addr, finding.value, finding.what))
+	}
+	if report.split != 1 || strings.Join(got, "|") != "split 0x80100024 0x80100030 data g_test_tail" {
+		t.Fatalf("split %d, findings %q", report.split, got)
+	}
+	if err := relocPendingError(report); err == nil || !strings.Contains(err.Error(), "1 RAM addresses split over a lui and its use outside code") {
+		t.Fatalf("a split address: %v", err)
+	}
+}
+
 func TestRelocPendingErrorFailsAModuleWithPendingWords(t *testing.T) {
 	report := relocReport{words: 3, relocations: 2, values: 1,
 		findings: []relocFinding{{kind: "code", addr: 0x80100000, value: 0x80100040, what: "lui"}}}

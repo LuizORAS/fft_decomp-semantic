@@ -1110,8 +1110,10 @@ func (p project) validateProjectConfig(config *projectConfig) error {
 				if strings.TrimSpace(f.Asm) == "" {
 					fail("%s: asm needs the reason the routine is assembly", where)
 				}
-				if source != m.defaultSource(f) {
-					fail("%s: assembly is its own source named after it, %s", where, m.defaultSource(f))
+				// In the module's source directory, or a library routine's
+				// in its library's directory.
+				if filepath.Base(filepath.FromSlash(source)) != f.Name+".s" {
+					fail("%s: assembly is its own source named after it, %s.s", where, f.Name)
 				}
 				if !assemblyEntries[f.Name] {
 					fail("%s: QUIRKS.md has no %q entry for it (its Port debt)", where, quirksAssemblySection)

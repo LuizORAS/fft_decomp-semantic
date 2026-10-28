@@ -1349,6 +1349,14 @@ needs a portable C twin of each.
   empty function, and the 4 KB are MAIN's largest range of free RAM.
 - `main_system_frame_hook`: an empty per-frame hook whose callers enter at a
   leading `nop`; a native build uses an empty function.
+- `g_psyq_card_interrupt_jump_template`: LIBCARD's five words that load
+  `psyq_card_interrupt_tail`'s address and jump there, which `_patch_card`
+  copies into the BIOS exception handler. A native build has no BIOS handler
+  to patch and calls the card interrupt tail itself.
+- `g_psyq_card_delay_template`: LIBCARD's five words that call their own
+  place, which `_patch_card2` swaps into the BIOS pad-clear routine; the five
+  instructions they displace then run there and fall through into
+  `psyq_card_short_delay`. A native build has no BIOS routine to patch.
 - `wldcore_system_switch_to_stack`: stores `$sp` in the word at its argument
   (the scratchpad's last word) and runs on the stack below it, so the calls
   up to `wldcore_system_restore_previous_stack` keep their frames in the 1 KB

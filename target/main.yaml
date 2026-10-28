@@ -676,8 +676,10 @@ functions:
   - {addr: 0x80028894, size: 12, name: InitCARD2, hash: 3dc545cd2a7eb02a, source: src/lib/psyq/libapi/InitCARD2.c}
   - {addr: 0x800288a4, size: 12, name: StartCARD2, hash: 3265341abe40d382, source: src/lib/psyq/libapi/StartCARD2.c}
   - {addr: 0x800288b4, size: 12, name: StopCARD2, hash: 0bbe6cf1439cc86c, source: src/lib/psyq/libapi/StopCARD2.c}
+  - {addr: 0x800288c4, size: 20, name: g_psyq_card_interrupt_jump_template, hash: 39439335e9141672, source: src/lib/psyq/libcard/g_psyq_card_interrupt_jump_template.s, asm: "A template that _patch_card copies into the BIOS exception handler; its jump target is split over lui and addiu."}
   - {addr: 0x800288d8, size: 68, name: psyq_card_interrupt_tail, hash: b78f8219481dd509, source: src/lib/psyq/libcard/psyq_card_interrupt_tail.c}
   - {addr: 0x8002891c, size: 136, name: _patch_card, hash: 67d8245c788c8c94, source: src/lib/psyq/libcard/_patch_card.c}
+  - {addr: 0x800289a4, size: 20, name: g_psyq_card_delay_template, hash: 793daf9def9b7db5, source: src/lib/psyq/libcard/g_psyq_card_delay_template.s, asm: "A template that _patch_card2 swaps into the BIOS pad-clear routine; its own address is split over lui and addiu."}
   - {addr: 0x800289b8, size: 28, name: psyq_card_short_delay, hash: 629e1ed06635eaad, source: src/lib/psyq/libcard/psyq_card_short_delay.c}
   - {addr: 0x800289d4, size: 108, name: _patch_card2, hash: fe97d372338458dc, source: src/lib/psyq/libcard/_patch_card2.c}
   - {addr: 0x80028a40, size: 24, name: psyq_card_long_delay, hash: 3ab55a0f1f416982, source: src/lib/psyq/libcard/psyq_card_long_delay.c}
@@ -1013,9 +1015,7 @@ data:
   - {addr: 0x8001db08, name: g_psyq_gte_exception_patch_template_end}
   - {addr: 0x80022f5c, name: g_psyq_gpu_font_clut_y_offset_immediate}
   - {addr: 0x80026f94, name: psyq_api_memcpy}
-  - {addr: 0x800288c4, name: g_psyq_card_interrupt_jump_template}
   - {addr: 0x800288d8, name: g_psyq_card_interrupt_jump_template_end}
-  - {addr: 0x800289a4, name: g_psyq_card_delay_template}
   - {addr: 0x800289b8, name: g_psyq_card_delay_template_end}
   - {addr: 0x80028acc, name: g_psyq_card_restore_template}
   - {addr: 0x80028ad8, name: g_psyq_card_restore_template_end}

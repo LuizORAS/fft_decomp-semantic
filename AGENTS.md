@@ -87,7 +87,9 @@ File offset = address − `load`. Linked library ranges are declared under
 (OPENING), and Suzuki sound driver are reconstructed C. This includes the four
 Suzuki heap routines at `0x8001423c`–`0x8001442c`, which use the original
 `-G8` profile and `$gp` binding. Original padding, tables and executable
-patch templates remain data in their original modules. `target/*.yaml` is
+patch templates remain data in their original modules, except a template
+that holds an address split over two instructions, which is a `.s` so the
+link moves the address (LIBCARD's two). `target/*.yaml` is
 authoritative for each function's source, address, size, profile and hash.
 
 ## Commands
@@ -109,7 +111,7 @@ make trial TWINS=t0001     # compile each twin's source at the others' entries (
 make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
 make link [MODULE=x]       # link each module whole from its objects and the bytes between them, taking each name another module places from that module's link (a second pass); compare with the original file (function hashes without the BIN); fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc in build/link/disc
 make link SHIFT=16         # a test disc in build/shift: every module's image opens 16 bytes (break instructions) at its start, MAIN pads to whole sectors and a file that outgrows its sectors moves; fail on a word that changed unexplained (needs the BIN)
-make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address or a disc sector and is neither relocation, disc or ram word nor value, link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
+make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address or a disc sector and is neither relocation, disc or ram word nor value, and on a RAM address split over two instructions outside code; link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
 make permute FUNC=f        # run decomp-permuter on it [DURATION=300 JOBS=4]
@@ -155,8 +157,9 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
   `load`, `source_dir`, `profile` (module default), `links` (modules
   resident alongside).
 - `functions`: `{addr, size, name, hash}`, plus `profile`, `rodata`, `asm`
-  (why the routine is assembly; its source is then
-  `src/<module>/<name>.s`), `source` (a path other than the default) or
+  (why the routine is assembly; its source is then `<name>.s` in
+  `src/<module>/`, or in its library's directory with `source`), `source` (a
+  path other than the default) or
   `source_symbol` (the neutral symbol a `src/shared/` source defines) only
   when needed. `hash` is the first 16 hex digits of the SHA-256 of the
   original bytes; only `make checksums` writes it.
@@ -179,7 +182,9 @@ addresses, decimal sizes, one flow mapping per line, sorted rows) and
   symbol. `values`: words that look like RAM addresses or disc sectors but
   are not, `{addr, why}` for one word or `{addr, end, why}` for a range.
   Each word lies outside code and is classified once; `make reloc-check`
-  fails on a word in the game's RAM that is neither, nor a `ram` word.
+  fails on a word in the game's RAM that is neither, nor a `ram` word, and on
+  a RAM address split over a `lui` and a use of its register outside code,
+  which no data word can relocate.
 - `disc`: data words that hold a file's place on the disc, `{addr, sector:
   FILE}` for its first sector (plus `offset` in sectors past it),
   `{addr, size: FILE}` for its size rounded up to whole sectors (0 when
