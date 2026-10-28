@@ -66,7 +66,7 @@ remain excluded. Never modify `meta/`.
 | `target/*.yaml` | Every disc module: functions with hashes, data names, libraries, regions |
 | `target/disc.yaml` | The disc's file system: every directory, file and dummy at its sector, with sizes and dates, never bytes |
 | `target/ram.yaml` | The RAM the modules load into: each window with its modules and what bounds it, and the windows resident together |
-| `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call |
+| `tools/` | Go tooling (its own module), rebuilt from the working tree on every `make` call, and `make smoke`'s emulator script and runner (`smoke.lua`, `smoke.sh`) |
 | `QUIRKS.md` | Index of retail bugs and code that looks wrong on purpose |
 | `CODEBASE.md` | Architecture guide: disc modules, boot and game loop, engine services, how to find things |
 | `docs/` | Hand-written mechanic pages and guides; `make map` copies them into the map vault |
@@ -111,6 +111,7 @@ make trial TWINS=t0001     # compile each twin's source at the others' entries (
 make unit-check [MODULE=x] # compile each original translation unit whole from its members' sources
 make link [MODULE=x]       # link each module whole from its objects and the bytes between them, taking each name another module places from that module's link (a second pass); compare with the original file (function hashes without the BIN); fail on an image past its RAM window and print each window's room; every module with the BIN also builds the disc in build/link/disc
 make link SHIFT=16         # a test disc in build/shift: every module's image opens 16 bytes (break instructions) at its start, MAIN pads to whole sectors and a file that outgrows its sectors moves; fail on a word that changed unexplained (needs the BIN)
+make smoke                 # boot the original and the shifted test disc in PCSX-Redux (PCSX_REDUX=path) from tools/smoke.lua: a new game through Orbonne (ATTACK.OUT, an effect file's code) to the save screen, then Continue through Gariland to the world map's formation screen, each checkpoint checking the code in RAM; logs and screenshots in build/smoke, about 50 minutes (after make link and make link SHIFT=16)
 make reloc-check [MODULE=x] # fail on a data word that looks like a RAM address or a disc sector and is neither relocation, disc or ram word nor value, and on a RAM address split over two instructions outside code; link each module twice shifted to check every changed word, and list the findings in build/reloc-check (needs the BIN)
 make diff FUNC=f           # compare one function with the original bytes (needs the BIN)
 make library-diff ARGS="..." # compare a scratch library candidate without registering it
@@ -131,7 +132,8 @@ make compile-commands      # editor compile_commands.json (host clang)
 `effect` selects every such module. `diff` and `permute` need it only when
 several modules define `FUNC`. Both compile exactly as `check` does. Every change
 ends with `make check` passing. Before handing off, also run `make build`
-and `make link` (disc exact both ways), `make reloc-check`,
+and `make link` (disc exact both ways), `make link SHIFT=16` (nothing
+unexplained), `make reloc-check`,
 `make check-config`, `make decl-check`, `make fmt-check` and `make test`.
 
 Every target runs in a fresh `docker run --rm` container of the pinned

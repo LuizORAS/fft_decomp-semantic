@@ -206,6 +206,13 @@ run: ## Build the disc and launch PCSX-Redux (PCSX_REDUX=path; default is the ma
 		-iso "$(CURDIR)/build/disc/output-scus-94221.cue" \
 		-run
 
+.PHONY: smoke
+smoke: ## Boot the original and the shifted test disc in PCSX-Redux and pass each session's checkpoints, after make link and make link SHIFT=16 (PCSX_REDUX=path; logs and screenshots in build/smoke)
+	test -x "$(PCSX_REDUX)"
+	@$(TOOLS) smoke prepare
+	PCSX_REDUX="$(PCSX_REDUX)" sh tools/smoke.sh
+	@$(TOOLS) smoke report
+
 .PHONY: shell
 shell: image ## Open an interactive shell in the Docker image
 	@$(DOCKER_RUN) --interactive --tty $(IMAGE) bash
